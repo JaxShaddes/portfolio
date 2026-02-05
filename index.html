@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en" class="antialiased bg-[#f4f4f0] text-[#111]">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bruno Clemente — Graphic Design</title>
+    <meta name="description" content="Senior Graphic Designer specializing in brutalist, typographic, and editorial design.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                    },
+                    colors: {
+                        'off-white': '#f4f4f0',
+                        'black': '#111111',
+                        'accent': 'var(--accent-color, #FF3300)',
+                        'gray-light': '#e5e5e5',
+                    },
+                    spacing: {
+                        '128': '32rem',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- GSAP & Lenis -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lenis@1.0.45/dist/lenis.min.js"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            --accent-color: #4b5670;
+            --cursor-size: 20px;
+        }
+        
+        body {
+            cursor: none;
+            overflow-x: hidden;
+        }
+        
+        /* Custom Cursor */
+        #cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--cursor-size);
+            height: var(--cursor-size);
+            background: var(--accent-color);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            mix-blend-mode: difference;
+            transition: width 0.3s, height 0.3s, background-color 0.3s;
+        }
+        
+        #cursor.hovered {
+            width: 60px;
+            height: 60px;
+            background: white;
+            mix-blend-mode: difference;
+        }
+        
+        #cursor.hidden {
+            opacity: 0;
+        }
+
+        /* Utility Classes */
+        .grid-overlay {
+            background-size: 100px 100px;
+            background-image:
+                linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+            pointer-events: none;
+        }
+
+        .clip-text {
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f4f4f0;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #111;
+            border: 2px solid #f4f4f0;
+        }
+        
+        .loader-overlay {
+            position: fixed;
+            inset: 0;
+            background: #111;
+            color: #f4f4f0;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .page-enter {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        .page-enter-active {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .page-exit {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .page-exit-active {
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <div id="cursor"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef, useLayoutEffect } = React;
+
+        // --- DATA ---
+        const PROJECTS = [
+            //0
+            {
+                slug: 'casa-rabelo',
+                title: 'Casa Rabelo',
+                year: '2025',
+                month: 8,
+                showMonth: true,
+                client: 'Casa Rabelo: Wine Boutique',
+                services: ['Identity', 'Branding', 'web design', 'Logo Design', 'card design'],
+                role: ['lead designer', 'web developer'],
+                tags: ['identity', 'typography', 'web design', 'print', 'graphic design'],
+                coverImage: 'media/casa-rabelo/cv3.jpg',
+                description: [
+                    "Casa Rabelo: A Brazilian wine boutique imbued with the essential soul of Portugal.",
+                    "The brand is anchored in the heritage of the Douro River and the iconic Rabelo vessels that navigated its currents, transporting the region's essence. This duality celebrates the enduring link between history, meticulous craft, and the act of discovery, rendered through a precise, contemporary filter.",
+                    "I directed the complete visual architecture, encompassing logo design, the systematic color theory, the overarching visual language, and the digital cadence for both the web platform and collateral communications. The objective was to synthesize an authentic presence with modern acuity, echoing the tempered warmth and cultivated elegance inherent in Portuguese viticulture.",
+                    "The guiding concept leverages the kinetic elegance of the river’s flow against the refined materiality of winemaking—a convergence where archival context meets present-day execution. Drawing from the structural elegance of Porto and the sensory complexity of the vintage, the identity communicates sophistication, assuredness, and implicit reliability.",
+                    "The central narrative establishes Casa Rabelo as “a new route through the world of wine,” positioning the boutique not merely as a point of transaction, but as a curated passage of experience, bridging the bedrock of tradition with the palate of the contemporary connoisseur.",
+                    "A rigorously minimalist emblem, derived from the distilled silhouette of the Rabelo craft, anchored by precise, geometric typography to signify both measured intent and modern luxury.",
+                    "A disciplined palette featuring deep, resonant tones—Ebony Clay, Arrowtown, and Mirage—selected to evoke the patina of aged timber, the shadows cast by deep water, and the diffused amber of twilight across the Douro valley.",
+                    "A calculated pairing of refined sans-serif forms characterized by deliberate, generous leading. This configuration mandates clarity, projects unwavering confidence, and substantiates the sense of timeless refinement.",
+                    "Subtly integrated motifs, inspired by topographical maps and fluid wave dynamics, serve as abstract echoes of the river's trajectory and the layered sensory architecture inherent in wine tasting.",
+                    "The resulting identity is a cohesive, atmospheric construct that effectively spans cultural heritage and contemporary lifestyle. It articulates Casa Rabelo's mission to deliver not only exceptional vintages but curated moments of sensory revelation and meaningful connection."
+                ],
+                images: [
+                    'media/casa-rabelo/cv1.jpg',
+                    'media/casa-rabelo/web1.jpg',
+                    'media/casa-rabelo/cv2.jpg',
+                    'media/casa-rabelo/web2.jpg',
+                    'media/casa-rabelo/cv3.jpg',
+                    'media/casa-rabelo/web3.jpg',
+                    'media/casa-rabelo/bi1.jpg',                
+                ]
+            },
+            //1
+            {
+                slug: 'tintas-silaca',
+                title: 'Tintas Silaca',
+                year: '2019/2025',
+                month: 1,
+                showMonth: false,
+                client: 'Tintas Silaca',
+                services: ['Mobile App design', 'web design', 'logo design', 'packaging design'],
+                tags: ['packaging', 'ux/ui design', 'web design', 'graphid design'],
+                coverImage: 'media/silaca/capa.jpg',
+                description: [
+                    'A Portuguese company with over four decades of expertise in paints, coatings, adhesives, and specialized chemical solutions, forged since 1981 and trusted across civil construction, automotive refinishing, metalworking, and furniture manufacturing.',
+                    'The challenge was to modernize a brand with deep industrial roots, translating its technical excellence and innovative drive into a cohesive, future-ready identity—while honoring its heritage and remaining instantly recognizable.',
+                    'The goal was to position Tintas Silaca as a contemporary leader in applied chemistry and material technology, balancing tradition with cutting-edge advancements.',
+                    'I led the full rebranding project, developing everything from the logo redesign and visual system to product packaging, corporate stationery, and a mobile app UI—crafting a unified brand universe that communicates trust, performance, and technical rigor.',
+                    'The creative direction focused on modernizing the brand without disrupting its legacy, transitioning it from a traditional 1980s manufacturer to a technologically advanced, design-conscious industrial entity.',
+                    'A minimalist emblem replaced the former illustrative logo, retaining the original color palette to preserve brand equity while signaling contemporary evolution.',
+                    'The new packaging system strengthens shelf presence through simplified layouts, color-coded differentiation, and bold typography—conveying clarity and modern performance, as seen in the redesigned Silaca paint series.',
+                    'The mobile app UI for technical and security documentation prioritizes usability and intuitive hierarchy, integrating strong brand colors and direct access to critical information, styled as a fusion of digital futurism and industrial brutalism.',
+                    'The rebrand transforms Tintas Silaca into a modern industrial design brand, standing for innovation, consistency, and unwavering technical excellence.',
+                    'The identity bridges its forty-year legacy with a future-ready ethos, affirming its role as a visionary in material technology while retaining the trust of long-standing clients.'
+                ],
+                images: [
+                    'media/silaca/latas/before.jpg',
+                    'media/silaca/latas/after.jpg',
+                    'media/silaca/latas/1.jpg',
+                    'media/silaca/latas/2.jpg',
+                    'media/silaca/app/1.jpg',
+                    'media/silaca/app/2.jpg',
+                    'media/silaca/app/3.jpg',
+                    'media/silaca/app/4.jpg'
+                ]
+            },
+            //2
+            {
+                slug: 'hqrz',
+                title: 'hqrz - portfolio',
+                year: '2025',
+                month: 11,
+                showMonth: true,
+                client: 'Hingryd Queiroz',
+                services: ['web design', 'web development'],
+                role: ['web designer', 'web developer',],
+                tags: ['web design'], 
+                coverImage: 'media/hqrz/1mk.jpg',
+                description: [
+                    "hqrz is the artistic name of 'Hingryd Queiroz'. She is a photographer, a poet and an architect. Three disciplines, one singular vision.",
+                    "This portfolio explores the harmony between the structures we build and the emotions we inhabit. Inspired by the steady flow of rivers and the breathless ascent of flight, her work captures the intersection of human design and natural wonder.",
+                    "Through the lens, the pen, and the drafting table, she seeks one thing: the beauty of love in every form.",
+                    "Check out her work at: www.hqrz.pt"
+                ],
+                images: [
+                    'media/hqrz/1mk.jpg',
+                    'media/hqrz/1.jpg',
+                    'media/hqrz/2mk.jpg',
+                    'media/hqrz/2.jpg',
+                    'media/hqrz/3mk.jpg',
+                    'media/hqrz/3.jpg',            
+                ]
+            },
+            //3
+            {
+                slug: 'azul',
+                title: 'Azul Empréstimo',
+                year: '2025',
+                month: 7,
+                showMonth: false,
+                client: 'Azul Empréstimo',
+                services: ['Typography', 'Social Media', 'consulting'],
+                tags: ['typography', 'print'],
+                coverImage: 'media/azul/capa.jpg',
+               description: [
+                    'Azul Empréstimo operates as a prominent Brazilian franchise network of credit brokers, dedicated to simplifying access to a wide array of financial solutions in a way that is both secure and personable.',
+                    'My work with them was a branding project focused on crafting social media graphics and promotional posters to reinforce visual identity and sector credibility.',
+                    'For Azul Empréstimo, I developed a cohesive series of social media graphics and promotional posters aimed at reinforcing the company’s visual identity and credibility within the financial services sector.',
+                    'The creative direction centered around the brand’s signature blue tones, symbolizing trust, stability, and reliability, while incorporating modern typographic hierarchy and clear visual storytelling to highlight key offerings such as personal loans, consórcios, and digital payment services.',
+                    'Each composition balanced photographic realism with clean graphic structure, ensuring information remained accessible and visually engaging across print and digital formats.',
+                    'Through consistent layout systems and subtle gradients, the campaign established a strong, unified aesthetic that communicates professionalism and approachability—key values for a financial brand seeking customer confidence and recognition.'
+                ],
+                images: [
+                    'media/azul/1.jpg',
+                    'media/azul/2.jpg',
+                    'media/azul/3.jpg',
+                    'media/azul/4.jpg',
+                    'media/azul/5.jpg',
+                    'media/azul/6.jpg',
+                ]
+            },
+            //4
+            {
+                slug: 'signature-collection',
+                title: 'Signature Collection',
+                year: '2024',
+                month: 11,
+                showMonth: false,
+                client: 'Personal Project',
+                services: ['Typography', 'Cover Design'],
+                tags: ['print', 'graphic design'],
+                coverImage: 'media/signature-collection/capa.jpg',
+                description: [
+                    'This personal project draws inspiration from Sony’s 2019 "Only on Playstation" collection. It explores how minimalism, texture, and tone can redefine the storytelling power of a game cover.',
+                    'Drawing inspiration from Sony’s iconic “Only on PlayStation” branding, this personal project revisits titles such as Red Dead Redemption 2, God of War: Ragnarök, Ghost of Tsushima, and Marvel’s Spider-Man 2, presenting them through a unified aesthetic, one that honors their emotional core while celebrating the artistry of physical media design.',
+                    'Concept & Design: The design approach combines cinematic restraint and textural depth, focusing on atmosphere rather than spectacle. Each cover relies on monochromatic palettes, grainy surface textures, and minimal iconography to evoke mood and identity, stripping away marketing clutter in favor of pure visual storytelling. Typography and structure aims to create a collector’s edition sensibility, merging nostalgia with refinement.',
+                    'Creative Intent: This project pays tribute to the craft of game art direction and the timeless appeal of PlayStation’s exclusive lineup. It’s an exercise in visual storytelling through restraint, showing how a strong emotional tone can live within minimalist composition.',
+                ],
+                images: [
+                    'media/signature-collection/cover/rdr2.jpg',
+                    'media/signature-collection/box/rdr2.jpg',
+                    'media/signature-collection/box-cd/rdr2.jpg',
+                    'media/signature-collection/cover/kcd2.jpg',
+                    'media/signature-collection/box/kcd2.jpg',
+                    'media/signature-collection/box-cd/kcd2.jpg',
+                    'media/signature-collection/cover/got.jpg',
+                    'media/signature-collection/box/got.jpg',
+                    'media/signature-collection/box-cd/got.jpg',
+                    'media/signature-collection/cover/gow.jpg',
+                    'media/signature-collection/box/gow.jpg',
+                    'media/signature-collection/box-cd/gow.jpg',
+                    'media/signature-collection/cover/sm2.jpg',
+                    'media/signature-collection/box/sm2.jpg',
+                    'media/signature-collection/box-cd/sm2.jpg',
+                ]
+            }
+        ];
+
+        const CLIENTS = ['Casa Rabelo', 'Azul Empréstimo', 'Tintas Silaca', 'Outrider Petfood', 'hqrz'];
+
+        // --- COMPONENTS ---
+        const Cursor = () => {
+            useEffect(() => {
+                const cursor = document.getElementById('cursor');
+                const moveCursor = (e) => {
+                    gsap.to(cursor, {
+                        x: e.clientX,
+                        y: e.clientY,
+                        duration: 0.1,
+                        ease: "power2.out"
+                    });
+                };
+                const hoverEnter = () => cursor.classList.add('hovered');
+                const hoverLeave = () => cursor.classList.remove('hovered');
+                window.addEventListener('mousemove', moveCursor);
+                const interactiveElements = document.querySelectorAll('a, button, .interactive');
+                interactiveElements.forEach(el => {
+                    el.addEventListener('mouseenter', hoverEnter);
+                    el.addEventListener('mouseleave', hoverLeave);
+                });
+                return () => {
+                    window.removeEventListener('mousemove', moveCursor);
+                    interactiveElements.forEach(el => {
+                        el.removeEventListener('mouseenter', hoverEnter);
+                        el.removeEventListener('mouseleave', hoverLeave);
+                    });
+                };
+            }, []);
+            return null;
+        };
+
+        const useCursorHover = () => {
+            useEffect(() => {
+                const cursor = document.getElementById('cursor');
+                const hoverEnter = () => cursor.classList.add('hovered');
+                const hoverLeave = () => cursor.classList.remove('hovered');
+                setTimeout(() => {
+                    const interactiveElements = document.querySelectorAll('a, button, .interactive');
+                    interactiveElements.forEach(el => {
+                        el.addEventListener('mouseenter', hoverEnter);
+                        el.addEventListener('mouseleave', hoverLeave);
+                    });
+                }, 100);
+                return () => {
+                    const interactiveElements = document.querySelectorAll('a, button, .interactive');
+                    interactiveElements.forEach(el => {
+                        el.removeEventListener('mouseenter', hoverEnter);
+                        el.removeEventListener('mouseleave', hoverLeave);
+                    });
+                };
+            }, []);
+        };
+
+        const Navigation = ({ currentPage, setPage }) => {
+            return (
+                <nav className="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 py-6 mix-blend-difference text-[#f4f4f0]">
+                    <div className="font-display font-bold text-xl tracking-tighter uppercase cursor-pointer interactive hidden md:block" onClick={() => setPage('home')}>
+                        Bruno Clemente
+                    </div>
+                    <div className="font-display font-bold text-xl tracking-tighter uppercase cursor-pointer interactive md:hidden" onClick={() => setPage('home')}>
+                        BC
+                    </div>
+                    <div className="flex gap-4 md:gap-8 font-sans text-xs md:text-sm uppercase tracking-widest">
+                        <button 
+                            className={`hover:text-accent transition-colors interactive ${currentPage === 'work' ? 'underline decoration-2 underline-offset-4' : ''}`}
+                            onClick={() => setPage('work')}
+                        >
+                            Work
+                        </button>
+                        <button 
+                            className={`hover:text-accent transition-colors interactive ${currentPage === 'about' ? 'underline decoration-2 underline-offset-4' : ''}`}
+                            onClick={() => setPage('about')}
+                        >
+                            About
+                        </button>
+                        <button 
+                            className={`hover:text-accent transition-colors interactive ${currentPage === 'contact' ? 'underline decoration-2 underline-offset-4' : ''}`}
+                            onClick={() => setPage('contact')}
+                        >
+                            Contact
+                        </button>
+                    </div>
+                </nav>
+            );
+        };
+
+        const Marquee = ({ text, repeat = 4 }) => {
+            const containerRef = useRef(null);
+            useEffect(() => {
+                const el = containerRef.current;
+                gsap.to(el, {
+                    xPercent: -50,
+                    ease: "none",
+                    duration: 20,
+                    repeat: -1
+                });
+            }, []);
+            return (
+                <div className="w-full overflow-hidden bg-accent border-y border-black py-3">
+                    <div className="flex whitespace-nowrap" ref={containerRef}>
+                        {Array(repeat).fill(text).map((t, i) => (
+                            <span key={i} className="font-display text-4xl font-bold uppercase mx-4 text-off-white">
+                                {t} <span className="mx-4 text-white"></span>
+                            </span>
+                        ))}
+                        {Array(repeat).fill(text).map((t, i) => (
+                            <span key={`dup-${i}`} className="font-display text-4xl font-bold uppercase mx-4 text-off-white">
+                                {t} <span className="mx-4 text-white"></span>
+                            </span>
+                        ))}
+                    </div>
+                </div>
+            );
+        };
+
+        const Footer = ({ setPage }) => {
+            return (
+                <footer className="w-full bg-black text-off-white py-20 px-6 mt-auto">
+                    <div className="max-w-screen-2xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+                        <div className="flex flex-col gap-4">
+                            <h3 className="font-display text-2xl font-bold uppercase">Bruno Clemente</h3>
+                            <p className="font-sans text-sm text-gray-400">
+                                Modern minimalistic design for forward-thinking brands.
+                            </p>
+                        </div>
+                        <div>
+                            <h4 className="font-sans text-xs uppercase tracking-widest mb-6 text-gray-500">Sitemap</h4>
+                            <ul className="flex flex-col gap-2 font-sans text-sm">
+                                <li onClick={() => setPage('home')} className="cursor-pointer hover:text-accent interactive w-fit">Home</li>
+                                <li onClick={() => setPage('work')} className="cursor-pointer hover:text-accent interactive w-fit">Work</li>
+                                <li onClick={() => setPage('about')} className="cursor-pointer hover:text-accent interactive w-fit">About</li>
+                                <li onClick={() => setPage('contact')} className="cursor-pointer hover:text-accent interactive w-fit">Contact</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 className="font-sans text-xs uppercase tracking-widest mb-6 text-gray-500">Social</h4>
+                            <ul className="flex flex-col gap-2 font-sans text-sm">
+                                <li className="cursor-pointer hover:text-accent interactive w-fit">Instagram</li>
+                                <li className="cursor-pointer hover:text-accent interactive w-fit">Behance</li>
+                                <li className="cursor-pointer hover:text-accent interactive w-fit">LinkedIn</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 className="font-sans text-xs uppercase tracking-widest mb-6 text-gray-500">Connect</h4>
+                            <a href="#" onClick={() => setPage('contact')} className="font-display text-3xl hover:text-accent transition-colors interactive underline decoration-1 underline-offset-4">
+                                Let's Talk
+                            </a>
+                        </div>
+                    </div>
+                    <div className="flex justify-between items-end mt-20 pt-8 border-t border-gray-800 font-sans text-xs text-gray-500">
+                        <span>© 2026 Bruno Clemente. All rights reserved.</span>
+                        <span>Porto, PT</span>
+                    </div>
+                </footer>
+            );
+        };
+
+        // --- PAGES ---
+        const HomePage = ({ setPage }) => {
+            useCursorHover();
+            const SELECTED_INDICES = [0, 2]; 
+            const selectedProjects = PROJECTS.filter((_, index) => SELECTED_INDICES.includes(index));
+            
+            useEffect(() => {
+                gsap.fromTo(".hero-text", 
+                    { y: 100, opacity: 0 },
+                    { y: 0, opacity: 1, duration: 1, stagger: 0.1, ease: "power4.out" }
+                );
+            }, []);
+
+            return (
+                <div className="min-h-screen pt-32 pb-20 px-6 max-w-screen-2xl mx-auto">
+                    {/* Hero */}
+                    <section className="mb-32 min-h-[60vh] flex flex-col justify-center">
+                        <h1 className="font-display text-6xl md:text-8xl lg:text-9xl font-bold leading-[0.85] tracking-tighter uppercase mb-12">
+                            <div className="overflow-hidden"><span className="hero-text inline-block">Digital</span></div>
+                            <div className="overflow-hidden"><span className="hero-text inline-block text-transparent text-stroke-black" style={{WebkitTextStroke: '2px #111'}}>Craftsman</span></div>
+                            <div className="overflow-hidden"><span className="hero-text inline-block">& Visual</span></div>
+                            <div className="overflow-hidden"><span className="hero-text inline-block">Engineer</span></div>
+                        </h1>
+                        <div className="max-w-xl ml-auto hero-text opacity-0">
+                            <p className="font-sans text-lg md:text-xl leading-relaxed">
+                                Creating stark, typographic, and purpose-driven digital experiences for brands that aren't afraid to stand out. Based in Porto, working globally.
+                            </p>
+                        </div>
+                    </section>
+
+                    <div className="mb-32 -mx-6">
+                        <Marquee text="AVAILABLE FOR NEW PROJECTS — PORTO BASED — GLOBAL REACH" />
+                    </div>
+
+                    {/* Featured Work */}
+                    <section className="mb-32">
+                        <div className="flex justify-between items-end mb-12 border-b border-black pb-4">
+                            <h2 className="font-display text-4xl font-bold uppercase">Selected Work</h2>
+                            <button onClick={() => setPage('work')} className="font-sans text-sm uppercase tracking-widest hover:text-accent interactive">View All</button>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-16">
+                            {selectedProjects.map((project, index) => (
+                                <div key={project.slug} className="group cursor-pointer interactive" onClick={() => setPage('project', project.slug)}>
+                                    <div className="relative aspect-[4/3] overflow-hidden bg-gray-200 mb-4">
+                                        <img 
+                                            src={project.coverImage} 
+                                            alt={project.title}
+                                            className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-700 ease-out grayscale group-hover:grayscale-0"
+                                        />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none"></div>
+                                    </div>
+                                    <div className="flex justify-between items-start">
+                                        <div>
+                                            <h3 className="font-display text-2xl font-bold uppercase group-hover:text-accent transition-colors">{project.title}</h3>
+                                            <span className="font-sans text-sm text-gray-500">{project.services.join(', ')}</span>
+                                        </div>
+                                        <span className="font-sans text-sm font-mono border border-black px-2 rounded-full">{project.year}</span>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+
+                    {/* Services/Philosophy */}
+                    <section className="grid grid-cols-1 lg:grid-cols-2 gap-16 border-t border-black pt-16">
+                        <div>
+                            <h2 className="font-display text-4xl font-bold uppercase mb-8">Approach</h2>
+                        </div>
+                        <div className="flex flex-col gap-8">
+                            <p className="font-sans text-xl leading-relaxed">
+                                I believe in the power of reduction. By stripping away the non-essential, we reveal the core message of a brand. This minimalistic approach ensures that content is the focus, and typography is the primary vehicle for communication.
+                            </p>
+                            <div className="grid grid-cols-2 gap-4 font-mono text-sm uppercase">
+                                {['Art Direction', 'Web Design', 'Brand Identity', 'Graphic Design', 'Editorial', 'Development', 'UX/UI'].map(s => (
+                                    <div key={s} className="border-b border-gray-300 pb-2">{s}</div>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            );
+        };
+
+        const WorkPage = ({ setPage }) => {
+            const [filter, setFilter] = useState('all');
+            useCursorHover();
+            const getYear = (yearStr) => {
+                const matches = yearStr.match(/(\d{4})/g);
+                if (matches && matches.length > 0) {
+                    return parseInt(matches[matches.length - 1]);
+                }
+                return 0;
+            };
+            const filteredProjects = filter === 'all' 
+                ? PROJECTS 
+                : PROJECTS.filter(p => p.tags.includes(filter));
+            
+            const getSortValue = (p) => {
+                const year = getYear(p.year);
+                const month = p.month || 0;
+                return year * 100 + month;
+            };
+            const sortedProjects = [...filteredProjects].sort((a, b) => getSortValue(b) - getSortValue(a));
+            const filters = ['all', 'identity', 'web design', 'print', 'graphic design', 'ux/ui design', 'packaging'];
+
+            return (
+                <div className="min-h-screen pt-32 pb-20 px-6 max-w-screen-2xl mx-auto">
+                    <div className="mb-16">
+                        <h1 className="font-display text-6xl md:text-8xl font-bold uppercase mb-8">Work</h1>
+                        <div className="flex flex-wrap gap-4">
+                            {filters.map(f => (
+                                <button 
+                                    key={f}
+                                    onClick={() => setFilter(f)}
+                                    className={`font-sans text-sm uppercase tracking-widest border px-4 py-2 rounded-full transition-colors interactive ${filter === f ? 'bg-black text-white border-black' : 'border-black hover:bg-black hover:text-white'}`}
+                                >
+                                    {f}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                    <div className="grid grid-cols-1 gap-y-24">
+                        {sortedProjects.map((project) => (
+                            <div key={project.slug} className="group cursor-pointer interactive grid grid-cols-1 md:grid-cols-12 gap-8 items-center border-t border-gray-300 pt-8" onClick={() => setPage('project', project.slug)}>
+                                <div className="md:col-span-5 order-2 md:order-1">
+                                    <h2 className="font-display text-5xl font-bold uppercase mb-4 group-hover:text-accent transition-colors">{project.title}</h2>
+                                    <div className="flex gap-4 font-mono text-sm mb-6 text-gray-500">
+                                        <span>{project.client}</span>
+                                        <span>—</span>
+                                        <span>{project.year}</span>
+                                    </div>
+                                    <p className="font-sans text-lg leading-relaxed mb-8 max-w-md">
+                                        {Array.isArray(project.description) ? project.description[0] : project.description}
+                                    </p>
+                                    <span className="font-sans text-sm uppercase underline decoration-1 underline-offset-4 group-hover:no-underline">View Case Study</span>
+                                </div>
+                                <div className="md:col-span-7 order-1 md:order-2 relative overflow-hidden">
+                                    <img 
+                                        src={project.coverImage} 
+                                        alt={project.title}
+                                        className="w-full h-[60vh] object-cover group-hover:scale-105 transition-transform duration-700 ease-out grayscale group-hover:grayscale-0"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none"></div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        };
+
+        const ProjectDetail = ({ slug, setPage }) => {
+            useCursorHover();
+            const project = PROJECTS.find(p => p.slug === slug);
+            const [isExpanded, setIsExpanded] = useState(false);
+            
+            const galleryRef = useRef(null);
+            const rightColRef = useRef(null);
+
+            useLayoutEffect(() => {
+                setIsExpanded(false);
+                if (window.gsap && window.ScrollTrigger) {
+                    gsap.registerPlugin(ScrollTrigger);
+                    const ctx = gsap.context(() => {
+                        if (window.innerWidth >= 768 && rightColRef.current) {
+                            gsap.to(rightColRef.current, {
+                                y: -100,
+                                ease: "none",
+                                scrollTrigger: {
+                                    trigger: galleryRef.current,
+                                    start: "top bottom",
+                                    end: "bottom top",
+                                    scrub: true
+                                }
+                            });
+                        }
+                    }, galleryRef);
+                    return () => ctx.revert();
+                }
+            }, [slug]);
+
+            if (!project) return <div>Project not found</div>;
+
+            const description = Array.isArray(project.description) ? project.description : [project.description];
+            
+            const leftImages = project.images.filter((_, i) => i % 2 === 0);
+            const rightImages = project.images.filter((_, i) => i % 2 !== 0);
+
+            const renderRole = () => {
+                 if (Array.isArray(project.role)) {
+                     return project.role.map(r => <li key={r}>{r}</li>);
+                 }
+                 return <li>{project.role || 'Lead Designer'}</li>;
+            };
+
+            return (
+                <div className="min-h-screen bg-off-white">
+                    {/* Hero Image */}
+                    <div className="h-[80vh] w-full relative overflow-hidden">
+                        <img 
+                            src={project.coverImage} 
+                            className="w-full h-full object-cover"
+                            alt={project.title}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/30 pointer-events-none" />
+                        <div className="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black/50 to-transparent">
+                            <h1 className="font-display text-6xl md:text-9xl font-bold uppercase text-white tracking-tighter">{project.title}</h1>
+                        </div>
+                    </div>
+
+                    <div className="max-w-screen-2xl mx-auto px-6 py-20">
+                        {/* Meta */}
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 border-b border-black pb-20 mb-20">
+                            <div className="md:col-span-1">
+                                <h3 className="font-mono text-xs uppercase text-gray-500 mb-2">Client</h3>
+                                <p className="font-display text-xl uppercase font-bold">{project.client}</p>
+                            </div>
+                            <div className="md:col-span-1">
+                                <h3 className="font-mono text-xs uppercase text-gray-500 mb-2">Date</h3>
+                                <p className="font-display text-xl uppercase font-bold">
+                                    {project.showMonth && project.month && (
+                                        <span className="mr-2">{["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][project.month - 1]}</span>
+                                    )}
+                                    {project.year}
+                                </p>
+                            </div>
+                            <div className="md:col-span-1">
+                                <h3 className="font-mono text-xs uppercase text-gray-500 mb-2">Services</h3>
+                                <ul className="font-display text-xl uppercase font-bold">
+                                    {project.services.map(s => <li key={s}>{s}</li>)}
+                                </ul>
+                            </div>
+                             <div className="md:col-span-1">
+                                <h3 className="font-mono text-xs uppercase text-gray-500 mb-2">Role</h3>
+                                <ul className="font-display text-xl uppercase font-bold">
+                                    {renderRole()}
+                                </ul>
+                            </div>
+                        </div>
+
+                        {/* Description */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 mb-32">
+                            <h2 className="font-display text-4xl font-bold uppercase">Overview</h2>
+                            <div className="font-sans text-xl leading-relaxed space-y-6">
+                                {description.slice(0, 2).map((para, i) => (
+                                    <p key={`static-${i}`}>{para}</p>
+                                ))}
+                                
+                                {isExpanded && description.slice(2).map((para, i) => (
+                                    <p key={`extra-${i}`} className="page-enter-active">{para}</p>
+                                ))}
+                                
+                                {description.length > 2 && (
+                                    <button 
+                                        onClick={() => setIsExpanded(!isExpanded)}
+                                        className="text-sm uppercase font-bold tracking-widest border-b border-black pb-1 hover:text-accent interactive"
+                                    >
+                                        {isExpanded ? 'Read Less' : 'Read More'}
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Gallery - Editorial Layout */}
+                        <div ref={galleryRef} className="mb-32">
+                            {/* Mobile: Standard Stack */}
+                            <div className="md:hidden space-y-8">
+                                {project.images.map((img, idx) => (
+                                    <div key={idx} className="w-full">
+                                        <img src={img} alt="" className="w-full h-auto" loading="lazy" />
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* Desktop: Parallax Columns */}
+                            <div className="hidden md:grid grid-cols-2 gap-8 lg:gap-16 items-start">
+                                {/* Left Column */}
+                                <div className="flex flex-col gap-16 lg:gap-32">
+                                    {leftImages.map((img, idx) => (
+                                        <div key={`l-${idx}`} className="w-full">
+                                            <img src={img} alt="" className="w-full h-auto" loading="lazy" />
+                                        </div>
+                                    ))}
+                                </div>
+                                {/* Right Column (Offset + Parallax) */}
+                                <div ref={rightColRef} className="flex flex-col gap-16 lg:gap-32 pt-32 lg:pt-64">
+                                    {rightImages.map((img, idx) => (
+                                        <div key={`r-${idx}`} className="w-full">
+                                            <img src={img} alt="" className="w-full h-auto" loading="lazy" />
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Next Project */}
+                        <div className="border-t border-black pt-12 flex justify-between items-center">
+                            <button onClick={() => setPage('work')} className="font-sans text-sm uppercase tracking-widest hover:text-accent interactive">← Back to Work</button>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const AboutPage = () => {
+            useCursorHover();
+            return (
+                <div className="min-h-screen pt-32 pb-20 px-6 max-w-screen-2xl mx-auto">
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
+                        <div className="lg:col-span-8">
+                            <h1 className="font-display text-6xl md:text-9xl font-bold uppercase leading-[0.85] tracking-tighter mb-16">
+                                Precise.<br/>Editorial.<br/>Digital.
+                            </h1>
+                            <div className="prose prose-xl font-sans max-w-none mb-20">
+                                <p>
+                                    I am Bruno Clemente, an independent graphic designer and art director. With nearly a decade of experience, I specialize in building digital products and brand identities that cut through the noise.
+                                </p>
+                                <p>
+                                    My work is characterized by a strict adherence to grid systems, expressive typography, and a minimalist aesthetic. I believe that good design is as little design as possible.
+                                </p>
+                            </div>
+                        </div>
+                        <div className="lg:col-span-4 space-y-16">
+                            <div>
+                                <h3 className="font-display text-2xl font-bold uppercase border-b border-black pb-4 mb-6">Clients</h3>
+                                <ul className="space-y-2 font-sans text-lg">
+                                    {CLIENTS.map(c => <li key={c}>{c}</li>)}
+                                </ul>
+                            </div>
+                             <div>
+                                <h3 className="font-display text-2xl font-bold uppercase border-b border-black pb-4 mb-6">Awards</h3>
+                                <ul className="space-y-2 font-sans text-lg">
+                                    <li>Awwwards — SOTD</li>
+                                    <li>The FWA — FOTD</li>
+                                    <li>Type Directors Club</li>
+                                    <li>Behance Appreciation</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const ContactPage = () => {
+            useCursorHover();
+            const [status, setStatus] = useState('idle'); 
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                setStatus('submitting');
+                
+                const formData = new FormData(e.target);
+
+                fetch("https://formsubmit.co/41be71d64fb293e4cd6013f81cb8467f", {
+                method: "POST",
+                body: formData,
+                headers: {
+                    "Accept": "application/json"
+                }
+            })
+        .then(response => {
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    return response.json();
+})
+.then(data => {
+    setStatus('success');
+})
+.catch(error => {
+    console.log(error);
+    setStatus('error');
+});
+                
+            };
+
+            return (
+                <div className="min-h-screen pt-32 pb-20 px-6 max-w-screen-2xl mx-auto flex flex-col justify-center">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+                        <div>
+                            <h1 className="font-display text-6xl md:text-8xl font-bold uppercase leading-[0.85] tracking-tighter mb-8">
+                                Let's Build<br/>Something<br/>Great.
+                            </h1>
+                            <p className="font-sans text-xl mb-8">
+                                Currently accepting new projects for Q1 2026. <br/>
+                            </p>
+                            <a href="mailto:contact@jbclemente.pt" className="font-mono text-lg hover:text-accent interactive">work@jbclemente.pt</a>
+                        </div>
+
+                        <div className="bg-white p-8 border border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+                            {status === 'success' ? (
+                                <div className="h-full flex flex-col items-center justify-center text-center py-20">
+                                    <h3 className="font-display text-4xl font-bold uppercase mb-4">Message Sent</h3>
+                                    <p className="font-sans">Thank you. I will get back to you shortly.</p>
+                                    <button onClick={() => setStatus('idle')} className="mt-8 text-sm underline interactive">Send another</button>
+                                </div>
+                            ) : (
+                                <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+                                    <input type="text" name="_honey" style={{display: 'none'}} />
+                                    <input type="hidden" name="_captcha" value="false" />
+                                    
+                                    <div>
+                                        <label className="block font-mono text-xs uppercase mb-2">Name</label>
+                                        <input type="text" name="name" required className="w-full border-b border-gray-300 py-2 focus:outline-none focus:border-black bg-transparent font-sans text-lg transition-colors" placeholder="John Doe" />
+                                    </div>
+                                    <div>
+                                        <label className="block font-mono text-xs uppercase mb-2">Email</label>
+                                        <input type="email" name="email" required className="w-full border-b border-gray-300 py-2 focus:outline-none focus:border-black bg-transparent font-sans text-lg transition-colors" placeholder="john@example.com" />
+                                    </div>
+                                    <div>
+                                        <label className="block font-mono text-xs uppercase mb-2">Project Details</label>
+                                        <textarea rows="4" name="message" required className="w-full border-b border-gray-300 py-2 focus:outline-none focus:border-black bg-transparent font-sans text-lg transition-colors resize-none" placeholder="Tell me about your project..."></textarea>
+                                    </div>
+                                    <button type="submit" disabled={status === 'submitting'} className="mt-4 bg-black text-white font-display font-bold uppercase py-4 px-8 hover:bg-accent transition-colors interactive disabled:opacity-50">
+                                        {status === 'submitting' ? 'Sending...' : 'Send Request'}
+                                    </button>
+                                    {status === 'error' && <p className="text-red-500 text-sm">Something went wrong. Please try again or email directly.</p>}
+                                </form>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // 4. App Shell
+        const App = () => {
+            const [page, setPageState] = useState('home');
+            const [slug, setSlug] = useState(null);
+            const [loading, setLoading] = useState(true);
+            
+            // 🔥 CRITICAL: Lenis instance storage
+            const lenisInstance = useRef(null);
+
+            // Initialize Lenis ONCE
+            useEffect(() => {
+                const lenis = new Lenis({
+                    duration: 1.2,
+                    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                    direction: 'vertical',
+                    gestureDirection: 'vertical',
+                    smooth: true,
+                    mouseMultiplier: 1,
+                    smoothTouch: false,
+                    touchMultiplier: 2,
+                });
+                lenisInstance.current = lenis;
+                function raf(time) {
+                    lenis.raf(time);
+                    requestAnimationFrame(raf);
+                }
+                requestAnimationFrame(raf);
+                return () => lenis.destroy();
+            }, []);
+
+            // 🔥 FORCE SCROLL TO TOP ON ANY NAVIGATION
+            useEffect(() => {
+                if (lenisInstance.current) {
+                    lenisInstance.current.scrollTo(0, { behavior: 'auto' }); // Instant to top
+                } else {
+                    window.scrollTo(0, 0); // Fallback
+                }
+            }, [page, slug]); // Triggers on project open/close
+
+            // Initial Loader
+            useEffect(() => {
+                const timer = setTimeout(() => setLoading(false), 1500);
+                return () => clearTimeout(timer);
+            }, []);
+
+            const setPage = (newPage, newSlug = null) => {
+                setSlug(newSlug);
+                setPageState(newPage);
+            };
+
+            const [progress, setProgress] = useState(0);
+
+            useEffect(() => {
+                const interval = setInterval(() => {
+                    setProgress(prev => {
+                        if (prev >= 100) {
+                            clearInterval(interval);
+                            setTimeout(() => setLoading(false), 500);
+                            return 100;
+                        }
+                        return prev + Math.floor(Math.random() * 15) + 1;
+                    });
+                }, 150);
+                return () => clearInterval(interval);
+            }, []);
+
+            if (loading) {
+                return (
+                    <div className="loader-overlay">
+                        <div className="w-64 h-[1px] bg-gray-800 mb-4 relative overflow-hidden">
+                            <div className="absolute top-0 left-0 h-full bg-[#f4f4f0] transition-all duration-200 ease-out" style={{ width: `${progress}%` }}></div>
+                        </div>
+                        <h1 className="font-display text-8xl font-bold uppercase tracking-tighter">
+                            {Math.min(progress, 100)}%
+                        </h1>
+                    </div>
+                );
+            }
+
+            return (
+                <div className="min-h-screen flex flex-col relative">
+                    <div className="fixed inset-0 grid-overlay opacity-30 pointer-events-none z-0 h-full w-full"></div>
+                    
+                    <Cursor />
+                    <Navigation currentPage={page} setPage={setPage} />
+                    
+                    <main className="flex-grow z-10">
+                        {page === 'home' && <HomePage setPage={setPage} />}
+                        {page === 'work' && <WorkPage setPage={setPage} />}
+                        {page === 'about' && <AboutPage />}
+                        {page === 'contact' && <ContactPage />}
+                        {page === 'project' && <ProjectDetail slug={slug} setPage={setPage} />}
+                    </main>
+
+                    <Footer setPage={setPage} />
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
