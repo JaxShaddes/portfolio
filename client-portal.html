@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" class="antialiased bg-[#f4f4f0] text-[#111]">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Client Portal â€” Bruno Clemente</title>
+  <meta name="description" content="Client access portal." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Space Grotesk', 'sans-serif'],
+          },
+          colors: {
+            'off-white': '#f4f4f0',
+            'black': '#111111',
+            'accent': 'var(--accent-color, #FF3300)',
+            'gray-light': '#e5e5e5',
+          },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root { --accent-color: #4b5670; }
+    body { overflow-x: hidden; }
+
+    .grid-overlay {
+      background-size: 100px 100px;
+      background-image:
+        linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+      pointer-events: none;
+    }
+
+    .field {
+      outline: none;
+      transition: box-shadow .2s, border-color .2s, transform .2s;
+    }
+    .field:focus {
+      border-color: rgba(17,17,17,.9);
+      box-shadow: 0 0 0 4px rgba(75,86,112,.15);
+    }
+  </style>
+</head>
+
+<body class="min-h-screen">
+  <div class="fixed inset-0 grid-overlay opacity-60"></div>
+
+  <nav class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 py-6 mix-blend-difference text-[#f4f4f0]">
+    <a href="./index.html"
+       class="font-display font-bold text-xl tracking-tighter uppercase cursor-pointer hidden md:block hover:text-accent transition-colors">
+      Bruno Clemente
+    </a>
+    <a href="./index.html"
+       class="font-display font-bold text-xl tracking-tighter uppercase cursor-pointer md:hidden hover:text-accent transition-colors">
+      BC
+    </a>
+
+    <div class="flex gap-4 md:gap-8 font-sans text-xs md:text-sm uppercase tracking-widest">
+      <a href="./index.html" class="hover:text-accent transition-colors">Back</a>
+    </div>
+  </nav>
+
+  <main class="relative pt-28 md:pt-32 px-6 pb-16">
+    <div class="max-w-3xl mx-auto">
+      <div class="mb-10 md:mb-12">
+        <div class="font-display uppercase tracking-[0.25em] text-xs mb-3 opacity-70">Client Portal</div>
+        <h1 class="font-display font-bold tracking-tighter text-4xl md:text-6xl leading-[0.95]">
+          Client Access
+        </h1>
+        <p class="mt-4 max-w-2xl text-sm md:text-base opacity-80">
+          Enter your client ID to continue.
+        </p>
+      </div>
+
+      <section class="border border-black/10 bg-white/40 backdrop-blur-sm rounded-2xl p-6 md:p-7 shadow-sm">
+        <label class="block text-xs uppercase tracking-widest opacity-70" for="clientId">
+          Client ID
+        </label>
+
+        <div class="mt-2 flex gap-2">
+          <input id="clientId" type="text" autocomplete="off"
+                 class="field w-full px-4 py-3 rounded-xl border border-black/10 bg-[#f4f4f0] text-black font-sans text-sm"
+                 placeholder="Enter your ID" />
+          <button id="continueBtn" type="button"
+                  class="px-5 py-3 rounded-xl bg-black text-[#f4f4f0] hover:bg-[#111] transition-colors font-sans text-xs uppercase tracking-widest">
+            Continue
+          </button>
+        </div>
+
+        <div id="status" class="mt-4 text-sm opacity-80 min-h-[1.5rem]"></div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+
+    function setStatus(msg, type = "neutral") {
+      const el = $("status");
+      const base = "mt-4 text-sm min-h-[1.5rem]";
+      const color =
+        type === "error" ? "text-red-700" :
+        type === "success" ? "text-green-700" :
+        "opacity-80";
+      el.className = `${base} ${color}`;
+      el.textContent = msg || "";
+    }
+
+    function goToClient() {
+      const id = ($("clientId").value || "").trim();
+      if (!id) {
+        setStatus("Please enter your client ID.", "error");
+        return;
+      }
+      const target = `safety.html?id=${encodeURIComponent(id)}`;
+      window.location.href = target;
+    }
+
+    $("continueBtn").addEventListener("click", goToClient);
+    $("clientId").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") goToClient();
+    });
+  </script>
+</body>
+</html>

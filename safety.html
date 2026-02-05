@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en" class="antialiased bg-[#f4f4f0] text-[#111]">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Client Access — Bruno Clemente</title>
+  <meta name="description" content="Client project access portal." />
+
+  <!-- Fonts (matches your site vibe) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind (same pattern as your portfolio) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Space Grotesk', 'sans-serif'],
+          },
+          colors: {
+            'off-white': '#f4f4f0',
+            'black': '#111111',
+            'accent': 'var(--accent-color, #FF3300)',
+            'gray-light': '#e5e5e5',
+          },
+          spacing: { '128': '32rem' }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      --accent-color: #4b5670; /* your default accent */
+      --cursor-size: 20px;
+    }
+
+    body { overflow-x: hidden; }
+
+/* Only hide the system cursor when there is a fine pointer (mouse/trackpad) */
+@media (pointer: fine) {
+  body.custom-cursor { cursor: none; }
+  body.custom-cursor a,
+  body.custom-cursor button,
+  body.custom-cursor .interactive,
+  body.custom-cursor input,
+  body.custom-cursor label,
+  body.custom-cursor summary { cursor: none; }
+}
+
+/* On touch devices, don’t show the custom cursor at all */
+@media (pointer: coarse) {
+  #cursor { display: none; }
+}
+    /* Custom Cursor */
+    #cursor {
+      position: fixed;
+      top: 0; left: 0;
+      width: var(--cursor-size);
+      height: var(--cursor-size);
+      background: #111111;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      mix-blend-mode: normal;
+      box-shadow: 0 0 0 2px rgba(244,244,240,0.9);
+      transition: width 0.3s, height 0.3s, background-color 0.3s, opacity 0.2s;
+    }
+    #cursor.hovered {
+      width: 60px;
+      height: 60px;
+      background: #f4f4f0;
+      mix-blend-mode: normal;
+      box-shadow: 0 0 0 2px rgba(17,17,17,0.2);
+    }
+    #cursor.hidden { opacity: 0; }
+
+    /* Background grid overlay */
+    .grid-overlay {
+      background-size: 100px 100px;
+      background-image:
+        linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+      pointer-events: none;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #f4f4f0; }
+    ::-webkit-scrollbar-thumb { background: #111; border: 2px solid #f4f4f0; }
+
+    /* Premium-ish inputs */
+    .field {
+      outline: none;
+      transition: box-shadow .2s, border-color .2s, transform .2s;
+    }
+    .field:focus {
+      border-color: rgba(17,17,17,.9);
+      box-shadow: 0 0 0 4px rgba(75,86,112,.15);
+    }
+  </style>
+</head>
+
+<body class="min-h-screen">
+  <div id="cursor"></div>
+  <div class="fixed inset-0 grid-overlay opacity-60"></div>
+
+  <!-- NAV -->
+  <nav class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 py-6 mix-blend-difference text-[#f4f4f0]">
+    <a href="./index.html"
+       class="font-display font-bold text-xl tracking-tighter uppercase cursor-pointer interactive hidden md:block hover:text-accent transition-colors">
+      Bruno Clemente
+    </a>
+    <a href="./index.html"
+       class="font-display font-bold text-xl tracking-tighter uppercase cursor-pointer interactive md:hidden hover:text-accent transition-colors">
+      BC
+    </a>
+
+    <div class="flex gap-4 md:gap-8 font-sans text-xs md:text-sm uppercase tracking-widest">
+      <a href="./index.html" class="hover:text-accent transition-colors interactive">Back</a>
+      <button id="lockBtn" class="hover:text-accent transition-colors interactive hidden" type="button">Lock</button>
+      <a id="openNewTabLink" href="#" target="_blank" rel="noopener"
+         class="hover:text-accent transition-colors interactive hidden">Open</a>
+    </div>
+  </nav>
+
+  <main class="relative pt-28 md:pt-32 px-6 pb-16">
+    <div class="max-w-5xl mx-auto">
+
+      <div class="mb-10 md:mb-14">
+        <div class="font-display uppercase tracking-[0.25em] text-xs mb-3 opacity-70">Client Portal</div>
+        <h1 class="font-display font-bold tracking-tighter text-4xl md:text-6xl leading-[0.95]">
+          Client Access
+        </h1>
+        <p class="mt-4 max-w-2xl text-sm md:text-base opacity-80">
+          Enter the password to view your project. This is lightweight privacy (front-end gate).
+          For real security, protect this route with Cloudflare Access.
+        </p>
+      </div>
+
+      <section class="grid md:grid-cols-5 gap-6 md:gap-8 items-start">
+        <!-- Gate -->
+        <div class="md:col-span-2">
+          <div class="border border-black/10 bg-white/40 backdrop-blur-sm rounded-2xl p-6 md:p-7 shadow-sm">
+            <div class="flex items-center justify-between">
+              <h2 class="font-display font-bold tracking-tight text-xl">Unlock</h2>
+              <span id="chip" class="text-xs uppercase tracking-widest opacity-60">Protected</span>
+            </div>
+
+            <p id="contextLine" class="mt-3 text-sm opacity-80">
+              Provide a link with <span class="font-mono text-xs">?id=client</span>
+            </p>
+
+            <label class="block mt-5 text-xs uppercase tracking-widest opacity-70" for="password">
+              Password
+            </label>
+
+            <div class="mt-2 flex gap-2">
+              <input id="password" type="password" autocomplete="current-password"
+                     class="field w-full px-4 py-3 rounded-xl border border-black/10 bg-[#f4f4f0] text-black font-sans text-sm interactive"
+                     placeholder="Enter password" />
+              <button id="togglePw" type="button"
+                      class="px-4 py-3 rounded-xl border border-black/10 bg-white/60 hover:bg-white transition-colors text-xs uppercase tracking-widest interactive">
+                Show
+              </button>
+            </div>
+
+            <div class="mt-4 flex items-center justify-between gap-3">
+              <label class="flex items-center gap-2 text-sm opacity-80 cursor-pointer select-none interactive">
+                <input id="remember" type="checkbox" class="accent-black" />
+                Remember (24h)
+              </label>
+
+              <button id="unlockBtn" type="button"
+                      class="px-5 py-3 rounded-xl bg-black text-[#f4f4f0] hover:bg-[#111] transition-colors font-sans text-xs uppercase tracking-widest interactive">
+                Unlock
+              </button>
+            </div>
+
+            <div id="status" class="mt-4 text-sm opacity-80 min-h-[1.5rem]"></div>
+
+          </div>
+        </div>
+
+        <!-- Viewer -->
+        <div class="md:col-span-3">
+          <div id="viewerShell"
+               class="border border-black/10 bg-white/30 backdrop-blur-sm rounded-2xl shadow-sm overflow-hidden hidden">
+            <div class="flex items-center justify-between px-5 py-4 border-b border-black/10">
+              <div>
+                <div class="font-display font-bold tracking-tight text-lg">Project Viewer</div>
+                <div id="viewerSub" class="text-xs uppercase tracking-widest opacity-60 mt-1"></div>
+              </div>
+              <div class="flex items-center gap-2">
+                <span id="embedStatus" class="text-xs uppercase tracking-widest opacity-60"></span>
+                <div class="hidden md:flex items-center gap-2 text-[10px] uppercase tracking-widest">
+                  <button id="sizeMobile" type="button"
+                          class="px-3 py-2 rounded-lg border border-black/10 bg-white/60 hover:bg-white transition-colors interactive">
+                    Mobile
+                  </button>
+                  <button id="sizeTablet" type="button"
+                          class="px-3 py-2 rounded-lg border border-black/10 bg-white/60 hover:bg-white transition-colors interactive">
+                    Tablet
+                  </button>
+                  <button id="sizeDesktop" type="button"
+                          class="px-3 py-2 rounded-lg border border-black/10 bg-white/60 hover:bg-white transition-colors interactive">
+                    Desktop
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-4 md:p-5">
+              <div id="frameShell" class="rounded-2xl overflow-hidden border border-black/10 bg-[#f4f4f0]">
+                <iframe id="projectFrame"
+                        title="Client Project"
+                        class="w-full block"
+                        style="height: 70vh; min-height: 420px; max-height: 85vh;"
+                        referrerpolicy="no-referrer"
+                        loading="eager"></iframe>
+              </div>
+
+              <div id="fallback" class="mt-4 hidden border border-black/10 bg-white/50 rounded-2xl p-4">
+                <div class="font-display font-bold tracking-tight">Can’t embed this project</div>
+                <p class="mt-2 text-sm opacity-80">
+                  The project may block embedding (X-Frame-Options / CSP frame-ancestors). Use the button below.
+                </p>
+                <a id="fallbackOpen"
+                   class="inline-flex mt-3 px-5 py-3 rounded-xl bg-black text-[#f4f4f0] hover:bg-[#111] transition-colors font-sans text-xs uppercase tracking-widest interactive"
+                   href="#" target="_blank" rel="noopener">
+                  Open in new tab
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Empty/error state -->
+          <div id="emptyState"
+               class="border border-black/10 bg-white/40 backdrop-blur-sm rounded-2xl p-6 md:p-7 shadow-sm">
+            <h3 class="font-display font-bold tracking-tight text-xl">Waiting for your client ID</h3>
+            <p class="mt-2 text-sm opacity-80">
+              This page needs an <span class="font-mono text-xs">id</span>.
+            </p>
+            <div class="mt-4 text-xs opacity-70 leading-relaxed">
+              Example:
+              <div class="mt-2 font-mono text-xs bg-[#f4f4f0] border border-black/10 rounded-xl p-3 overflow-x-auto">
+                safety.html?id=acme
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <div class="mt-14 text-xs uppercase tracking-widest opacity-60">
+        Having trouble? Contact João at
+        <a class="underline hover:text-accent interactive" href="mailto:work@jbclemente.pt">work@jbclemente.pt</a>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    /*************************************************************
+     * CONFIG (edit this)
+     *************************************************************/
+    const rememberDurationHours = 24;
+
+    // 1) Add each client here:
+    // - id: the URL ?id= value
+    // - name: optional label displayed on the page
+    // - passwordHashHex: SHA-256 (hex) of the client's password
+    // - allowedDomains: optional allowlist of domains for this client (empty = allow any https)
+    //
+    // IMPORTANT: This is a front-end gate (privacy), not strong security.
+    const CLIENTS = {
+      // Example:
+      // acme: {
+      //   name: "ACME",
+      //   passwordHashHex: "PASTE_SHA256_HEX_HERE",
+      //   projectUrl: "https://example.com/demo",
+      //   allowedDomains: ["example.com"]
+      // },
+
+      byBrazil: {
+        name: "by Brazil",
+        passwordHashHex: "371b67fae05a6362d9b73583be098aeadd69ba165e51b83b9cdafc5819cc7016",
+        projectUrl: "client-safe-preview/hqrz/index.html",
+        allowedDomains: []
+      }
+    };
+
+    /*************************************************************
+     * Helpers
+     *************************************************************/
+    const $ = (id) => document.getElementById(id);
+
+    function setStatus(msg, type = "neutral") {
+      const el = $("status");
+      const base = "mt-4 text-sm min-h-[1.5rem]";
+      const color =
+        type === "error" ? "text-red-700" :
+        type === "success" ? "text-green-700" :
+        "opacity-80";
+      el.className = `${base} ${color}`;
+      el.textContent = msg || "";
+    }
+
+    function safeParseUrl(u) {
+      try { return new URL(u); } catch { return null; }
+    }
+
+    function hostAllowed(host, allowedDomains) {
+      if (!allowedDomains || allowedDomains.length === 0) return true;
+      const h = host.toLowerCase();
+      return allowedDomains.some(d => {
+        const dd = d.toLowerCase();
+        return h === dd || h.endsWith("." + dd);
+      });
+    }
+
+    async function sha256Hex(str) {
+      const data = new TextEncoder().encode(str);
+      const hash = await crypto.subtle.digest("SHA-256", data);
+      return [...new Uint8Array(hash)].map(b => b.toString(16).padStart(2, "0")).join("");
+    }
+
+    function rememberKey(clientId) {
+      return `client_portal_unlock:${clientId}`;
+    }
+
+    function rememberSet(clientId) {
+      const exp = Date.now() + rememberDurationHours * 60 * 60 * 1000;
+      localStorage.setItem(rememberKey(clientId), JSON.stringify({ exp }));
+    }
+
+    function rememberClear(clientId) {
+      localStorage.removeItem(rememberKey(clientId));
+    }
+
+    function rememberValid(clientId) {
+      try {
+        const raw = localStorage.getItem(rememberKey(clientId));
+        if (!raw) return false;
+        const obj = JSON.parse(raw);
+        return obj && typeof obj.exp === "number" && Date.now() < obj.exp;
+      } catch {
+        return false;
+      }
+    }
+
+    function updateOpenLinks(url) {
+      $("openNewTabLink").href = url;
+      $("fallbackOpen").href = url;
+    }
+
+    function showViewer() {
+      $("emptyState").classList.add("hidden");
+      $("viewerShell").classList.remove("hidden");
+      $("lockBtn").classList.remove("hidden");
+      $("openNewTabLink").classList.remove("hidden");
+    }
+
+    function hideViewer() {
+      $("viewerShell").classList.add("hidden");
+      $("lockBtn").classList.add("hidden");
+      $("openNewTabLink").classList.add("hidden");
+      $("fallback").classList.add("hidden");
+      $("embedStatus").textContent = "";
+      $("viewerSub").textContent = "";
+
+      const frame = $("projectFrame");
+      frame.removeAttribute("src");
+    }
+
+    function setEmbedStatus(text) {
+      $("embedStatus").textContent = text || "";
+    }
+
+    /*************************************************************
+     * Cursor (matches your site)
+     *************************************************************/
+    /*************************************************************
+ * Cursor (matches your site)
+ *************************************************************/
+function initCursor() {
+  // Only use the custom cursor if there's a fine pointer (mouse/trackpad)
+  if (!window.matchMedia || !window.matchMedia("(pointer: fine)").matches) return;
+
+  const cursor = $("cursor");
+  if (!cursor) return;
+  const body = document.body;
+
+  const setCustomCursorEnabled = (enabled) => {
+    body.classList.toggle("custom-cursor", enabled);
+    cursor.classList.toggle("hidden", !enabled);
+  };
+
+  const moveCursor = (e) => {
+    cursor.style.top = `${e.clientY}px`;
+    cursor.style.left = `${e.clientX}px`;
+  };
+
+  const updateHover = (e) => {
+    const hit = e.target && e.target.closest
+      ? e.target.closest("a, button, .interactive, input, label, summary")
+      : null;
+    cursor.classList.toggle("hovered", !!hit);
+  };
+
+  window.addEventListener("mousemove", (e) => {
+    moveCursor(e);
+    updateHover(e);
+  });
+
+  window.addEventListener("blur", () => setCustomCursorEnabled(false));
+  window.addEventListener("focus", () => setCustomCursorEnabled(true));
+
+  // Show the system cursor over iframes (no mousemove events inside).
+  document.querySelectorAll("iframe").forEach((frame) => {
+    frame.addEventListener("mouseenter", () => setCustomCursorEnabled(false));
+    frame.addEventListener("mouseleave", () => setCustomCursorEnabled(true));
+  });
+
+  // Make sure it shows immediately once initialized
+  setCustomCursorEnabled(true);
+}
+
+
+    /*************************************************************
+     * Portal logic
+     *************************************************************/
+    const state = {
+      clientId: null,
+      client: null,
+      projectUrl: null,
+      unlocked: false,
+      loadTimer: null,
+      loaded: false,
+    };
+
+    function readParams() {
+      const params = new URLSearchParams(window.location.search);
+      const id = (params.get("id") || "").trim();
+
+      state.clientId = id || null;
+      state.client = id && CLIENTS[id] ? CLIENTS[id] : null;
+      state.projectUrl = state.client && state.client.projectUrl ? state.client.projectUrl : null;
+    }
+
+    function renderContext() {
+      if (!state.clientId) {
+        $("chip").textContent = "Missing id";
+        $("contextLine").innerHTML = `Provide a link with <span class="font-mono text-xs">?id=client</span>`;
+        return;
+      }
+      if (!state.client) {
+        $("chip").textContent = "Unknown client";
+        $("contextLine").innerHTML = `Unknown <span class="font-mono text-xs">id=${escapeHtml(state.clientId)}</span>. Add this client to the CLIENTS map in the file.`;
+        return;
+      }
+
+      $("chip").textContent = state.client.name ? state.client.name : state.clientId;
+      $("contextLine").textContent = `Client: ${state.client.name || state.clientId}`;
+    }
+
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, c => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+      }[c]));
+    }
+
+    function validateProject() {
+  if (!state.projectUrl) return { ok: false, reason: "Missing project URL for this client." };
+
+  // Accept:
+  // - absolute URLs: https://...
+  // - relative paths: /client-safe-preview/hqrz/index.html or client-safe-preview/hqrz/index.html
+  let urlObj = safeParseUrl(state.projectUrl);
+
+  if (!urlObj) {
+    // Try resolving as relative to the current page location
+    try {
+      urlObj = new URL(state.projectUrl, window.location.href);
+    } catch {
+      return { ok: false, reason: "Invalid project URL or path." };
+    }
+  }
+
+  // While testing locally, allow http://localhost / 127.0.0.1.
+  // In production, you can tighten this to https-only.
+  const isLocalHost =
+    urlObj.hostname === "localhost" ||
+    urlObj.hostname === "127.0.0.1" ||
+    urlObj.hostname === "0.0.0.0";
+
+  if (urlObj.protocol !== "https:" && !isLocalHost) {
+    return { ok: false, reason: "Project must be https:// (http allowed only on localhost for testing)." };
+  }
+
+  // Domain allowlist (optional)
+  const allowedDomains = (state.client && state.client.allowedDomains) ? state.client.allowedDomains : [];
+  if (allowedDomains.length > 0 && !hostAllowed(urlObj.hostname, allowedDomains)) {
+    return { ok: false, reason: "Project domain not allowed for this client." };
+  }
+
+  return { ok: true, url: urlObj.toString(), host: urlObj.hostname };
+}
+
+
+    function startEmbedWatchdog() {
+      clearTimeout(state.loadTimer);
+      state.loaded = false;
+      setEmbedStatus("Loading…");
+
+      state.loadTimer = setTimeout(() => {
+        if (state.loaded) return;
+        setEmbedStatus("Embed blocked");
+        $("fallback").classList.remove("hidden");
+      }, 5000);
+    }
+
+    function loadProjectIfReady() {
+      if (!state.unlocked) return;
+
+      const v = validateProject();
+      if (!v.ok) {
+        hideViewer();
+        $("emptyState").classList.remove("hidden");
+        setStatus(`Unlocked — ${v.reason}`, "success");
+        return;
+      }
+
+      showViewer();
+      $("fallback").classList.add("hidden");
+      $("viewerSub").textContent = v.host;
+      updateOpenLinks(v.url);
+
+      const frame = $("projectFrame");
+      startEmbedWatchdog();
+      frame.src = v.url;
+    }
+
+    async function attemptUnlock() {
+      if (!state.clientId) {
+        setStatus("Missing ?id=. Use a client link like: safety.html?id=acme", "error");
+        return;
+      }
+      if (!state.client) {
+        setStatus(`Unknown client id: ${state.clientId}. Add it in the CLIENTS map inside the file.`, "error");
+        return;
+      }
+      if (!state.client.passwordHashHex || state.client.passwordHashHex === "REPLACE_ME_WITH_SHA256_HEX") {
+        setStatus("This client isn't configured yet (missing password hash).", "error");
+        return;
+      }
+
+      const pw = $("password").value || "";
+      if (!pw.trim()) {
+        setStatus("Please enter the password.", "error");
+        return;
+      }
+
+      setStatus("Checking…");
+      try {
+        const enteredHash = await sha256Hex(pw);
+        if (enteredHash !== String(state.client.passwordHashHex).toLowerCase()) {
+          setStatus("Wrong password.", "error");
+          return;
+        }
+
+        state.unlocked = true;
+        setStatus("Unlocked.", "success");
+        $("password").value = "";
+
+        if ($("remember").checked) rememberSet(state.clientId);
+        else rememberClear(state.clientId);
+
+        loadProjectIfReady();
+      } catch (e) {
+        console.error(e);
+        setStatus("Something went wrong while unlocking.", "error");
+      }
+    }
+
+    function lockNow() {
+      state.unlocked = false;
+      if (state.clientId) rememberClear(state.clientId);
+      hideViewer();
+      setStatus("Locked.");
+      $("emptyState").classList.remove("hidden");
+    }
+
+    function init() {
+      initCursor();
+      readParams();
+      renderContext();
+
+      // Empty state visibility
+      $("emptyState").classList.remove("hidden");
+      hideViewer();
+
+      // Events
+      $("unlockBtn").addEventListener("click", attemptUnlock);
+      $("password").addEventListener("keydown", (e) => {
+        if (e.key === "Enter") attemptUnlock();
+      });
+
+      $("togglePw").addEventListener("click", () => {
+        const input = $("password");
+        const isPw = input.type === "password";
+        input.type = isPw ? "text" : "password";
+        $("togglePw").textContent = isPw ? "Hide" : "Show";
+        input.focus();
+      });
+
+      $("lockBtn").addEventListener("click", lockNow);
+
+      $("projectFrame").addEventListener("load", () => {
+        state.loaded = true;
+        clearTimeout(state.loadTimer);
+        setEmbedStatus("Loaded");
+        $("fallback").classList.add("hidden");
+      });
+
+      // Preview sizing
+      const setPreviewSize = (mode) => {
+        const shell = $("frameShell");
+        const frame = $("projectFrame");
+        if (!shell || !frame) return;
+
+        if (mode === "desktop") {
+          shell.style.maxWidth = "1200px";
+          shell.style.marginLeft = "auto";
+          shell.style.marginRight = "auto";
+          frame.style.height = "80vh";
+          frame.style.minHeight = "700px";
+          frame.style.maxHeight = "92vh";
+        } else if (mode === "tablet") {
+          shell.style.maxWidth = "900px";
+          shell.style.marginLeft = "auto";
+          shell.style.marginRight = "auto";
+          frame.style.height = "80vh";
+          frame.style.minHeight = "600px";
+          frame.style.maxHeight = "90vh";
+        } else {
+          shell.style.maxWidth = "420px";
+          shell.style.marginLeft = "auto";
+          shell.style.marginRight = "auto";
+          frame.style.height = "80vh";
+          frame.style.minHeight = "600px";
+          frame.style.maxHeight = "90vh";
+        }
+
+        $("sizeMobile")?.classList.toggle("bg-black", mode === "mobile");
+        $("sizeMobile")?.classList.toggle("text-[#f4f4f0]", mode === "mobile");
+        $("sizeTablet")?.classList.toggle("bg-black", mode === "tablet");
+        $("sizeTablet")?.classList.toggle("text-[#f4f4f0]", mode === "tablet");
+        $("sizeDesktop")?.classList.toggle("bg-black", mode === "desktop");
+        $("sizeDesktop")?.classList.toggle("text-[#f4f4f0]", mode === "desktop");
+      };
+
+      $("sizeMobile")?.addEventListener("click", () => setPreviewSize("mobile"));
+      $("sizeTablet")?.addEventListener("click", () => setPreviewSize("tablet"));
+      $("sizeDesktop")?.addEventListener("click", () => setPreviewSize("desktop"));
+      setPreviewSize("mobile");
+
+      // Auto unlock (per client)
+      if (state.clientId && rememberValid(state.clientId)) {
+        state.unlocked = true;
+        setStatus("Unlocked (remembered).", "success");
+        loadProjectIfReady();
+      } else {
+        setStatus("");
+      }
+
+      // Show a helpful hint if link is incomplete
+      if (!state.clientId) {
+        setStatus("This page needs ?id=.", "error");
+      } else if (!state.client) {
+        setStatus(`Unknown client id: ${state.clientId}. Add it in CLIENTS.`, "error");
+      } else {
+        const v = validateProject();
+        if (!v.ok) {
+          setStatus(v.reason, "error");
+        } else {
+          setStatus("Ready. Enter password to load the project.", "neutral");
+        }
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", init);
+  </script>
+</body>
+</html>
