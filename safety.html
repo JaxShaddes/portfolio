@@ -184,6 +184,13 @@
 
             <div id="status" class="mt-4 text-sm opacity-80 min-h-[1.5rem]"></div>
 
+            <div id="clientLogoWrap" class="mt-5 hidden">
+              <div class="text-[10px] uppercase tracking-widest opacity-60 mb-2">Client</div>
+              <div class="flex items-center justify-center rounded-xl border border-black/10 bg-white/60 h-20">
+                <img id="clientLogo" alt="Client logo" class="w-full h-full object-contain" />
+              </div>
+            </div>
+
           </div>
         </div>
 
@@ -276,6 +283,7 @@
     // - name: optional label displayed on the page
     // - passwordHashHex: SHA-256 (hex) of the client's password
     // - allowedDomains: optional allowlist of domains for this client (empty = allow any https)
+    // - logoUrl: optional logo image URL or path
     //
     // IMPORTANT: This is a front-end gate (privacy), not strong security.
     const CLIENTS = {
@@ -291,7 +299,8 @@
         name: "by Brazil",
         passwordHashHex: "371b67fae05a6362d9b73583be098aeadd69ba165e51b83b9cdafc5819cc7016",
         projectUrl: "client-safe-preview/hqrz/index.html",
-        allowedDomains: []
+        allowedDomains: [],
+        logoUrl: ""
       }
     };
 
@@ -457,16 +466,28 @@ function initCursor() {
       if (!state.clientId) {
         $("chip").textContent = "Missing id";
         $("contextLine").innerHTML = `Provide a link with <span class="font-mono text-xs">?id=client</span>`;
+        $("clientLogoWrap").classList.add("hidden");
         return;
       }
       if (!state.client) {
         $("chip").textContent = "Unknown client";
         $("contextLine").innerHTML = `Unknown <span class="font-mono text-xs">id=${escapeHtml(state.clientId)}</span>. Add this client to the CLIENTS map in the file.`;
+        $("clientLogoWrap").classList.add("hidden");
         return;
       }
 
       $("chip").textContent = state.client.name ? state.client.name : state.clientId;
       $("contextLine").textContent = `Client: ${state.client.name || state.clientId}`;
+
+      const logoUrl = state.client.logoUrl;
+      const logoWrap = $("clientLogoWrap");
+      const logoImg = $("clientLogo");
+      if (logoUrl && logoImg && logoWrap) {
+        logoImg.src = logoUrl;
+        logoWrap.classList.remove("hidden");
+      } else if (logoWrap) {
+        logoWrap.classList.add("hidden");
+      }
     }
 
     function escapeHtml(s) {
