@@ -173,24 +173,24 @@
               Password
             </label>
 
-            <div class="mt-2 flex gap-2">
+            <div class="mt-2 flex flex-col sm:flex-row gap-2">
               <input id="password" type="password" autocomplete="current-password"
                      class="field w-full px-4 py-3 rounded-xl border border-black/10 bg-[#f4f4f0] text-black font-sans text-sm interactive"
                      placeholder="Enter password" data-i18n-placeholder="gate.passwordPlaceholder" />
               <button id="togglePw" type="button"
-                      class="px-4 py-3 rounded-xl border border-black/10 bg-white/60 hover:bg-white transition-colors text-xs uppercase tracking-widest interactive">
+                      class="w-full sm:w-auto px-4 py-3 rounded-xl border border-black/10 bg-white/60 hover:bg-white transition-colors text-xs uppercase tracking-widest interactive">
                 <span data-i18n="gate.toggleShow">Show</span>
               </button>
             </div>
 
-            <div class="mt-4 flex items-center justify-between gap-3">
+            <div class="mt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
               <label class="flex items-center gap-2 text-sm opacity-80 cursor-pointer select-none interactive">
                 <input id="remember" type="checkbox" class="accent-black" />
                 <span data-i18n="gate.remember">Remember (24h)</span>
               </label>
 
               <button id="unlockBtn" type="button"
-                      class="px-5 py-3 rounded-xl bg-black text-[#f4f4f0] hover:bg-[#111] transition-colors font-sans text-xs uppercase tracking-widest interactive">
+                      class="w-full sm:w-auto px-5 py-3 rounded-xl bg-black text-[#f4f4f0] hover:bg-[#111] transition-colors font-sans text-xs uppercase tracking-widest interactive">
                 <span data-i18n="gate.unlock">Unlock</span>
               </button>
             </div>
