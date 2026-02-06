@@ -23,9 +23,9 @@ window.PORTFOLIO_DATA = {
       },
       "home": {
         "heroLines": [
+          "ux/ui & ",
           "graphic",
           "designer",
-          "ux/ui",
           ""
         ],
         "heroBody": "Creating stark, typographic, and purpose-driven digital experiences for brands that aren't afraid to stand out. Based in Porto, working globally.",
