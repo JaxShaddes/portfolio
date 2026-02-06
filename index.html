@@ -236,34 +236,46 @@
         };
 
         const Navigation = ({ currentPage, setPage, copy, lang, onLangChange }) => {
+            const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+            const closeMenu = () => setIsMenuOpen(false);
+            const handleNav = (nextPage) => {
+                setPage(nextPage);
+                closeMenu();
+            };
+            const handleLang = (nextLang) => {
+                onLangChange(nextLang);
+                closeMenu();
+            };
+
             return (
                 <nav className="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 py-6 mix-blend-difference text-[#f4f4f0]">
-                    <div className="font-display font-bold text-xl tracking-tighter uppercase cursor-pointer interactive hidden md:block" onClick={() => setPage('home')}>
+                    <div className="font-display font-bold text-xl tracking-tighter uppercase cursor-pointer interactive hidden md:block" onClick={() => handleNav('home')}>
                         Bruno Clemente
                     </div>
-                    <div className="font-display font-bold text-xl tracking-tighter uppercase cursor-pointer interactive md:hidden" onClick={() => setPage('home')}>
+                    <div className="font-display font-bold text-xl tracking-tighter uppercase cursor-pointer interactive md:hidden" onClick={() => handleNav('home')}>
                         BC
                     </div>
-                    <div className="flex gap-4 md:gap-8 font-sans text-xs md:text-sm uppercase tracking-widest">
+                    <div className="hidden md:flex gap-4 md:gap-8 font-sans text-xs md:text-sm uppercase tracking-widest">
                         <button 
                             className={`hover:text-accent transition-colors interactive ${currentPage === 'work' ? 'underline decoration-2 underline-offset-4' : ''}`}
-                            onClick={() => setPage('work')}
+                            onClick={() => handleNav('work')}
                         >
                             {copy.nav.work}
                         </button>
                         <button 
                             className={`hover:text-accent transition-colors interactive ${currentPage === 'about' ? 'underline decoration-2 underline-offset-4' : ''}`}
-                            onClick={() => setPage('about')}
+                            onClick={() => handleNav('about')}
                         >
                             {copy.nav.about}
                         </button>
                         <button 
                             className={`hover:text-accent transition-colors interactive ${currentPage === 'contact' ? 'underline decoration-2 underline-offset-4' : ''}`}
-                            onClick={() => setPage('contact')}
+                            onClick={() => handleNav('contact')}
                         >
                             {copy.nav.contact}
                         </button>
-                        <button className="hover:text-accent transition-colors interactive" onClick={() => { window.location.href = './client-portal.html'; }} >
+                        <button className="hover:text-accent transition-colors interactive" onClick={() => { window.location.href = './client-portal.html'; closeMenu(); }} >
                             {copy.nav.clientPortal}
                         </button>   
 
@@ -271,7 +283,7 @@
                             <button
                                 type="button"
                                 className={`text-[10px] md:text-xs uppercase tracking-widest transition-colors interactive ${lang === 'en' ? 'underline decoration-2 underline-offset-4' : 'opacity-70 hover:opacity-100'}`}
-                                onClick={() => onLangChange('en')}
+                                onClick={() => handleLang('en')}
                             >
                                 EN
                             </button>
@@ -279,12 +291,59 @@
                             <button
                                 type="button"
                                 className={`text-[10px] md:text-xs uppercase tracking-widest transition-colors interactive ${lang === 'pt' ? 'underline decoration-2 underline-offset-4' : 'opacity-70 hover:opacity-100'}`}
-                                onClick={() => onLangChange('pt')}
+                                onClick={() => handleLang('pt')}
                             >
                                 PT
                             </button>
                         </div>
                     </div>
+
+                    <button
+                        type="button"
+                        className="md:hidden font-sans text-xs uppercase tracking-widest border border-[#f4f4f0]/60 px-3 py-2 rounded-full interactive"
+                        onClick={() => setIsMenuOpen(true)}
+                    >
+                        Menu
+                    </button>
+
+                    {isMenuOpen && (
+                        <div className="fixed inset-0 z-[9999] md:hidden">
+                            <div className="absolute inset-0 bg-black/70" onClick={closeMenu}></div>
+                            <div className="absolute top-0 right-0 h-full w-[85%] max-w-xs bg-[#f4f4f0] text-[#111] border-l border-black shadow-[8px_0_0px_0px_rgba(0,0,0,1)] p-6 flex flex-col">
+                                <div className="flex items-center justify-between mb-8">
+                                    <div className="font-display text-xl uppercase">Menu</div>
+                                    <button type="button" className="text-xs uppercase tracking-widest border border-black px-3 py-2 rounded-full" onClick={closeMenu}>
+                                        Close
+                                    </button>
+                                </div>
+                                <div className="flex flex-col gap-4 font-sans text-xs uppercase tracking-widest">
+                                    <button className="text-left hover:text-accent transition-colors" onClick={() => handleNav('home')}>{copy.nav.home}</button>
+                                    <button className="text-left hover:text-accent transition-colors" onClick={() => handleNav('work')}>{copy.nav.work}</button>
+                                    <button className="text-left hover:text-accent transition-colors" onClick={() => handleNav('about')}>{copy.nav.about}</button>
+                                    <button className="text-left hover:text-accent transition-colors" onClick={() => handleNav('contact')}>{copy.nav.contact}</button>
+                                    <button className="text-left hover:text-accent transition-colors" onClick={() => { window.location.href = './client-portal.html'; closeMenu(); }}>{copy.nav.clientPortal}</button>
+                                </div>
+                                <div className="mt-8 flex items-center gap-3 border border-black/40 rounded-full px-3 py-2 w-fit">
+                                    <button
+                                        type="button"
+                                        className={`text-[10px] uppercase tracking-widest ${lang === 'en' ? 'underline decoration-2 underline-offset-4' : 'opacity-70'}`}
+                                        onClick={() => handleLang('en')}
+                                    >
+                                        EN
+                                    </button>
+                                    <span className="opacity-50">/</span>
+                                    <button
+                                        type="button"
+                                        className={`text-[10px] uppercase tracking-widest ${lang === 'pt' ? 'underline decoration-2 underline-offset-4' : 'opacity-70'}`}
+                                        onClick={() => handleLang('pt')}
+                                    >
+                                        PT
+                                    </button>
+                                </div>
+                                <div className="mt-auto pt-6 text-xs uppercase tracking-widest opacity-60">Bruno Clemente</div>
+                            </div>
+                        </div>
+                    )}
                 </nav>
             );
         };
@@ -936,5 +995,4 @@
     </script>
 </body>
 </html>
-
 
