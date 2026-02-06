@@ -103,6 +103,20 @@
       border-color: rgba(17,17,17,.9);
       box-shadow: 0 0 0 4px rgba(75,86,112,.15);
     }
+
+    /* Locked screen visuals */
+    .scanline { animation: scan 3.6s linear infinite; }
+    @keyframes scan {
+      0% { transform: translateY(-20%); opacity: 0; }
+      10% { opacity: 0.8; }
+      55% { opacity: 0.5; }
+      100% { transform: translateY(120%); opacity: 0; }
+    }
+    .pulse-dot { animation: pulse 1.8s ease-in-out infinite; }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.6; }
+      50% { transform: scale(1.4); opacity: 1; }
+    }
   </style>
 </head>
 
@@ -138,8 +152,7 @@
           Client Access
         </h1>
         <p class="mt-4 max-w-2xl text-sm md:text-base opacity-80">
-          Enter the password to view your project. This is lightweight privacy (front-end gate).
-          For real security, protect this route with Cloudflare Access.
+          Welcome, <span id="clientName">client</span>. Your project is our priority, and everything you need is right below.
         </p>
       </div>
 
@@ -186,7 +199,7 @@
 
             <div id="clientLogoWrap" class="mt-5 hidden">
               <div class="text-[10px] uppercase tracking-widest opacity-60 mb-2">Client</div>
-              <div class="rounded-xl border border-black/10 bg-white/60 px-4 py-3 min-h-[64px] md:min-h-[80px]">
+                   <div class="rounded-xl border border-black/10 bg-white/60 px-4 py-3">
                 <img id="clientLogo" alt="Client logo" class="w-full h-auto object-contain" />
               </div>
             </div>
@@ -249,14 +262,56 @@
           <!-- Empty/error state -->
           <div id="emptyState"
                class="border border-black/10 bg-white/40 backdrop-blur-sm rounded-2xl p-6 md:p-7 shadow-sm">
-            <h3 class="font-display font-bold tracking-tight text-xl">Waiting for your client ID</h3>
-            <p class="mt-2 text-sm opacity-80">
-              This page needs an <span class="font-mono text-xs">id</span>.
-            </p>
-            <div class="mt-4 text-xs opacity-70 leading-relaxed">
-              Example:
-              <div class="mt-2 font-mono text-xs bg-[#f4f4f0] border border-black/10 rounded-xl p-3 overflow-x-auto">
-                safety.html?id=acme
+            <div class="relative overflow-hidden rounded-2xl border border-white/10 bg-[#0b0f14] text-[#e7eef7] p-6 md:p-7">
+              <div class="absolute inset-0 opacity-40 pointer-events-none"
+                   style="background-image: radial-gradient(80% 60% at 50% 0%, rgba(77,118,255,0.35), transparent 60%), radial-gradient(60% 80% at 100% 100%, rgba(0,255,180,0.12), transparent 70%);">
+              </div>
+              <div class="absolute inset-0 opacity-25 pointer-events-none"
+                   style="background-image: linear-gradient(to right, rgba(255,255,255,0.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.06) 1px, transparent 1px); background-size: 48px 48px;">
+              </div>
+              <div class="scanline absolute left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#8fb2ff] to-transparent"></div>
+
+              <div class="relative">
+                <div class="flex items-center justify-between gap-4">
+                  <div class="flex items-center gap-3">
+                    <div class="h-11 w-11 rounded-full border border-white/15 bg-white/5 flex items-center justify-center">
+                      <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="#c9d7ff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <rect x="5" y="10" width="14" height="10" rx="2"></rect>
+                        <path d="M8 10V7a4 4 0 0 1 8 0v3"></path>
+                      </svg>
+                    </div>
+                    <div>
+                      <div class="text-xs uppercase tracking-[0.35em] opacity-70">Secure Node</div>
+                      <div class="font-display text-xl md:text-2xl tracking-tight">Access Locked</div>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-2 text-[10px] uppercase tracking-[0.3em] opacity-70">
+                    <span class="h-2 w-2 rounded-full bg-[#5bffb0] pulse-dot"></span>
+                    Shielded
+                  </div>
+                </div>
+
+                <div class="mt-6 grid grid-cols-2 gap-4 text-xs">
+                  <div class="rounded-xl border border-white/10 bg-white/5 p-4">
+                    <div class="uppercase tracking-widest opacity-60">State</div>
+                    <div class="mt-2 font-mono text-sm">LOCKED</div>
+                  </div>
+                  <div class="rounded-xl border border-white/10 bg-white/5 p-4">
+                    <div class="uppercase tracking-widest opacity-60">Handshake</div>
+                    <div class="mt-2 font-mono text-sm">Awaiting Token</div>
+                  </div>
+                </div>
+
+                <div class="mt-6 rounded-xl border border-white/10 bg-white/5 p-4 font-mono text-xs leading-relaxed text-[#b7c6dd]">
+                  <div class="opacity-80">&gt; initiating secure session</div>
+                  <div class="opacity-60">&gt; device: unknown</div>
+                  <div class="opacity-60">&gt; channel: encrypted</div>
+                  <div class="opacity-80">&gt; status: locked</div>
+                </div>
+
+                <div class="mt-5 text-[11px] uppercase tracking-[0.35em] opacity-50">
+                  Client access portal secured
+                </div>
               </div>
             </div>
           </div>
@@ -463,21 +518,25 @@ function initCursor() {
     }
 
     function renderContext() {
+      const nameEl = $("clientName");
       if (!state.clientId) {
         $("chip").textContent = "Missing id";
         $("contextLine").innerHTML = `Provide a link with <span class="font-mono text-xs">?id=client</span>`;
         $("clientLogoWrap").classList.add("hidden");
+        if (nameEl) nameEl.textContent = "client";
         return;
       }
       if (!state.client) {
         $("chip").textContent = "Unknown client";
         $("contextLine").innerHTML = `Unknown <span class="font-mono text-xs">id=${escapeHtml(state.clientId)}</span>. Add this client to the CLIENTS map in the file.`;
         $("clientLogoWrap").classList.add("hidden");
+        if (nameEl) nameEl.textContent = "client";
         return;
       }
 
       $("chip").textContent = state.client.name ? state.client.name : state.clientId;
       $("contextLine").textContent = `Client: ${state.client.name || state.clientId}`;
+      if (nameEl) nameEl.textContent = state.client.name || state.clientId || "client";
 
       const logoUrl = state.client.logoUrl;
       const logoWrap = $("clientLogoWrap");
