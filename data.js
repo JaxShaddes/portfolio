@@ -1,4 +1,4 @@
-﻿window.PORTFOLIO_DATA = {
+window.PORTFOLIO_DATA = {
   "copy": {
     "en": {
       "meta": {
@@ -365,7 +365,7 @@
         "slug": "hqrz",
         "title": "hqrz - portfolio",
         "year": "2025",
-        "month": 11,
+        "month": 12,
         "showMonth": true,
         "client": "Hingryd Queiroz",
         "services": [
@@ -566,7 +566,7 @@
         "slug": "hqrz",
         "title": "hqrz - portfolio",
         "year": "2025",
-        "month": 11,
+        "month": 12,
         "showMonth": true,
         "client": "Hingryd Queiroz",
         "services": [
@@ -680,5 +680,3 @@
     "hqrz"
   ]
 };
-
-
