@@ -249,7 +249,7 @@
             };
 
             return (
-                <nav className="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 py-6 mix-blend-difference text-[#f4f4f0]">
+                <nav className={`fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 py-6 text-[#f4f4f0] ${isMenuOpen ? 'mix-blend-normal' : 'mix-blend-difference'} md:mix-blend-difference`}>
                     <div className="font-display font-bold text-xl tracking-tighter uppercase cursor-pointer interactive hidden md:block" onClick={() => handleNav('home')}>
                         Bruno Clemente
                     </div>
@@ -307,9 +307,9 @@
                     </button>
 
                     {isMenuOpen && (
-                        <div className="fixed inset-0 z-[9999] md:hidden">
-                            <div className="absolute inset-0 bg-black/70" onClick={closeMenu}></div>
-                            <div className="absolute top-0 right-0 h-full w-[85%] max-w-xs bg-[#f4f4f0] text-[#111] border-l border-black shadow-[8px_0_0px_0px_rgba(0,0,0,1)] p-6 flex flex-col">
+                        <div className="fixed inset-0 z-[9999] md:hidden mix-blend-normal isolate">
+                            <div className="absolute inset-0 bg-black/90 backdrop-blur-sm" onClick={closeMenu}></div>
+                            <div className="absolute top-0 right-0 h-full w-[85%] max-w-xs bg-[#f4f4f0] text-[#111] border-l border-black shadow-[8px_0_0px_0px_rgba(0,0,0,1)] p-6 flex flex-col mix-blend-normal">
                                 <div className="flex items-center justify-between mb-8">
                                     <div className="font-display text-xl uppercase">Menu</div>
                                     <button type="button" className="text-xs uppercase tracking-widest border border-black px-3 py-2 rounded-full" onClick={closeMenu}>
@@ -995,4 +995,3 @@
     </script>
 </body>
 </html>
-
