@@ -152,7 +152,189 @@
         const { useState, useEffect, useRef, useLayoutEffect } = React;
 
         // --- DATA ---
-        const PROJECTS = [
+        const LANG_KEY = "bc_lang";
+        const SUPPORTED_LANGS = ["en", "pt"];
+
+        const normalizeLang = (lang) => (SUPPORTED_LANGS.includes(lang) ? lang : "en");
+
+        const getStoredLang = () => {
+            try {
+                const stored = localStorage.getItem(LANG_KEY);
+                return SUPPORTED_LANGS.includes(stored) ? stored : null;
+            } catch {
+                return null;
+            }
+        };
+
+        const setDocumentLang = (lang) => {
+            const htmlLang = lang === "pt" ? "pt-PT" : "en";
+            document.documentElement.setAttribute("lang", htmlLang);
+            document.documentElement.setAttribute("data-lang", lang);
+        };
+
+        const COPY = {
+            en: {
+                meta: {
+                    title: "Bruno Clemente — Graphic Design",
+                    description: "Senior Graphic Designer specializing in brutalist, typographic, and editorial design."
+                },
+                nav: {
+                    home: "Home",
+                    work: "Work",
+                    about: "About",
+                    contact: "Contact",
+                    clientPortal: "Client Portal"
+                },
+                footer: {
+                    tagline: "Modern minimalistic design for forward-thinking brands.",
+                    sitemap: "Sitemap",
+                    social: "Social",
+                    connect: "Connect",
+                    letsTalk: "Let's Talk",
+                    rights: "© 2026 Bruno Clemente. All rights reserved.",
+                    location: "Porto, PT"
+                },
+                home: {
+                    heroLines: ["Digital", "Craftsman", "& Visual", "Engineer"],
+                    heroBody: "Creating stark, typographic, and purpose-driven digital experiences for brands that aren't afraid to stand out. Based in Porto, working globally.",
+                    marquee: "AVAILABLE FOR NEW PROJECTS — PORTO BASED — GLOBAL REACH",
+                    selectedWork: "Selected Work",
+                    viewAll: "View All",
+                    approachTitle: "Approach",
+                    approachBody: "I believe in the power of reduction. By stripping away the non-essential, we reveal the core message of a brand. This minimalistic approach ensures that content is the focus, and typography is the primary vehicle for communication.",
+                    approachList: ["Art Direction", "Web Design", "Brand Identity", "Graphic Design", "Editorial", "Development", "UX/UI"]
+                },
+                work: {
+                    title: "Work",
+                    viewCaseStudy: "View Case Study"
+                },
+                project: {
+                    client: "Client",
+                    date: "Date",
+                    services: "Services",
+                    role: "Role",
+                    overview: "Overview",
+                    readMore: "Read More",
+                    readLess: "Read Less",
+                    backToWork: "← Back to Work",
+                    notFound: "Project not found",
+                    defaultRole: "Lead Designer"
+                },
+                about: {
+                    titleLines: ["Precise.", "Editorial.", "Digital."],
+                    body1: "I am Bruno Clemente, an independent graphic designer and art director. With nearly a decade of experience, I specialize in building digital products and brand identities that cut through the noise.",
+                    body2: "My work is characterized by a strict adherence to grid systems, expressive typography, and a minimalist aesthetic. I believe that good design is as little design as possible.",
+                    clientsTitle: "Clients"
+                },
+                contact: {
+                    titleLines: ["Let's Build", "Something", "Great."],
+                    subtitle: "Currently accepting new projects for Q1 2026.",
+                    form: {
+                        nameLabel: "Name",
+                        emailLabel: "Email",
+                        projectLabel: "Project Details",
+                        namePlaceholder: "John Doe",
+                        emailPlaceholder: "john@example.com",
+                        messagePlaceholder: "Tell me about your project...",
+                        send: "Send Request",
+                        sending: "Sending...",
+                        successTitle: "Message Sent",
+                        successBody: "Thank you. I will get back to you shortly.",
+                        sendAnother: "Send another",
+                        error: "Something went wrong. Please try again or email directly."
+                    }
+                }
+            },
+            pt: {
+                meta: {
+                    title: "Bruno Clemente — Design Gráfico",
+                    description: "Designer gráfico sénior especializado em design brutalista, tipográfico e editorial."
+                },
+                nav: {
+                    home: "Início",
+                    work: "Trabalho",
+                    about: "Sobre",
+                    contact: "Contacto",
+                    clientPortal: "Portal do Cliente"
+                },
+                footer: {
+                    tagline: "Design minimalista contemporâneo para marcas orientadas para o futuro.",
+                    sitemap: "Mapa do Site",
+                    social: "Social",
+                    connect: "Contacto",
+                    letsTalk: "Vamos Falar",
+                    rights: "© 2026 Bruno Clemente. Todos os direitos reservados.",
+                    location: "Porto, PT"
+                },
+                home: {
+                    heroLines: ["Digital", "Artesão", "& Visual", "Engenheiro"],
+                    heroBody: "Crio experiências digitais austeras, tipográficas e orientadas por propósito para marcas que não têm medo de se destacar. Baseado no Porto, com atuação global.",
+                    marquee: "DISPONÍVEL PARA NOVOS PROJETOS — BASEADO NO PORTO — ALCANCE GLOBAL",
+                    selectedWork: "Trabalhos Selecionados",
+                    viewAll: "Ver Todos",
+                    approachTitle: "Abordagem",
+                    approachBody: "Acredito no poder da redução. Ao remover o não essencial, revelamos a mensagem central de uma marca. Esta abordagem minimalista garante que o conteúdo é o foco e que a tipografia é o principal veículo de comunicação.",
+                    approachList: ["Direção de Arte", "Web Design", "Identidade de Marca", "Design Gráfico", "Editorial", "Desenvolvimento", "UX/UI"]
+                },
+                work: {
+                    title: "Trabalho",
+                    viewCaseStudy: "Ver Estudo de Caso"
+                },
+                project: {
+                    client: "Cliente",
+                    date: "Data",
+                    services: "Serviços",
+                    role: "Função",
+                    overview: "Visão Geral",
+                    readMore: "Ler Mais",
+                    readLess: "Ler Menos",
+                    backToWork: "← Voltar ao Trabalho",
+                    notFound: "Projeto não encontrado",
+                    defaultRole: "Designer Principal"
+                },
+                about: {
+                    titleLines: ["Preciso.", "Editorial.", "Digital."],
+                    body1: "Sou Bruno Clemente, designer gráfico e diretor de arte independente. Com quase uma década de experiência, especializo-me na criação de produtos digitais e identidades de marca que se destacam do ruído.",
+                    body2: "O meu trabalho caracteriza-se por uma adesão rigorosa a grelhas, tipografia expressiva e uma estética minimalista. Acredito que o bom design é o mínimo de design possível.",
+                    clientsTitle: "Clientes"
+                },
+                contact: {
+                    titleLines: ["Vamos Construir", "Algo", "Excelente."],
+                    subtitle: "Atualmente a aceitar novos projetos para o Q1 de 2026.",
+                    form: {
+                        nameLabel: "Nome",
+                        emailLabel: "Email",
+                        projectLabel: "Detalhes do Projeto",
+                        namePlaceholder: "João Silva",
+                        emailPlaceholder: "joao@exemplo.com",
+                        messagePlaceholder: "Fala-me sobre o teu projeto...",
+                        send: "Enviar Pedido",
+                        sending: "A enviar...",
+                        successTitle: "Mensagem Enviada",
+                        successBody: "Obrigado. Responderei em breve.",
+                        sendAnother: "Enviar outra",
+                        error: "Algo correu mal. Tenta novamente ou envia um email diretamente."
+                    }
+                }
+            }
+        };
+
+        const FILTERS = [
+            { value: "all", label: { en: "all", pt: "todos" } },
+            { value: "identity", label: { en: "identity", pt: "identidade" } },
+            { value: "web design", label: { en: "web design", pt: "web design" } },
+            { value: "print", label: { en: "print", pt: "impressão" } },
+            { value: "graphic design", label: { en: "graphic design", pt: "design gráfico" } },
+            { value: "ux/ui design", label: { en: "ux/ui design", pt: "ux/ui design" } },
+            { value: "packaging", label: { en: "packaging", pt: "embalagem" } }
+        ];
+
+        const MONTHS_SHORT = {
+            en: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+            pt: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]
+        };
+
+        const PROJECTS_EN = [
             //0
             {
                 slug: 'casa-rabelo',
@@ -313,6 +495,167 @@
             }
         ];
 
+        const PROJECTS_PT = [
+            //0
+            {
+                slug: "casa-rabelo",
+                title: "Casa Rabelo",
+                year: "2025",
+                month: 8,
+                showMonth: true,
+                client: "Casa Rabelo: Boutique de Vinhos",
+                services: ["Identidade", "Branding", "Web Design", "Design de Logótipo", "Design de Cartão"],
+                role: ["Designer Principal", "Desenvolvedor Web"],
+                tags: ["identity", "typography", "web design", "print", "graphic design"],
+                coverImage: "media/casa-rabelo/CV3.jpg",
+                description: [
+                    "Casa Rabelo: Uma boutique de vinhos brasileira imbuída da alma essencial de Portugal.",
+                    "A marca ancora-se no legado do rio Douro e nas icónicas embarcações Rabelo que navegavam as suas correntes, transportando a essência da região. Esta dualidade celebra a ligação duradoura entre história, ofício meticuloso e o ato de descoberta, filtrada por uma visão contemporânea e precisa.",
+                    "Dirigi a arquitetura visual completa, abrangendo o design do logótipo, a teoria cromática sistemática, a linguagem visual global e a cadência digital tanto para a plataforma web como para as comunicações colaterais. O objetivo foi sintetizar uma presença autêntica com acuidade moderna, ecoando a calorosa sobriedade e a elegância cultivada inerentes à viticultura portuguesa.",
+                    "O conceito orientador explora a elegância cinética do fluxo do rio contraposta à materialidade refinada da produção de vinho — uma convergência onde o contexto de arquivo encontra a execução atual. Inspirada na elegância estrutural do Porto e na complexidade sensorial da colheita, a identidade comunica sofisticação, segurança e fiabilidade implícita.",
+                    "A narrativa central estabelece a Casa Rabelo como 'uma nova rota pelo mundo do vinho', posicionando a boutique não apenas como ponto de transação, mas como um percurso curado de experiência, unindo o alicerce da tradição ao paladar do conhecedor contemporâneo.",
+                    "Um emblema rigorosamente minimalista, derivado da silhueta depurada do barco Rabelo, ancorado por tipografia geométrica precisa para significar intenção medida e luxo moderno.",
+                    "Uma paleta disciplinada com tons profundos e ressonantes — Ebony Clay, Arrowtown e Mirage — escolhidos para evocar a pátina da madeira envelhecida, as sombras lançadas pela água profunda e o âmbar difuso do crepúsculo no vale do Douro.",
+                    "Uma combinação calculada de formas sans-serif refinadas, caracterizada por entrelinhas deliberadas e generosas. Esta configuração impõe clareza, projeta confiança inabalável e reforça a sensação de refinamento intemporal.",
+                    "Motivos subtilmente integrados, inspirados em mapas topográficos e dinâmicas de ondas fluidas, servem como ecos abstratos do percurso do rio e da arquitetura sensorial presente na prova de vinhos.",
+                    "A identidade resultante é um construto coeso e atmosférico que atravessa património cultural e estilo de vida contemporâneo. Articula a missão da Casa Rabelo de oferecer não só colheitas excecionais, mas momentos curados de revelação sensorial e ligação significativa."
+                ],
+                images: [
+                    "media/casa-rabelo/CV1.jpg",
+                    "media/casa-rabelo/WEB1.jpg",
+                    "media/casa-rabelo/CV2.jpg",
+                    "media/casa-rabelo/WEB2.jpg",
+                    "media/casa-rabelo/CV3.jpg",
+                    "media/casa-rabelo/WEB3.jpg",
+                    "media/casa-rabelo/bi1.jpg",
+                ]
+            },
+            //1
+            {
+                slug: "tintas-silaca",
+                title: "Tintas Silaca",
+                year: "2019/2025",
+                month: 1,
+                showMonth: false,
+                client: "Tintas Silaca",
+                services: ["Design de App Móvel", "Web Design", "Design de Logótipo", "Design de Embalagem"],
+                tags: ["packaging", "ux/ui design", "web design", "graphid design"],
+                coverImage: "media/silaca/capa.jpg",
+                description: [
+                    "Uma empresa portuguesa com mais de quatro décadas de experiência em tintas, revestimentos, adesivos e soluções químicas especializadas, forjada desde 1981 e de confiança na construção civil, repintura automóvel, metalomecânica e fabrico de mobiliário.",
+                    "O desafio era modernizar uma marca com raízes industriais profundas, traduzindo a sua excelência técnica e o seu impulso inovador numa identidade coesa e preparada para o futuro — sem perder a herança nem a reconhecibilidade imediata.",
+                    "O objetivo foi posicionar a Tintas Silaca como uma líder contemporânea em química aplicada e tecnologia de materiais, equilibrando tradição com avanços de ponta.",
+                    "Liderei o projeto de rebranding completo, desenvolvendo desde o redesenho do logótipo e o sistema visual até embalagens de produto, papelaria corporativa e UI de uma app móvel — construindo um universo de marca unificado que comunica confiança, performance e rigor técnico.",
+                    "A direção criativa focou-se em modernizar a marca sem romper com o seu legado, fazendo a transição de um fabricante tradicional dos anos 1980 para uma entidade industrial tecnologicamente avançada e consciente do design.",
+                    "Um emblema minimalista substituiu o antigo logótipo ilustrativo, mantendo a paleta de cores original para preservar o capital de marca enquanto sinaliza evolução contemporânea.",
+                    "O novo sistema de embalagens reforça a presença em prateleira através de layouts simplificados, diferenciação por cores e tipografia contundente — comunicando clareza e performance moderna, como na série redesenhada de tintas Silaca.",
+                    "A UI da app móvel para documentação técnica e de segurança privilegia a usabilidade e a hierarquia intuitiva, integrando cores fortes da marca e acesso direto a informação crítica, numa fusão de futurismo digital com brutalismo industrial.",
+                    "O rebranding transforma a Tintas Silaca numa marca de design industrial moderna, que representa inovação, consistência e excelência técnica inabalável.",
+                    "A identidade liga o seu legado de quarenta anos a um ethos preparado para o futuro, afirmando o seu papel visionário na tecnologia de materiais sem perder a confiança dos clientes de longa data."
+                ],
+                images: [
+                    "media/silaca/latas/before.jpg",
+                    "media/silaca/latas/after.jpg",
+                    "media/silaca/latas/1.jpg",
+                    "media/silaca/latas/2.jpg",
+                    "media/silaca/app/1.jpg",
+                    "media/silaca/app/2.jpg",
+                    "media/silaca/app/3.jpg",
+                    "media/silaca/app/4.jpg"
+                ]
+            },
+            //2
+            {
+                slug: "hqrz",
+                title: "hqrz - portfolio",
+                year: "2025",
+                month: 11,
+                showMonth: true,
+                client: "Hingryd Queiroz",
+                services: ["Web Design", "Desenvolvimento Web"],
+                role: ["Designer Web", "Desenvolvedor Web"],
+                tags: ["web design"],
+                coverImage: "media/hqrz/1mk.jpg",
+                description: [
+                    "hqrz é o nome artístico de 'Hingryd Queiroz'. É fotógrafa, poetisa e arquiteta. Três disciplinas, uma visão singular.",
+                    "Este portfólio explora a harmonia entre as estruturas que construímos e as emoções que habitamos. Inspirado pelo fluxo constante dos rios e pela ascensão ofegante do voo, o seu trabalho capta a interseção entre o design humano e o maravilhamento natural.",
+                    "Através da lente, da caneta e da prancheta, procura uma coisa: a beleza do amor em todas as formas.",
+                    "Vê o seu trabalho em: www.hqrz.pt"
+                ],
+                images: [
+                    "media/hqrz/1mk.jpg",
+                    "media/hqrz/1.jpg",
+                    "media/hqrz/2mk.jpg",
+                    "media/hqrz/2.jpg",
+                    "media/hqrz/3mk.jpg",
+                    "media/hqrz/3.jpg",
+                ]
+            },
+            //3
+            {
+                slug: "azul",
+                title: "Azul Empréstimo",
+                year: "2025",
+                month: 7,
+                showMonth: false,
+                client: "Azul Empréstimo",
+                services: ["Tipografia", "Redes Sociais", "Consultoria"],
+                tags: ["typography", "print"],
+                coverImage: "media/azul/capa.jpg",
+                description: [
+                    "A Azul Empréstimo opera como uma proeminente rede brasileira de franchising de mediadores de crédito, dedicada a simplificar o acesso a uma vasta gama de soluções financeiras de forma segura e próxima.",
+                    "O meu trabalho com eles foi um projeto de branding focado na criação de grafismos para redes sociais e cartazes promocionais para reforçar a identidade visual e a credibilidade no setor.",
+                    "Para a Azul Empréstimo, desenvolvi uma série coesa de grafismos para redes sociais e cartazes promocionais destinada a reforçar a identidade visual e a credibilidade da empresa no setor dos serviços financeiros.",
+                    "A direção criativa centrou-se nos azuis de assinatura da marca, símbolos de confiança, estabilidade e fiabilidade, incorporando hierarquia tipográfica moderna e narrativa visual clara para destacar ofertas-chave como empréstimos pessoais, consórcios e serviços de pagamentos digitais.",
+                    "Cada composição equilibrou realismo fotográfico com estrutura gráfica limpa, garantindo que a informação se mantinha acessível e visualmente envolvente em formatos impressos e digitais.",
+                    "Através de sistemas de layout consistentes e gradientes subtis, a campanha estabeleceu uma estética forte e unificada que comunica profissionalismo e proximidade — valores-chave para uma marca financeira que procura confiança e reconhecimento."
+                ],
+                images: [
+                    "media/azul/1.jpg",
+                    "media/azul/2.jpg",
+                    "media/azul/3.jpg",
+                    "media/azul/4.jpg",
+                    "media/azul/5.jpg",
+                    "media/azul/6.jpg",
+                ]
+            },
+            //4
+            {
+                slug: "signature-collection",
+                title: "Signature Collection",
+                year: "2024",
+                month: 11,
+                showMonth: false,
+                client: "Projeto Pessoal",
+                services: ["Tipografia", "Design de Capas"],
+                tags: ["print", "graphic design"],
+                coverImage: "media/signature-collection/capa.jpg",
+                description: [
+                    "Este projeto pessoal inspira-se na coleção da Sony 'Only on PlayStation' de 2019. Explora como o minimalismo, a textura e o tom podem redefinir o poder narrativo de uma capa de videojogo.",
+                    "Inspirado no icónico branding 'Only on PlayStation' da Sony, este projeto revisita títulos como Red Dead Redemption 2, God of War: Ragnarök, Ghost of Tsushima e Marvel's Spider-Man 2, apresentando-os através de uma estética unificada que honra o seu núcleo emocional e celebra a arte do design de suporte físico.",
+                    "Conceito & Design: A abordagem combina contenção cinematográfica e profundidade textural, focando-se na atmosfera em vez do espetáculo. Cada capa recorre a paletas monocromáticas, texturas granuladas e iconografia mínima para evocar humor e identidade, eliminando o ruído de marketing em favor de uma narrativa visual pura. A tipografia e a estrutura procuram criar uma sensibilidade de edição de colecionador, unindo nostalgia e refinamento.",
+                    "Intenção Criativa: Este projeto presta homenagem ao ofício da direção de arte de videojogos e ao apelo intemporal do catálogo exclusivo da PlayStation. É um exercício de narrativa visual através da contenção, mostrando como um tom emocional forte pode viver numa composição minimalista."
+                ],
+                images: [
+                    "media/signature-collection/cover/rdr2.jpg",
+                    "media/signature-collection/box/rdr2.jpg",
+                    "media/signature-collection/box-cd/rdr2.jpg",
+                    "media/signature-collection/cover/kcd2.jpg",
+                    "media/signature-collection/box/kcd2.jpg",
+                    "media/signature-collection/box-cd/kcd2.jpg",
+                    "media/signature-collection/cover/got.jpg",
+                    "media/signature-collection/box/got.jpg",
+                    "media/signature-collection/box-cd/got.jpg",
+                    "media/signature-collection/cover/gow.jpg",
+                    "media/signature-collection/box/gow.jpg",
+                    "media/signature-collection/box-cd/gow.jpg",
+                    "media/signature-collection/cover/sm2.jpg",
+                    "media/signature-collection/box/sm2.jpg",
+                    "media/signature-collection/box-cd/sm2.jpg",
+                ]
+            }
+        ];
+
         const CLIENTS = ['Casa Rabelo', 'Azul Empréstimo', 'Tintas Silaca', 'Outrider Petfood', 'hqrz'];
 
         // --- COMPONENTS ---
@@ -368,7 +711,7 @@
             }, []);
         };
 
-        const Navigation = ({ currentPage, setPage }) => {
+        const Navigation = ({ currentPage, setPage, copy }) => {
             return (
                 <nav className="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 py-6 mix-blend-difference text-[#f4f4f0]">
                     <div className="font-display font-bold text-xl tracking-tighter uppercase cursor-pointer interactive hidden md:block" onClick={() => setPage('home')}>
@@ -382,22 +725,22 @@
                             className={`hover:text-accent transition-colors interactive ${currentPage === 'work' ? 'underline decoration-2 underline-offset-4' : ''}`}
                             onClick={() => setPage('work')}
                         >
-                            Work
+                            {copy.nav.work}
                         </button>
                         <button 
                             className={`hover:text-accent transition-colors interactive ${currentPage === 'about' ? 'underline decoration-2 underline-offset-4' : ''}`}
                             onClick={() => setPage('about')}
                         >
-                            About
+                            {copy.nav.about}
                         </button>
                         <button 
                             className={`hover:text-accent transition-colors interactive ${currentPage === 'contact' ? 'underline decoration-2 underline-offset-4' : ''}`}
                             onClick={() => setPage('contact')}
                         >
-                            Contact
+                            {copy.nav.contact}
                         </button>
                         <button className="hover:text-accent transition-colors interactive" onClick={() => { window.location.href = './client-portal.html'; }} >
-                            Client Portal
+                            {copy.nav.clientPortal}
                         </button>   
 
                     </div>
@@ -434,27 +777,27 @@
             );
         };
 
-        const Footer = ({ setPage }) => {
+        const Footer = ({ setPage, copy }) => {
             return (
                 <footer className="w-full bg-black text-off-white py-20 px-6 mt-auto">
                     <div className="max-w-screen-2xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
                         <div className="flex flex-col gap-4">
                             <h3 className="font-display text-2xl font-bold uppercase">Bruno Clemente</h3>
                             <p className="font-sans text-sm text-gray-400">
-                                Modern minimalistic design for forward-thinking brands.
+                                {copy.footer.tagline}
                             </p>
                         </div>
                         <div>
-                            <h4 className="font-sans text-xs uppercase tracking-widest mb-6 text-gray-500">Sitemap</h4>
+                            <h4 className="font-sans text-xs uppercase tracking-widest mb-6 text-gray-500">{copy.footer.sitemap}</h4>
                             <ul className="flex flex-col gap-2 font-sans text-sm">
-                                <li onClick={() => setPage('home')} className="cursor-pointer hover:text-accent interactive w-fit">Home</li>
-                                <li onClick={() => setPage('work')} className="cursor-pointer hover:text-accent interactive w-fit">Work</li>
-                                <li onClick={() => setPage('about')} className="cursor-pointer hover:text-accent interactive w-fit">About</li>
-                                <li onClick={() => setPage('contact')} className="cursor-pointer hover:text-accent interactive w-fit">Contact</li>
+                                <li onClick={() => setPage('home')} className="cursor-pointer hover:text-accent interactive w-fit">{copy.nav.home}</li>
+                                <li onClick={() => setPage('work')} className="cursor-pointer hover:text-accent interactive w-fit">{copy.nav.work}</li>
+                                <li onClick={() => setPage('about')} className="cursor-pointer hover:text-accent interactive w-fit">{copy.nav.about}</li>
+                                <li onClick={() => setPage('contact')} className="cursor-pointer hover:text-accent interactive w-fit">{copy.nav.contact}</li>
                             </ul>
                         </div>
                         <div>
-                            <h4 className="font-sans text-xs uppercase tracking-widest mb-6 text-gray-500">Social</h4>
+                            <h4 className="font-sans text-xs uppercase tracking-widest mb-6 text-gray-500">{copy.footer.social}</h4>
                             <ul className="flex flex-col gap-2 font-sans text-sm">
                                 <li className="cursor-pointer hover:text-accent interactive w-fit">Instagram</li>
                                 <li className="cursor-pointer hover:text-accent interactive w-fit">Behance</li>
@@ -462,25 +805,44 @@
                             </ul>
                         </div>
                         <div>
-                            <h4 className="font-sans text-xs uppercase tracking-widest mb-6 text-gray-500">Connect</h4>
+                            <h4 className="font-sans text-xs uppercase tracking-widest mb-6 text-gray-500">{copy.footer.connect}</h4>
                             <a href="#" onClick={() => setPage('contact')} className="font-display text-3xl hover:text-accent transition-colors interactive underline decoration-1 underline-offset-4">
-                                Let's Talk
+                                {copy.footer.letsTalk}
                             </a>
                         </div>
                     </div>
                     <div className="flex justify-between items-end mt-20 pt-8 border-t border-gray-800 font-sans text-xs text-gray-500">
-                        <span>© 2026 Bruno Clemente. All rights reserved.</span>
-                        <span>Porto, PT</span>
+                        <span>{copy.footer.rights}</span>
+                        <span>{copy.footer.location}</span>
                     </div>
                 </footer>
             );
         };
 
+        const LanguageModal = ({ onSelect }) => {
+            return (
+                <div className="fixed inset-0 z-[11000] flex items-center justify-center bg-black/70 px-6">
+                    <div className="w-full max-w-md border border-black bg-[#f4f4f0] p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+                        <div className="font-display text-2xl uppercase tracking-tight mb-2">Choose your language</div>
+                        <p className="text-sm opacity-70 mb-6">Escolha o idioma preferido</p>
+                        <div className="flex flex-col gap-3">
+                            <button type="button" onClick={() => onSelect("pt")} className="w-full px-4 py-3 border border-black bg-white hover:bg-black hover:text-white transition-colors font-sans text-xs uppercase tracking-widest interactive">
+                                Português (Portugal)
+                            </button>
+                            <button type="button" onClick={() => onSelect("en")} className="w-full px-4 py-3 border border-black bg-white hover:bg-black hover:text-white transition-colors font-sans text-xs uppercase tracking-widest interactive">
+                                English (International)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
         // --- PAGES ---
-        const HomePage = ({ setPage }) => {
+        const HomePage = ({ setPage, copy, projects }) => {
             useCursorHover();
             const SELECTED_INDICES = [0, 2]; 
-            const selectedProjects = PROJECTS.filter((_, index) => SELECTED_INDICES.includes(index));
+            const selectedProjects = projects.filter((_, index) => SELECTED_INDICES.includes(index));
             
             useEffect(() => {
                 gsap.fromTo(".hero-text", 
@@ -494,27 +856,27 @@
                     {/* Hero */}
                     <section className="mb-32 min-h-[60vh] flex flex-col justify-center">
                         <h1 className="font-display text-6xl md:text-8xl lg:text-9xl font-bold leading-[0.85] tracking-tighter uppercase mb-12">
-                            <div className="overflow-hidden"><span className="hero-text inline-block">Digital</span></div>
-                            <div className="overflow-hidden"><span className="hero-text inline-block text-transparent text-stroke-black" style={{WebkitTextStroke: '2px #111'}}>Craftsman</span></div>
-                            <div className="overflow-hidden"><span className="hero-text inline-block">& Visual</span></div>
-                            <div className="overflow-hidden"><span className="hero-text inline-block">Engineer</span></div>
+                            <div className="overflow-hidden"><span className="hero-text inline-block">{copy.home.heroLines[0]}</span></div>
+                            <div className="overflow-hidden"><span className="hero-text inline-block text-transparent text-stroke-black" style={{WebkitTextStroke: '2px #111'}}>{copy.home.heroLines[1]}</span></div>
+                            <div className="overflow-hidden"><span className="hero-text inline-block">{copy.home.heroLines[2]}</span></div>
+                            <div className="overflow-hidden"><span className="hero-text inline-block">{copy.home.heroLines[3]}</span></div>
                         </h1>
                         <div className="max-w-xl ml-auto hero-text opacity-0">
                             <p className="font-sans text-lg md:text-xl leading-relaxed">
-                                Creating stark, typographic, and purpose-driven digital experiences for brands that aren't afraid to stand out. Based in Porto, working globally.
+                                {copy.home.heroBody}
                             </p>
                         </div>
                     </section>
 
                     <div className="mb-32 -mx-6">
-                        <Marquee text="AVAILABLE FOR NEW PROJECTS — PORTO BASED — GLOBAL REACH" />
+                        <Marquee text={copy.home.marquee} />
                     </div>
 
                     {/* Featured Work */}
                     <section className="mb-32">
                         <div className="flex justify-between items-end mb-12 border-b border-black pb-4">
-                            <h2 className="font-display text-4xl font-bold uppercase">Selected Work</h2>
-                            <button onClick={() => setPage('work')} className="font-sans text-sm uppercase tracking-widest hover:text-accent interactive">View All</button>
+                            <h2 className="font-display text-4xl font-bold uppercase">{copy.home.selectedWork}</h2>
+                            <button onClick={() => setPage('work')} className="font-sans text-sm uppercase tracking-widest hover:text-accent interactive">{copy.home.viewAll}</button>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-16">
                             {selectedProjects.map((project, index) => (
@@ -542,14 +904,14 @@
                     {/* Services/Philosophy */}
                     <section className="grid grid-cols-1 lg:grid-cols-2 gap-16 border-t border-black pt-16">
                         <div>
-                            <h2 className="font-display text-4xl font-bold uppercase mb-8">Approach</h2>
+                            <h2 className="font-display text-4xl font-bold uppercase mb-8">{copy.home.approachTitle}</h2>
                         </div>
                         <div className="flex flex-col gap-8">
                             <p className="font-sans text-xl leading-relaxed">
-                                I believe in the power of reduction. By stripping away the non-essential, we reveal the core message of a brand. This minimalistic approach ensures that content is the focus, and typography is the primary vehicle for communication.
+                                {copy.home.approachBody}
                             </p>
                             <div className="grid grid-cols-2 gap-4 font-mono text-sm uppercase">
-                                {['Art Direction', 'Web Design', 'Brand Identity', 'Graphic Design', 'Editorial', 'Development', 'UX/UI'].map(s => (
+                                {copy.home.approachList.map(s => (
                                     <div key={s} className="border-b border-gray-300 pb-2">{s}</div>
                                 ))}
                             </div>
@@ -559,7 +921,7 @@
             );
         };
 
-        const WorkPage = ({ setPage }) => {
+        const WorkPage = ({ setPage, copy, projects, lang }) => {
             const [filter, setFilter] = useState('all');
             useCursorHover();
             const getYear = (yearStr) => {
@@ -570,8 +932,8 @@
                 return 0;
             };
             const filteredProjects = filter === 'all' 
-                ? PROJECTS 
-                : PROJECTS.filter(p => p.tags.includes(filter));
+                ? projects 
+                : projects.filter(p => p.tags.includes(filter));
             
             const getSortValue = (p) => {
                 const year = getYear(p.year);
@@ -579,20 +941,20 @@
                 return year * 100 + month;
             };
             const sortedProjects = [...filteredProjects].sort((a, b) => getSortValue(b) - getSortValue(a));
-            const filters = ['all', 'identity', 'web design', 'print', 'graphic design', 'ux/ui design', 'packaging'];
+            const filters = FILTERS;
 
             return (
                 <div className="min-h-screen pt-32 pb-20 px-6 max-w-screen-2xl mx-auto">
                     <div className="mb-16">
-                        <h1 className="font-display text-6xl md:text-8xl font-bold uppercase mb-8">Work</h1>
+                        <h1 className="font-display text-6xl md:text-8xl font-bold uppercase mb-8">{copy.work.title}</h1>
                         <div className="flex flex-wrap gap-4">
                             {filters.map(f => (
                                 <button 
-                                    key={f}
-                                    onClick={() => setFilter(f)}
-                                    className={`font-sans text-sm uppercase tracking-widest border px-4 py-2 rounded-full transition-colors interactive ${filter === f ? 'bg-black text-white border-black' : 'border-black hover:bg-black hover:text-white'}`}
+                                    key={f.value}
+                                    onClick={() => setFilter(f.value)}
+                                    className={`font-sans text-sm uppercase tracking-widest border px-4 py-2 rounded-full transition-colors interactive ${filter === f.value ? 'bg-black text-white border-black' : 'border-black hover:bg-black hover:text-white'}`}
                                 >
-                                    {f}
+                                    {f.label[lang] || f.label.en}
                                 </button>
                             ))}
                         </div>
@@ -610,7 +972,7 @@
                                     <p className="font-sans text-lg leading-relaxed mb-8 max-w-md">
                                         {Array.isArray(project.description) ? project.description[0] : project.description}
                                     </p>
-                                    <span className="font-sans text-sm uppercase underline decoration-1 underline-offset-4 group-hover:no-underline">View Case Study</span>
+                                    <span className="font-sans text-sm uppercase underline decoration-1 underline-offset-4 group-hover:no-underline">{copy.work.viewCaseStudy}</span>
                                 </div>
                                 <div className="md:col-span-7 order-1 md:order-2 relative overflow-hidden">
                                     <img 
@@ -627,10 +989,11 @@
             );
         };
 
-        const ProjectDetail = ({ slug, setPage }) => {
+        const ProjectDetail = ({ slug, setPage, copy, projects, lang }) => {
             useCursorHover();
-            const project = PROJECTS.find(p => p.slug === slug);
+            const project = projects.find(p => p.slug === slug);
             const [isExpanded, setIsExpanded] = useState(false);
+            const months = MONTHS_SHORT[lang] || MONTHS_SHORT.en;
             
             const galleryRef = useRef(null);
             const rightColRef = useRef(null);
@@ -657,7 +1020,7 @@
                 }
             }, [slug]);
 
-            if (!project) return <div>Project not found</div>;
+            if (!project) return <div>{copy.project.notFound}</div>;
 
             const description = Array.isArray(project.description) ? project.description : [project.description];
             
@@ -668,7 +1031,7 @@
                  if (Array.isArray(project.role)) {
                      return project.role.map(r => <li key={r}>{r}</li>);
                  }
-                 return <li>{project.role || 'Lead Designer'}</li>;
+                 return <li>{project.role || copy.project.defaultRole}</li>;
             };
 
             return (
@@ -690,26 +1053,26 @@
                         {/* Meta */}
                         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 border-b border-black pb-20 mb-20">
                             <div className="md:col-span-1">
-                                <h3 className="font-mono text-xs uppercase text-gray-500 mb-2">Client</h3>
+                                <h3 className="font-mono text-xs uppercase text-gray-500 mb-2">{copy.project.client}</h3>
                                 <p className="font-display text-xl uppercase font-bold">{project.client}</p>
                             </div>
                             <div className="md:col-span-1">
-                                <h3 className="font-mono text-xs uppercase text-gray-500 mb-2">Date</h3>
+                                <h3 className="font-mono text-xs uppercase text-gray-500 mb-2">{copy.project.date}</h3>
                                 <p className="font-display text-xl uppercase font-bold">
                                     {project.showMonth && project.month && (
-                                        <span className="mr-2">{["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][project.month - 1]}</span>
+                                        <span className="mr-2">{months[project.month - 1]}</span>
                                     )}
                                     {project.year}
                                 </p>
                             </div>
                             <div className="md:col-span-1">
-                                <h3 className="font-mono text-xs uppercase text-gray-500 mb-2">Services</h3>
+                                <h3 className="font-mono text-xs uppercase text-gray-500 mb-2">{copy.project.services}</h3>
                                 <ul className="font-display text-xl uppercase font-bold">
                                     {project.services.map(s => <li key={s}>{s}</li>)}
                                 </ul>
                             </div>
                              <div className="md:col-span-1">
-                                <h3 className="font-mono text-xs uppercase text-gray-500 mb-2">Role</h3>
+                                <h3 className="font-mono text-xs uppercase text-gray-500 mb-2">{copy.project.role}</h3>
                                 <ul className="font-display text-xl uppercase font-bold">
                                     {renderRole()}
                                 </ul>
@@ -718,7 +1081,7 @@
 
                         {/* Description */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-16 mb-32">
-                            <h2 className="font-display text-4xl font-bold uppercase">Overview</h2>
+                            <h2 className="font-display text-4xl font-bold uppercase">{copy.project.overview}</h2>
                             <div className="font-sans text-xl leading-relaxed space-y-6">
                                 {description.slice(0, 2).map((para, i) => (
                                     <p key={`static-${i}`}>{para}</p>
@@ -733,7 +1096,7 @@
                                         onClick={() => setIsExpanded(!isExpanded)}
                                         className="text-sm uppercase font-bold tracking-widest border-b border-black pb-1 hover:text-accent interactive"
                                     >
-                                        {isExpanded ? 'Read Less' : 'Read More'}
+                                        {isExpanded ? copy.project.readLess : copy.project.readMore}
                                     </button>
                                 )}
                             </div>
@@ -773,34 +1136,34 @@
 
                         {/* Next Project */}
                         <div className="border-t border-black pt-12 flex justify-between items-center">
-                            <button onClick={() => setPage('work')} className="font-sans text-sm uppercase tracking-widest hover:text-accent interactive">← Back to Work</button>
+                            <button onClick={() => setPage('work')} className="font-sans text-sm uppercase tracking-widest hover:text-accent interactive">{copy.project.backToWork}</button>
                         </div>
                     </div>
                 </div>
             );
         };
 
-        const AboutPage = () => {
+        const AboutPage = ({ copy }) => {
             useCursorHover();
             return (
                 <div className="min-h-screen pt-32 pb-20 px-6 max-w-screen-2xl mx-auto">
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
                         <div className="lg:col-span-8">
                             <h1 className="font-display text-6xl md:text-9xl font-bold uppercase leading-[0.85] tracking-tighter mb-16">
-                                Precise.<br/>Editorial.<br/>Digital.
+                                {copy.about.titleLines[0]}<br/>{copy.about.titleLines[1]}<br/>{copy.about.titleLines[2]}
                             </h1>
                             <div className="prose prose-xl font-sans max-w-none mb-20">
                                 <p>
-                                    I am Bruno Clemente, an independent graphic designer and art director. With nearly a decade of experience, I specialize in building digital products and brand identities that cut through the noise.
+                                    {copy.about.body1}
                                 </p>
                                 <p>
-                                    My work is characterized by a strict adherence to grid systems, expressive typography, and a minimalist aesthetic. I believe that good design is as little design as possible.
+                                    {copy.about.body2}
                                 </p>
                             </div>
                         </div>
                         <div className="lg:col-span-4 space-y-16">
                             <div>
-                                <h3 className="font-display text-2xl font-bold uppercase border-b border-black pb-4 mb-6">Clients</h3>
+                                <h3 className="font-display text-2xl font-bold uppercase border-b border-black pb-4 mb-6">{copy.about.clientsTitle}</h3>
                                 <ul className="space-y-2 font-sans text-lg">
                                     {CLIENTS.map(c => <li key={c}>{c}</li>)}
                                 </ul>
@@ -811,7 +1174,7 @@
             );
         };
 
-        const ContactPage = () => {
+        const ContactPage = ({ copy }) => {
             useCursorHover();
             const [status, setStatus] = useState('idle'); 
 
@@ -847,10 +1210,10 @@
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
                         <div>
                             <h1 className="font-display text-6xl md:text-8xl font-bold uppercase leading-[0.85] tracking-tighter mb-8">
-                                Let's Build<br/>Something<br/>Great.
+                                {copy.contact.titleLines[0]}<br/>{copy.contact.titleLines[1]}<br/>{copy.contact.titleLines[2]}
                             </h1>
                             <p className="font-sans text-xl mb-8">
-                                Currently accepting new projects for Q1 2026. <br/>
+                                {copy.contact.subtitle} <br/>
                             </p>
                             <a href="mailto:contact@jbclemente.pt" className="font-mono text-lg hover:text-accent interactive">work@jbclemente.pt</a>
                         </div>
@@ -858,9 +1221,9 @@
                         <div className="bg-white p-8 border border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
                             {status === 'success' ? (
                                 <div className="h-full flex flex-col items-center justify-center text-center py-20">
-                                    <h3 className="font-display text-4xl font-bold uppercase mb-4">Message Sent</h3>
-                                    <p className="font-sans">Thank you. I will get back to you shortly.</p>
-                                    <button onClick={() => setStatus('idle')} className="mt-8 text-sm underline interactive">Send another</button>
+                                    <h3 className="font-display text-4xl font-bold uppercase mb-4">{copy.contact.form.successTitle}</h3>
+                                    <p className="font-sans">{copy.contact.form.successBody}</p>
+                                    <button onClick={() => setStatus('idle')} className="mt-8 text-sm underline interactive">{copy.contact.form.sendAnother}</button>
                                 </div>
                             ) : (
                                 <form onSubmit={handleSubmit} className="flex flex-col gap-6">
@@ -868,21 +1231,21 @@
                                     <input type="hidden" name="_captcha" value="false" />
                                     
                                     <div>
-                                        <label className="block font-mono text-xs uppercase mb-2">Name</label>
-                                        <input type="text" name="name" required className="w-full border-b border-gray-300 py-2 focus:outline-none focus:border-black bg-transparent font-sans text-lg transition-colors" placeholder="John Doe" />
+                                        <label className="block font-mono text-xs uppercase mb-2">{copy.contact.form.nameLabel}</label>
+                                        <input type="text" name="name" required className="w-full border-b border-gray-300 py-2 focus:outline-none focus:border-black bg-transparent font-sans text-lg transition-colors" placeholder={copy.contact.form.namePlaceholder} />
                                     </div>
                                     <div>
-                                        <label className="block font-mono text-xs uppercase mb-2">Email</label>
-                                        <input type="email" name="email" required className="w-full border-b border-gray-300 py-2 focus:outline-none focus:border-black bg-transparent font-sans text-lg transition-colors" placeholder="john@example.com" />
+                                        <label className="block font-mono text-xs uppercase mb-2">{copy.contact.form.emailLabel}</label>
+                                        <input type="email" name="email" required className="w-full border-b border-gray-300 py-2 focus:outline-none focus:border-black bg-transparent font-sans text-lg transition-colors" placeholder={copy.contact.form.emailPlaceholder} />
                                     </div>
                                     <div>
-                                        <label className="block font-mono text-xs uppercase mb-2">Project Details</label>
-                                        <textarea rows="4" name="message" required className="w-full border-b border-gray-300 py-2 focus:outline-none focus:border-black bg-transparent font-sans text-lg transition-colors resize-none" placeholder="Tell me about your project..."></textarea>
+                                        <label className="block font-mono text-xs uppercase mb-2">{copy.contact.form.projectLabel}</label>
+                                        <textarea rows="4" name="message" required className="w-full border-b border-gray-300 py-2 focus:outline-none focus:border-black bg-transparent font-sans text-lg transition-colors resize-none" placeholder={copy.contact.form.messagePlaceholder}></textarea>
                                     </div>
                                     <button type="submit" disabled={status === 'submitting'} className="mt-4 bg-black text-white font-display font-bold uppercase py-4 px-8 hover:bg-accent transition-colors interactive disabled:opacity-50">
-                                        {status === 'submitting' ? 'Sending...' : 'Send Request'}
+                                        {status === 'submitting' ? copy.contact.form.sending : copy.contact.form.send}
                                     </button>
-                                    {status === 'error' && <p className="text-red-500 text-sm">Something went wrong. Please try again or email directly.</p>}
+                                    {status === 'error' && <p className="text-red-500 text-sm">{copy.contact.form.error}</p>}
                                 </form>
                             )}
                         </div>
@@ -896,9 +1259,35 @@
             const [page, setPageState] = useState('home');
             const [slug, setSlug] = useState(null);
             const [loading, setLoading] = useState(true);
+            const storedLang = getStoredLang();
+            const [lang, setLang] = useState(storedLang || "en");
+            const [hasLangPref, setHasLangPref] = useState(!!storedLang);
+            const copy = COPY[lang] || COPY.en;
+            const projects = lang === "pt" ? PROJECTS_PT : PROJECTS_EN;
             
             // 🔥 CRITICAL: Lenis instance storage
             const lenisInstance = useRef(null);
+
+            useEffect(() => {
+                setDocumentLang(lang);
+                if (hasLangPref) {
+                    try {
+                        localStorage.setItem(LANG_KEY, lang);
+                    } catch {}
+                }
+                const meta = document.querySelector('meta[name="description"]');
+                if (meta) meta.setAttribute('content', copy.meta.description);
+                document.title = copy.meta.title;
+            }, [lang, hasLangPref, copy]);
+
+            useEffect(() => {
+                if (!hasLangPref) {
+                    document.body.style.overflow = "hidden";
+                } else {
+                    document.body.style.overflow = "";
+                }
+                return () => { document.body.style.overflow = ""; };
+            }, [hasLangPref]);
 
             // Initialize Lenis ONCE
             useEffect(() => {
@@ -941,6 +1330,15 @@
                 setPageState(newPage);
             };
 
+            const handleSelectLang = (nextLang) => {
+                const normalized = normalizeLang(nextLang);
+                setLang(normalized);
+                setHasLangPref(true);
+                try {
+                    localStorage.setItem(LANG_KEY, normalized);
+                } catch {}
+            };
+
             const [progress, setProgress] = useState(0);
 
             useEffect(() => {
@@ -975,17 +1373,18 @@
                     <div className="fixed inset-0 grid-overlay opacity-30 pointer-events-none z-0 h-full w-full"></div>
                     
                     <Cursor />
-                    <Navigation currentPage={page} setPage={setPage} />
+                    <Navigation currentPage={page} setPage={setPage} copy={copy} />
                     
                     <main className="flex-grow z-10">
-                        {page === 'home' && <HomePage setPage={setPage} />}
-                        {page === 'work' && <WorkPage setPage={setPage} />}
-                        {page === 'about' && <AboutPage />}
-                        {page === 'contact' && <ContactPage />}
-                        {page === 'project' && <ProjectDetail slug={slug} setPage={setPage} />}
+                        {page === 'home' && <HomePage setPage={setPage} copy={copy} projects={projects} />}
+                        {page === 'work' && <WorkPage setPage={setPage} copy={copy} projects={projects} lang={lang} />}
+                        {page === 'about' && <AboutPage copy={copy} />}
+                        {page === 'contact' && <ContactPage copy={copy} />}
+                        {page === 'project' && <ProjectDetail slug={slug} setPage={setPage} copy={copy} projects={projects} lang={lang} />}
                     </main>
 
-                    <Footer setPage={setPage} />
+                    <Footer setPage={setPage} copy={copy} />
+                    {!hasLangPref && <LanguageModal onSelect={handleSelectLang} />}
                 </div>
             );
         };

@@ -136,10 +136,10 @@
     </a>
 
     <div class="flex gap-4 md:gap-8 font-sans text-xs md:text-sm uppercase tracking-widest">
-      <a href="./index.html" class="hover:text-accent transition-colors interactive">Back</a>
-      <button id="lockBtn" class="hover:text-accent transition-colors interactive hidden" type="button">Lock</button>
+      <a href="./index.html" class="hover:text-accent transition-colors interactive" data-i18n="nav.back">Back</a>
+      <button id="lockBtn" class="hover:text-accent transition-colors interactive hidden" type="button" data-i18n="nav.lock">Lock</button>
       <a id="openNewTabLink" href="#" target="_blank" rel="noopener"
-         class="hover:text-accent transition-colors interactive hidden">Open</a>
+         class="hover:text-accent transition-colors interactive hidden" data-i18n="nav.open">Open</a>
     </div>
   </nav>
 
@@ -147,11 +147,11 @@
     <div class="max-w-5xl mx-auto">
 
       <div class="mb-10 md:mb-14">
-        <div class="font-display uppercase tracking-[0.25em] text-xs mb-3 opacity-70">Client Portal</div>
+        <div class="font-display uppercase tracking-[0.25em] text-xs mb-3 opacity-70" data-i18n="hero.kicker">Client Portal</div>
         <h1 class="font-display font-bold tracking-tighter text-4xl md:text-6xl leading-[0.95]">
-          Client Access
+          <span data-i18n="hero.title">Client Access</span>
         </h1>
-        <p class="mt-4 max-w-2xl text-sm md:text-base opacity-80">
+        <p class="mt-4 max-w-2xl text-sm md:text-base opacity-80" data-i18n-html="hero.subtitle">
           Welcome, <span id="clientName">client</span>. Your project is our priority, and everything you need is right below.
         </p>
       </div>
@@ -161,44 +161,44 @@
         <div class="md:col-span-2">
           <div class="border border-black/10 bg-white/40 backdrop-blur-sm rounded-2xl p-6 md:p-7 shadow-sm">
             <div class="flex items-center justify-between">
-              <h2 class="font-display font-bold tracking-tight text-xl">Unlock</h2>
-              <span id="chip" class="text-xs uppercase tracking-widest opacity-60">Protected</span>
+              <h2 class="font-display font-bold tracking-tight text-xl" data-i18n="gate.title">Unlock</h2>
+              <span id="chip" class="text-xs uppercase tracking-widest opacity-60" data-i18n="gate.protected">Protected</span>
             </div>
 
             <p id="contextLine" class="mt-3 text-sm opacity-80">
               Provide a link with <span class="font-mono text-xs">?id=client</span>
             </p>
 
-            <label class="block mt-5 text-xs uppercase tracking-widest opacity-70" for="password">
+            <label class="block mt-5 text-xs uppercase tracking-widest opacity-70" for="password" data-i18n="gate.passwordLabel">
               Password
             </label>
 
             <div class="mt-2 flex gap-2">
               <input id="password" type="password" autocomplete="current-password"
                      class="field w-full px-4 py-3 rounded-xl border border-black/10 bg-[#f4f4f0] text-black font-sans text-sm interactive"
-                     placeholder="Enter password" />
+                     placeholder="Enter password" data-i18n-placeholder="gate.passwordPlaceholder" />
               <button id="togglePw" type="button"
                       class="px-4 py-3 rounded-xl border border-black/10 bg-white/60 hover:bg-white transition-colors text-xs uppercase tracking-widest interactive">
-                Show
+                <span data-i18n="gate.toggleShow">Show</span>
               </button>
             </div>
 
             <div class="mt-4 flex items-center justify-between gap-3">
               <label class="flex items-center gap-2 text-sm opacity-80 cursor-pointer select-none interactive">
                 <input id="remember" type="checkbox" class="accent-black" />
-                Remember (24h)
+                <span data-i18n="gate.remember">Remember (24h)</span>
               </label>
 
               <button id="unlockBtn" type="button"
                       class="px-5 py-3 rounded-xl bg-black text-[#f4f4f0] hover:bg-[#111] transition-colors font-sans text-xs uppercase tracking-widest interactive">
-                Unlock
+                <span data-i18n="gate.unlock">Unlock</span>
               </button>
             </div>
 
             <div id="status" class="mt-4 text-sm opacity-80 min-h-[1.5rem]"></div>
 
             <div id="clientLogoWrap" class="mt-5 hidden">
-              <div class="text-[10px] uppercase tracking-widest opacity-60 mb-2">Client</div>
+              <div class="text-[10px] uppercase tracking-widest opacity-60 mb-2" data-i18n="gate.clientLabel">Client</div>
                    <div class="rounded-xl border border-black/10 bg-white/60 px-4 py-3">
                 <img id="clientLogo" alt="Client logo" class="w-full h-auto object-contain" />
               </div>
@@ -213,7 +213,7 @@
                class="border border-black/10 bg-white/30 backdrop-blur-sm rounded-2xl shadow-sm overflow-hidden hidden">
             <div class="flex items-center justify-between px-5 py-4 border-b border-black/10">
               <div>
-                <div class="font-display font-bold tracking-tight text-lg">Project Viewer</div>
+                <div class="font-display font-bold tracking-tight text-lg" data-i18n="viewer.title">Project Viewer</div>
                 <div id="viewerSub" class="text-xs uppercase tracking-widest opacity-60 mt-1"></div>
               </div>
               <div class="flex items-center gap-2">
@@ -221,15 +221,15 @@
                 <div class="hidden md:flex items-center gap-2 text-[10px] uppercase tracking-widest">
                   <button id="sizeMobile" type="button"
                           class="px-3 py-2 rounded-lg border border-black/10 bg-white/60 hover:bg-white transition-colors interactive">
-                    Mobile
+                    <span data-i18n="viewer.mobile">Mobile</span>
                   </button>
                   <button id="sizeTablet" type="button"
                           class="px-3 py-2 rounded-lg border border-black/10 bg-white/60 hover:bg-white transition-colors interactive">
-                    Tablet
+                    <span data-i18n="viewer.tablet">Tablet</span>
                   </button>
                   <button id="sizeDesktop" type="button"
                           class="px-3 py-2 rounded-lg border border-black/10 bg-white/60 hover:bg-white transition-colors interactive">
-                    Desktop
+                    <span data-i18n="viewer.desktop">Desktop</span>
                   </button>
                 </div>
               </div>
@@ -246,14 +246,14 @@
               </div>
 
               <div id="fallback" class="mt-4 hidden border border-black/10 bg-white/50 rounded-2xl p-4">
-                <div class="font-display font-bold tracking-tight">Can’t embed this project</div>
-                <p class="mt-2 text-sm opacity-80">
+                <div class="font-display font-bold tracking-tight" data-i18n="viewer.fallback.title">Can’t embed this project</div>
+                <p class="mt-2 text-sm opacity-80" data-i18n="viewer.fallback.body">
                   The project may block embedding (X-Frame-Options / CSP frame-ancestors). Use the button below.
                 </p>
                 <a id="fallbackOpen"
                    class="inline-flex mt-3 px-5 py-3 rounded-xl bg-black text-[#f4f4f0] hover:bg-[#111] transition-colors font-sans text-xs uppercase tracking-widest interactive"
                    href="#" target="_blank" rel="noopener">
-                  Open in new tab
+                  <span data-i18n="viewer.fallback.open">Open in new tab</span>
                 </a>
               </div>
             </div>
@@ -281,35 +281,35 @@
                       </svg>
                     </div>
                     <div>
-                      <div class="text-xs uppercase tracking-[0.35em] opacity-70">Secure Node</div>
-                      <div class="font-display text-xl md:text-2xl tracking-tight">Access Locked</div>
+                      <div class="text-xs uppercase tracking-[0.35em] opacity-70" data-i18n="empty.secureNode">Secure Node</div>
+                      <div class="font-display text-xl md:text-2xl tracking-tight" data-i18n="empty.accessLocked">Access Locked</div>
                     </div>
                   </div>
                   <div class="flex items-center gap-2 text-[10px] uppercase tracking-[0.3em] opacity-70">
                     <span class="h-2 w-2 rounded-full bg-[#5bffb0] pulse-dot"></span>
-                    Shielded
+                    <span data-i18n="empty.shielded">Shielded</span>
                   </div>
                 </div>
 
                 <div class="mt-6 grid grid-cols-2 gap-4 text-xs">
                   <div class="rounded-xl border border-white/10 bg-white/5 p-4">
-                    <div class="uppercase tracking-widest opacity-60">State</div>
-                    <div class="mt-2 font-mono text-sm">LOCKED</div>
+                    <div class="uppercase tracking-widest opacity-60" data-i18n="empty.stateLabel">State</div>
+                    <div class="mt-2 font-mono text-sm" data-i18n="empty.stateValue">LOCKED</div>
                   </div>
                   <div class="rounded-xl border border-white/10 bg-white/5 p-4">
-                    <div class="uppercase tracking-widest opacity-60">Handshake</div>
-                    <div class="mt-2 font-mono text-sm">Awaiting Token</div>
+                    <div class="uppercase tracking-widest opacity-60" data-i18n="empty.handshakeLabel">Handshake</div>
+                    <div class="mt-2 font-mono text-sm" data-i18n="empty.handshakeValue">Awaiting Token</div>
                   </div>
                 </div>
 
                 <div class="mt-6 rounded-xl border border-white/10 bg-white/5 p-4 font-mono text-xs leading-relaxed text-[#b7c6dd]">
-                  <div class="opacity-80">&gt; initiating secure session</div>
-                  <div class="opacity-60">&gt; device: unknown</div>
-                  <div class="opacity-60">&gt; channel: encrypted</div>
-                  <div class="opacity-80">&gt; status: locked</div>
+                  <div class="opacity-80" data-i18n="empty.log1">&gt; initiating secure session</div>
+                  <div class="opacity-60" data-i18n="empty.log2">&gt; device: unknown</div>
+                  <div class="opacity-60" data-i18n="empty.log3">&gt; channel: encrypted</div>
+                  <div class="opacity-80" data-i18n="empty.log4">&gt; status: locked</div>
                 </div>
 
-                <div class="mt-5 text-[11px] uppercase tracking-[0.35em] opacity-50">
+                <div class="mt-5 text-[11px] uppercase tracking-[0.35em] opacity-50" data-i18n="empty.footer">
                   Client access portal secured
                 </div>
               </div>
@@ -320,12 +320,29 @@
       </section>
 
       <div class="mt-14 text-xs uppercase tracking-widest opacity-60">
-        Having trouble? Contact us at
-        <a class="underline hover:text-accent interactive" href="mailto:work@jbclemente.pt">support@jbclemente.pt</a>
+        <span data-i18n="help.line">Having trouble? Contact João at</span>
+        <a class="underline hover:text-accent interactive" href="mailto:work@jbclemente.pt">work@jbclemente.pt</a>
       </div>
 
     </div>
   </main>
+
+  <div id="lang-modal" class="fixed inset-0 z-[11000] hidden items-center justify-center bg-black/70 px-6">
+    <div class="w-full max-w-md border border-black bg-[#f4f4f0] p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+      <div class="font-display text-2xl uppercase tracking-tight mb-2">Choose your language</div>
+      <p class="text-sm opacity-70 mb-6">Escolha o idioma preferido</p>
+      <div class="flex flex-col gap-3">
+        <button type="button" data-lang="pt"
+                class="w-full px-4 py-3 border border-black bg-white hover:bg-black hover:text-white transition-colors font-sans text-xs uppercase tracking-widest interactive">
+          Português (Portugal)
+        </button>
+        <button type="button" data-lang="en"
+                class="w-full px-4 py-3 border border-black bg-white hover:bg-black hover:text-white transition-colors font-sans text-xs uppercase tracking-widest interactive">
+          English (International)
+        </button>
+      </div>
+    </div>
+  </div>
 
   <script>
     /*************************************************************
@@ -363,6 +380,227 @@
      * Helpers
      *************************************************************/
     const $ = (id) => document.getElementById(id);
+
+    const LANG_KEY = "bc_lang";
+    const SUPPORTED_LANGS = ["en", "pt"];
+
+    const I18N = {
+      en: {
+        "meta.title": "Client Access — Bruno Clemente",
+        "meta.description": "Client project access portal.",
+        "nav.back": "Back",
+        "nav.lock": "Lock",
+        "nav.open": "Open",
+        "hero.kicker": "Client Portal",
+        "hero.title": "Client Access",
+        "hero.subtitle": "Welcome, <span id=\"clientName\">client</span>. Your project is our priority, and everything you need is right below.",
+        "gate.title": "Unlock",
+        "gate.protected": "Protected",
+        "gate.passwordLabel": "Password",
+        "gate.passwordPlaceholder": "Enter password",
+        "gate.toggleShow": "Show",
+        "gate.toggleHide": "Hide",
+        "gate.remember": "Remember (24h)",
+        "gate.unlock": "Unlock",
+        "gate.clientLabel": "Client",
+        "viewer.title": "Project Viewer",
+        "viewer.mobile": "Mobile",
+        "viewer.tablet": "Tablet",
+        "viewer.desktop": "Desktop",
+        "viewer.iframeTitle": "Client Project",
+        "viewer.fallback.title": "Can't embed this project",
+        "viewer.fallback.body": "The project may block embedding (X-Frame-Options / CSP frame-ancestors). Use the button below.",
+        "viewer.fallback.open": "Open in new tab",
+        "empty.secureNode": "Secure Node",
+        "empty.accessLocked": "Access Locked",
+        "empty.shielded": "Shielded",
+        "empty.stateLabel": "State",
+        "empty.stateValue": "LOCKED",
+        "empty.handshakeLabel": "Handshake",
+        "empty.handshakeValue": "Awaiting Token",
+        "empty.log1": "> initiating secure session",
+        "empty.log2": "> device: unknown",
+        "empty.log3": "> channel: encrypted",
+        "empty.log4": "> status: locked",
+        "empty.footer": "Client access portal secured",
+        "help.line": "Having trouble? Contact João at",
+        "chip.missingId": "Missing id",
+        "chip.unknownClient": "Unknown client",
+        "labels.clientDefault": "client",
+        "context.missingIdHtml": "Provide a link with <span class=\"font-mono text-xs\">?id=client</span>",
+        "context.unknownIdHtml": "Unknown <span class=\"font-mono text-xs\">id={id}</span>. Add this client to the CLIENTS map in the file.",
+        "context.clientLine": "Client: {name}",
+        "status.enterPassword": "Please enter the password.",
+        "status.checking": "Checking...",
+        "status.wrongPassword": "Wrong password.",
+        "status.unlocked": "Unlocked.",
+        "status.unlockError": "Something went wrong while unlocking.",
+        "status.locked": "Locked.",
+        "status.unlockedRemembered": "Unlocked (remembered).",
+        "status.pageNeedsId": "This page needs ?id=.",
+        "status.missingIdLink": "Missing ?id=. Use a client link like: safety.html?id=acme",
+        "status.unknownClient": "Unknown client id: {id}. Add it in the CLIENTS map inside the file.",
+        "status.missingPasswordHash": "This client isn't configured yet (missing password hash).",
+        "status.ready": "Ready. Enter password to load the project.",
+        "status.unlockedReason": "Unlocked — {reason}",
+        "status.projectUrlMissing": "Missing project URL for this client.",
+        "status.projectUrlInvalid": "Invalid project URL or path.",
+        "status.projectUrlHttps": "Project must be https:// (http allowed only on localhost for testing).",
+        "status.projectDomainNotAllowed": "Project domain not allowed for this client.",
+        "viewer.embed.loading": "Loading...",
+        "viewer.embed.blocked": "Embed blocked",
+        "viewer.embed.loaded": "Loaded"
+      },
+      pt: {
+        "meta.title": "Acesso do Cliente — Bruno Clemente",
+        "meta.description": "Portal de acesso a projetos de cliente.",
+        "nav.back": "Voltar",
+        "nav.lock": "Bloquear",
+        "nav.open": "Abrir",
+        "hero.kicker": "Portal do Cliente",
+        "hero.title": "Acesso do Cliente",
+        "hero.subtitle": "Bem-vindo, <span id=\"clientName\">cliente</span>. O teu projeto é a nossa prioridade e tudo o que precisas está logo abaixo.",
+        "gate.title": "Desbloquear",
+        "gate.protected": "Protegido",
+        "gate.passwordLabel": "Palavra-passe",
+        "gate.passwordPlaceholder": "Introduz a palavra-passe",
+        "gate.toggleShow": "Mostrar",
+        "gate.toggleHide": "Ocultar",
+        "gate.remember": "Lembrar (24h)",
+        "gate.unlock": "Desbloquear",
+        "gate.clientLabel": "Cliente",
+        "viewer.title": "Visualizador do Projeto",
+        "viewer.mobile": "Mobile",
+        "viewer.tablet": "Tablet",
+        "viewer.desktop": "Desktop",
+        "viewer.iframeTitle": "Projeto do Cliente",
+        "viewer.fallback.title": "Não é possível incorporar este projeto",
+        "viewer.fallback.body": "O projeto pode bloquear a incorporação (X-Frame-Options / CSP frame-ancestors). Usa o botão abaixo.",
+        "viewer.fallback.open": "Abrir num novo separador",
+        "empty.secureNode": "Nó Seguro",
+        "empty.accessLocked": "Acesso Bloqueado",
+        "empty.shielded": "Protegido",
+        "empty.stateLabel": "Estado",
+        "empty.stateValue": "BLOQUEADO",
+        "empty.handshakeLabel": "Handshake",
+        "empty.handshakeValue": "A aguardar token",
+        "empty.log1": "> a iniciar sessão segura",
+        "empty.log2": "> dispositivo: desconhecido",
+        "empty.log3": "> canal: encriptado",
+        "empty.log4": "> estado: bloqueado",
+        "empty.footer": "Portal de acesso do cliente protegido",
+        "help.line": "Com dificuldades? Contacta o João em",
+        "chip.missingId": "ID em falta",
+        "chip.unknownClient": "Cliente desconhecido",
+        "labels.clientDefault": "cliente",
+        "context.missingIdHtml": "Fornece um link com <span class=\"font-mono text-xs\">?id=client</span>",
+        "context.unknownIdHtml": "ID desconhecido <span class=\"font-mono text-xs\">id={id}</span>. Adiciona este cliente ao mapa CLIENTS no ficheiro.",
+        "context.clientLine": "Cliente: {name}",
+        "status.enterPassword": "Por favor, introduz a palavra-passe.",
+        "status.checking": "A verificar...",
+        "status.wrongPassword": "Palavra-passe incorreta.",
+        "status.unlocked": "Desbloqueado.",
+        "status.unlockError": "Algo correu mal ao desbloquear.",
+        "status.locked": "Bloqueado.",
+        "status.unlockedRemembered": "Desbloqueado (lembrado).",
+        "status.pageNeedsId": "Esta página precisa de ?id=.",
+        "status.missingIdLink": "Falta ?id=. Usa um link de cliente como: safety.html?id=acme",
+        "status.unknownClient": "ID de cliente desconhecido: {id}. Adiciona-o ao mapa CLIENTS dentro do ficheiro.",
+        "status.missingPasswordHash": "Este cliente ainda não está configurado (falta o hash da palavra-passe).",
+        "status.ready": "Pronto. Introduz a palavra-passe para carregar o projeto.",
+        "status.unlockedReason": "Desbloqueado — {reason}",
+        "status.projectUrlMissing": "Falta o URL do projeto para este cliente.",
+        "status.projectUrlInvalid": "URL ou caminho do projeto inválido.",
+        "status.projectUrlHttps": "O projeto deve ser https:// (http permitido apenas em localhost para testes).",
+        "status.projectDomainNotAllowed": "O domínio do projeto não é permitido para este cliente.",
+        "viewer.embed.loading": "A carregar...",
+        "viewer.embed.blocked": "Incorporação bloqueada",
+        "viewer.embed.loaded": "Carregado"
+      }
+    };
+
+    const getStoredLang = () => {
+      try {
+        const stored = localStorage.getItem(LANG_KEY);
+        return SUPPORTED_LANGS.includes(stored) ? stored : null;
+      } catch {
+        return null;
+      }
+    };
+
+    const storedLang = getStoredLang();
+    let currentLang = storedLang || "en";
+    const hasLangPref = !!storedLang;
+
+    const setDocumentLang = (lang) => {
+      document.documentElement.setAttribute("lang", lang === "pt" ? "pt-PT" : "en");
+    };
+
+    const t = (key, vars = {}) => {
+      const dict = I18N[currentLang] || I18N.en;
+      let str = dict[key] || I18N.en[key] || key;
+      return str.replace(/\{(\w+)\}/g, (_, k) => (vars[k] !== undefined ? vars[k] : ""));
+    };
+
+    const applyI18n = (lang) => {
+      const dict = I18N[lang] || I18N.en;
+      document.title = dict["meta.title"];
+      const desc = document.querySelector('meta[name="description"]');
+      if (desc) desc.setAttribute("content", dict["meta.description"]);
+      document.querySelectorAll("[data-i18n]").forEach((el) => {
+        const key = el.getAttribute("data-i18n");
+        if (dict[key]) el.textContent = dict[key];
+      });
+      document.querySelectorAll("[data-i18n-html]").forEach((el) => {
+        const key = el.getAttribute("data-i18n-html");
+        if (dict[key]) el.innerHTML = dict[key];
+      });
+      document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
+        const key = el.getAttribute("data-i18n-placeholder");
+        if (dict[key]) el.setAttribute("placeholder", dict[key]);
+      });
+      const frame = $("projectFrame");
+      if (frame && dict["viewer.iframeTitle"]) frame.setAttribute("title", dict["viewer.iframeTitle"]);
+    };
+
+    const showLangModal = () => {
+      const modal = $("lang-modal");
+      if (!modal) return;
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+      document.body.style.overflow = "hidden";
+    };
+
+    const hideLangModal = () => {
+      const modal = $("lang-modal");
+      if (!modal) return;
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+      document.body.style.overflow = "";
+    };
+
+    const initLanguage = () => {
+      setDocumentLang(currentLang);
+      applyI18n(currentLang);
+      const modal = $("lang-modal");
+      if (modal) {
+        modal.querySelectorAll("[data-lang]").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const next = btn.getAttribute("data-lang");
+            currentLang = SUPPORTED_LANGS.includes(next) ? next : "en";
+            try {
+              localStorage.setItem(LANG_KEY, currentLang);
+            } catch {}
+            setDocumentLang(currentLang);
+            applyI18n(currentLang);
+            renderContext();
+            renderStatusHint();
+            hideLangModal();
+          });
+        });
+      }
+      if (!hasLangPref) showLangModal();
+    };
 
     function setStatus(msg, type = "neutral") {
       const el = $("status");
@@ -520,23 +758,23 @@ function initCursor() {
     function renderContext() {
       const nameEl = $("clientName");
       if (!state.clientId) {
-        $("chip").textContent = "Missing id";
-        $("contextLine").innerHTML = `Provide a link with <span class="font-mono text-xs">?id=client</span>`;
+        $("chip").textContent = t("chip.missingId");
+        $("contextLine").innerHTML = t("context.missingIdHtml");
         $("clientLogoWrap").classList.add("hidden");
-        if (nameEl) nameEl.textContent = "client";
+        if (nameEl) nameEl.textContent = t("labels.clientDefault");
         return;
       }
       if (!state.client) {
-        $("chip").textContent = "Unknown client";
-        $("contextLine").innerHTML = `Unknown <span class="font-mono text-xs">id=${escapeHtml(state.clientId)}</span>. Add this client to the CLIENTS map in the file.`;
+        $("chip").textContent = t("chip.unknownClient");
+        $("contextLine").innerHTML = t("context.unknownIdHtml", { id: escapeHtml(state.clientId) });
         $("clientLogoWrap").classList.add("hidden");
-        if (nameEl) nameEl.textContent = "client";
+        if (nameEl) nameEl.textContent = t("labels.clientDefault");
         return;
       }
 
       $("chip").textContent = state.client.name ? state.client.name : state.clientId;
-      $("contextLine").textContent = `Client: ${state.client.name || state.clientId}`;
-      if (nameEl) nameEl.textContent = state.client.name || state.clientId || "client";
+      $("contextLine").textContent = t("context.clientLine", { name: state.client.name || state.clientId });
+      if (nameEl) nameEl.textContent = state.client.name || state.clientId || t("labels.clientDefault");
 
       const logoUrl = state.client.logoUrl;
       const logoWrap = $("clientLogoWrap");
@@ -556,7 +794,7 @@ function initCursor() {
     }
 
     function validateProject() {
-  if (!state.projectUrl) return { ok: false, reason: "Missing project URL for this client." };
+  if (!state.projectUrl) return { ok: false, reason: t("status.projectUrlMissing") };
 
   // Accept:
   // - absolute URLs: https://...
@@ -568,7 +806,7 @@ function initCursor() {
     try {
       urlObj = new URL(state.projectUrl, window.location.href);
     } catch {
-      return { ok: false, reason: "Invalid project URL or path." };
+      return { ok: false, reason: t("status.projectUrlInvalid") };
     }
   }
 
@@ -580,13 +818,13 @@ function initCursor() {
     urlObj.hostname === "0.0.0.0";
 
   if (urlObj.protocol !== "https:" && !isLocalHost) {
-    return { ok: false, reason: "Project must be https:// (http allowed only on localhost for testing)." };
+    return { ok: false, reason: t("status.projectUrlHttps") };
   }
 
   // Domain allowlist (optional)
   const allowedDomains = (state.client && state.client.allowedDomains) ? state.client.allowedDomains : [];
   if (allowedDomains.length > 0 && !hostAllowed(urlObj.hostname, allowedDomains)) {
-    return { ok: false, reason: "Project domain not allowed for this client." };
+    return { ok: false, reason: t("status.projectDomainNotAllowed") };
   }
 
   return { ok: true, url: urlObj.toString(), host: urlObj.hostname };
@@ -596,11 +834,11 @@ function initCursor() {
     function startEmbedWatchdog() {
       clearTimeout(state.loadTimer);
       state.loaded = false;
-      setEmbedStatus("Loading…");
+      setEmbedStatus(t("viewer.embed.loading"));
 
       state.loadTimer = setTimeout(() => {
         if (state.loaded) return;
-        setEmbedStatus("Embed blocked");
+        setEmbedStatus(t("viewer.embed.blocked"));
         $("fallback").classList.remove("hidden");
       }, 5000);
     }
@@ -612,7 +850,7 @@ function initCursor() {
       if (!v.ok) {
         hideViewer();
         $("emptyState").classList.remove("hidden");
-        setStatus(`Unlocked — ${v.reason}`, "success");
+        setStatus(t("status.unlockedReason", { reason: v.reason }), "success");
         return;
       }
 
@@ -628,34 +866,34 @@ function initCursor() {
 
     async function attemptUnlock() {
       if (!state.clientId) {
-        setStatus("Missing ?id=. Use a client link like: safety.html?id=acme", "error");
+        setStatus(t("status.missingIdLink"), "error");
         return;
       }
       if (!state.client) {
-        setStatus(`Unknown client id: ${state.clientId}. Add it in the CLIENTS map inside the file.`, "error");
+        setStatus(t("status.unknownClient", { id: state.clientId }), "error");
         return;
       }
       if (!state.client.passwordHashHex || state.client.passwordHashHex === "REPLACE_ME_WITH_SHA256_HEX") {
-        setStatus("This client isn't configured yet (missing password hash).", "error");
+        setStatus(t("status.missingPasswordHash"), "error");
         return;
       }
 
       const pw = $("password").value || "";
       if (!pw.trim()) {
-        setStatus("Please enter the password.", "error");
+        setStatus(t("status.enterPassword"), "error");
         return;
       }
 
-      setStatus("Checking…");
+      setStatus(t("status.checking"));
       try {
         const enteredHash = await sha256Hex(pw);
         if (enteredHash !== String(state.client.passwordHashHex).toLowerCase()) {
-          setStatus("Wrong password.", "error");
+          setStatus(t("status.wrongPassword"), "error");
           return;
         }
 
         state.unlocked = true;
-        setStatus("Unlocked.", "success");
+        setStatus(t("status.unlocked"), "success");
         $("password").value = "";
 
         if ($("remember").checked) rememberSet(state.clientId);
@@ -664,7 +902,7 @@ function initCursor() {
         loadProjectIfReady();
       } catch (e) {
         console.error(e);
-        setStatus("Something went wrong while unlocking.", "error");
+        setStatus(t("status.unlockError"), "error");
       }
     }
 
@@ -672,11 +910,27 @@ function initCursor() {
       state.unlocked = false;
       if (state.clientId) rememberClear(state.clientId);
       hideViewer();
-      setStatus("Locked.");
+      setStatus(t("status.locked"));
       $("emptyState").classList.remove("hidden");
     }
 
+    function renderStatusHint() {
+      if (!state.clientId) {
+        setStatus(t("status.pageNeedsId"), "error");
+      } else if (!state.client) {
+        setStatus(t("status.unknownClient", { id: state.clientId }), "error");
+      } else {
+        const v = validateProject();
+        if (!v.ok) {
+          setStatus(v.reason, "error");
+        } else {
+          setStatus(t("status.ready"), "neutral");
+        }
+      }
+    }
+
     function init() {
+      initLanguage();
       initCursor();
       readParams();
       renderContext();
@@ -695,7 +949,7 @@ function initCursor() {
         const input = $("password");
         const isPw = input.type === "password";
         input.type = isPw ? "text" : "password";
-        $("togglePw").textContent = isPw ? "Hide" : "Show";
+        $("togglePw").textContent = isPw ? t("gate.toggleHide") : t("gate.toggleShow");
         input.focus();
       });
 
@@ -704,7 +958,7 @@ function initCursor() {
       $("projectFrame").addEventListener("load", () => {
         state.loaded = true;
         clearTimeout(state.loadTimer);
-        setEmbedStatus("Loaded");
+        setEmbedStatus(t("viewer.embed.loaded"));
         $("fallback").classList.add("hidden");
       });
 
@@ -753,25 +1007,14 @@ function initCursor() {
       // Auto unlock (per client)
       if (state.clientId && rememberValid(state.clientId)) {
         state.unlocked = true;
-        setStatus("Unlocked (remembered).", "success");
+        setStatus(t("status.unlockedRemembered"), "success");
         loadProjectIfReady();
       } else {
         setStatus("");
       }
 
       // Show a helpful hint if link is incomplete
-      if (!state.clientId) {
-        setStatus("This page needs ?id=.", "error");
-      } else if (!state.client) {
-        setStatus(`Unknown client id: ${state.clientId}. Add it in CLIENTS.`, "error");
-      } else {
-        const v = validateProject();
-        if (!v.ok) {
-          setStatus(v.reason, "error");
-        } else {
-          setStatus("Ready. Enter password to load the project.", "neutral");
-        }
-      }
+      renderStatusHint();
     }
 
     document.addEventListener("DOMContentLoaded", init);
