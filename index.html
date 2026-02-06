@@ -235,7 +235,7 @@
             }, []);
         };
 
-        const Navigation = ({ currentPage, setPage, copy }) => {
+        const Navigation = ({ currentPage, setPage, copy, lang, onLangChange }) => {
             return (
                 <nav className="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 py-6 mix-blend-difference text-[#f4f4f0]">
                     <div className="font-display font-bold text-xl tracking-tighter uppercase cursor-pointer interactive hidden md:block" onClick={() => setPage('home')}>
@@ -267,6 +267,23 @@
                             {copy.nav.clientPortal}
                         </button>   
 
+                        <div className="flex items-center gap-2 border border-[#f4f4f0]/60 rounded-full px-2 py-1 ml-1">
+                            <button
+                                type="button"
+                                className={`text-[10px] md:text-xs uppercase tracking-widest transition-colors interactive ${lang === 'en' ? 'underline decoration-2 underline-offset-4' : 'opacity-70 hover:opacity-100'}`}
+                                onClick={() => onLangChange('en')}
+                            >
+                                EN
+                            </button>
+                            <span className="opacity-50">/</span>
+                            <button
+                                type="button"
+                                className={`text-[10px] md:text-xs uppercase tracking-widest transition-colors interactive ${lang === 'pt' ? 'underline decoration-2 underline-offset-4' : 'opacity-70 hover:opacity-100'}`}
+                                onClick={() => onLangChange('pt')}
+                            >
+                                PT
+                            </button>
+                        </div>
                     </div>
                 </nav>
             );
@@ -898,7 +915,7 @@
                     <div className="fixed inset-0 grid-overlay opacity-30 pointer-events-none z-0 h-full w-full"></div>
                     
                     <Cursor />
-                    <Navigation currentPage={page} setPage={setPage} copy={copy} />
+                    <Navigation currentPage={page} setPage={setPage} copy={copy} lang={lang} onLangChange={handleSelectLang} />
                     
                     <main className="flex-grow z-10">
                         {page === 'home' && <HomePage setPage={setPage} copy={copy} projects={projects} />}
@@ -919,7 +936,5 @@
     </script>
 </body>
 </html>
-
-
 
 
