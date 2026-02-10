@@ -138,9 +138,37 @@
       background: linear-gradient(to bottom, rgba(11, 15, 20, 0.88), rgba(11, 15, 20, 0.3), transparent);
       color: #e7eef7;
     }
-    #viewerShell.immersive #viewerSub,
-    #viewerShell.immersive .preview-size-controls {
+    #viewerShell.immersive #viewerSub {
       display: none !important;
+    }
+    #viewerShell.immersive > .flex {
+      pointer-events: none;
+    }
+    #viewerShell.immersive > .flex button,
+    #viewerShell.immersive > .flex .preview-size-controls {
+      pointer-events: auto;
+    }
+    #viewerShell.immersive #immersiveToggle {
+      border-color: rgba(231, 238, 247, 0.28);
+      background: rgba(231, 238, 247, 0.08);
+      color: #e7eef7;
+    }
+    #viewerShell.immersive .preview-size-controls {
+      display: flex !important;
+      padding: 4px;
+      border-radius: 999px;
+      border: 1px solid rgba(231, 238, 247, 0.2);
+      background: rgba(11, 15, 20, 0.5);
+    }
+    #viewerShell.immersive .preview-size-controls button {
+      border-color: rgba(231, 238, 247, 0.28);
+      background: rgba(231, 238, 247, 0.08);
+      color: #e7eef7;
+    }
+    #viewerShell.immersive .preview-size-controls button.bg-black {
+      background: #e7eef7 !important;
+      color: #0b0f14 !important;
+      border-color: #e7eef7 !important;
     }
     #viewerShell.immersive > .p-4,
     #viewerShell.immersive > .p-5,
@@ -169,6 +197,33 @@
       right: 0;
       bottom: 0;
       z-index: 3;
+    }
+    @media (max-width: 767px) {
+      #viewerShell.immersive > .flex {
+        top: auto;
+        left: auto;
+        right: 0.75rem;
+        bottom: calc(env(safe-area-inset-bottom, 0px) + 0.75rem);
+        width: auto;
+        max-width: calc(100% - 1.5rem);
+        padding: 0;
+        border: 0;
+        background: transparent;
+      }
+      #viewerShell.immersive > .flex > div:first-child,
+      #viewerShell.immersive #embedStatus,
+      #viewerShell.immersive .preview-size-controls {
+        display: none !important;
+      }
+      #viewerShell.immersive #immersiveToggle {
+        padding: 0.65rem 0.9rem;
+        border-radius: 999px;
+        border: 1px solid rgba(231, 238, 247, 0.45);
+        background: rgba(11, 15, 20, 0.78);
+        color: #e7eef7;
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+      }
     }
   </style>
 </head>
@@ -283,6 +338,10 @@
                   <button id="sizeTablet" type="button"
                           class="px-3 py-2 rounded-lg border border-black/10 bg-white/60 hover:bg-white transition-colors interactive">
                     <span data-i18n="viewer.tablet">Tablet</span>
+                  </button>
+                  <button id="sizeDesktop" type="button"
+                          class="px-3 py-2 rounded-lg border border-black/10 bg-white/60 hover:bg-white transition-colors interactive">
+                    <span data-i18n="viewer.desktop">Desktop</span>
                   </button>
                 </div>
               </div>
@@ -1134,7 +1193,7 @@ function initCursor() {
       $("sizeMobile")?.addEventListener("click", () => setPreviewSize("mobile"));
       $("sizeTablet")?.addEventListener("click", () => setPreviewSize("tablet"));
       $("sizeDesktop")?.addEventListener("click", () => setPreviewSize("desktop"));
-      setPreviewSize("mobile");
+      setPreviewSize(isMobileViewport() ? "mobile" : "desktop");
 
       // Auto unlock (per client)
       if (state.clientId && rememberValid(state.clientId)) {
