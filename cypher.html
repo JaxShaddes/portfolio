@@ -1,0 +1,1313 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Client Password Cipher Converter</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style>
+    :root {
+      --primary: #3B82F6; /* blue */
+      --success: #10B981; /* green */
+      --purple: #8B5CF6; /* violet */
+      --cyan: #22D3EE; /* database tab */
+      --bg-0: #0b0f14;
+      --bg-1: #101826;
+      --fg: #e7eef7;
+      --muted: #a7b9d4;
+      --line: rgba(143, 178, 255, 0.26);
+      --line-soft: rgba(143, 178, 255, 0.14);
+      --panel: rgba(12, 20, 33, 0.78);
+      --panel-strong: rgba(10, 16, 28, 0.9);
+    }
+    .fade-in { animation: fadeIn 300ms ease-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+    .tooltip { opacity: 0; transform: translateY(-4px); transition: opacity 150ms, transform 150ms; pointer-events: none; }
+    .tooltip.show { opacity: 1; transform: translateY(0); }
+    /* Tab accent helpers */
+    .accent-blue { --accent: var(--primary); }
+    .accent-green { --accent: var(--success); }
+    .accent-purple { --accent: var(--purple); }
+    .accent-cyan { --accent: var(--cyan); }
+    .accent-border { border-color: var(--accent); }
+    .accent-text { color: var(--accent); }
+    .accent-bg { background-color: var(--accent); }
+
+    body {
+      background:
+        radial-gradient(80% 60% at 50% 0%, rgba(77,118,255,0.28), transparent 62%),
+        radial-gradient(55% 80% at 100% 100%, rgba(0,255,180,0.09), transparent 72%),
+        linear-gradient(180deg, var(--bg-1) 0%, var(--bg-0) 100%) !important;
+      color: var(--fg) !important;
+    }
+    .node-aurora {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.45;
+      background-image:
+        radial-gradient(35% 45% at 15% 0%, rgba(56,189,248,0.12), transparent 70%),
+        radial-gradient(30% 45% at 85% 100%, rgba(99,102,241,0.10), transparent 70%);
+    }
+    .grid-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.22;
+      background-image:
+        linear-gradient(to right, rgba(255, 255, 255, 0.07) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+      background-size: 46px 46px;
+    }
+    .cypher-shell {
+      position: relative;
+      z-index: 1;
+    }
+    .node-head {
+      border: 1px solid var(--line-soft);
+      background: linear-gradient(180deg, rgba(17, 28, 45, 0.85), rgba(10, 16, 27, 0.75));
+      backdrop-filter: blur(8px);
+      border-radius: 1rem;
+      padding: 1rem 1.25rem;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.26);
+    }
+    .node-kicker {
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: #9ac2ff;
+      opacity: 0.9;
+      margin-bottom: 0.35rem;
+    }
+    .node-card {
+      border: 1px solid var(--line) !important;
+      background: linear-gradient(180deg, rgba(17, 27, 43, 0.78), var(--panel-strong)) !important;
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.28);
+      backdrop-filter: blur(10px);
+      color: var(--fg);
+    }
+    .node-card-soft {
+      border: 1px solid var(--line-soft) !important;
+      background: linear-gradient(180deg, rgba(14, 23, 36, 0.7), rgba(11, 18, 30, 0.78)) !important;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
+    }
+    .cypher-shell .text-slate-500,
+    .cypher-shell .text-slate-600,
+    .cypher-shell .text-slate-700,
+    .cypher-shell .dark\:text-slate-200,
+    .cypher-shell .dark\:text-slate-300,
+    .cypher-shell .dark\:text-slate-400 {
+      color: var(--muted) !important;
+    }
+    .cypher-shell h1,
+    .cypher-shell h3,
+    .cypher-shell h4 {
+      color: #f1f7ff !important;
+      letter-spacing: 0.01em;
+    }
+    .cypher-shell input:not([type="checkbox"]),
+    .cypher-shell select,
+    .cypher-shell textarea {
+      border: 1px solid var(--line-soft) !important;
+      background: rgba(7, 12, 20, 0.72) !important;
+      color: #e7eef7 !important;
+    }
+    .cypher-shell input:not([type="checkbox"]):focus,
+    .cypher-shell select:focus,
+    .cypher-shell textarea:focus {
+      outline: none;
+      border-color: rgba(125, 164, 255, 0.64) !important;
+      box-shadow: 0 0 0 3px rgba(77, 118, 255, 0.16);
+    }
+    .cypher-shell input[type="checkbox"] {
+      accent-color: #7aa7ff;
+    }
+    .cypher-shell button {
+      border-color: var(--line-soft) !important;
+      color: #e7eef7 !important;
+      transition: transform 120ms ease, box-shadow 150ms ease, background-color 150ms ease;
+    }
+    /* Keep button contrast high inside the dark secure-node theme */
+    .cypher-shell .bg-slate-50 {
+      background-color: rgba(15, 25, 40, 0.86) !important;
+    }
+    .cypher-shell .hover\:bg-slate-100:hover {
+      background-color: rgba(26, 40, 62, 0.92) !important;
+    }
+    .cypher-shell button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.3);
+    }
+    .tab-btn {
+      background: rgba(15, 25, 40, 0.82) !important;
+      border: 1px solid var(--line-soft) !important;
+    }
+    .tab-btn.ring-2 {
+      box-shadow: 0 0 0 1px rgba(123, 169, 255, 0.75), 0 0 24px rgba(74, 126, 255, 0.35) !important;
+    }
+    #generateBtn,
+    #shaTextHashBtn,
+    #shaHexConvertBtn {
+      border: 1px solid rgba(144, 179, 255, 0.4) !important;
+      box-shadow: 0 10px 26px rgba(50, 120, 255, 0.26) !important;
+    }
+    #darkToggle {
+      background: rgba(15, 25, 40, 0.8) !important;
+    }
+    #summary > div {
+      background: rgba(9, 15, 24, 0.56);
+      border-color: var(--line-soft) !important;
+    }
+    .tooltip {
+      border: 1px solid var(--line-soft);
+      background: rgba(8, 13, 22, 0.94) !important;
+      color: #d8e8ff !important;
+    }
+    #outputCard {
+      position: relative;
+      overflow: hidden;
+    }
+    #outputCard.accent-blue { border-color: rgba(96, 165, 250, 0.78) !important; }
+    #outputCard.accent-green { border-color: rgba(52, 211, 153, 0.78) !important; }
+    #outputCard.accent-purple { border-color: rgba(167, 139, 250, 0.78) !important; }
+    #outputCard.accent-cyan { border-color: rgba(34, 211, 238, 0.78) !important; }
+    #outputCard::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: -24px;
+      height: 1px;
+      opacity: 0.72;
+      background: linear-gradient(to right, transparent, #8fb2ff, transparent);
+      animation: scanline 3.8s linear infinite;
+      pointer-events: none;
+    }
+    @keyframes scanline {
+      0% { transform: translateY(0); opacity: 0; }
+      10% { opacity: 0.8; }
+      100% { transform: translateY(220px); opacity: 0; }
+    }
+  </style>
+  <style>
+    /* Custom Cursor */
+    :root { --cursor: var(--primary); }
+    body.use-custom-cursor { cursor: none; }
+    body.use-custom-cursor * { cursor: none; }
+    #cursor {
+      position: fixed;
+      top: 0; left: 0;
+      width: 14px; height: 14px;
+      border: 2px solid var(--cursor);
+      border-radius: 9999px;
+      transform: translate(-50%, -50%) scale(1);
+      pointer-events: none;
+      transition: transform 120ms ease, background-color 120ms ease, border-color 120ms ease, opacity 200ms ease;
+      z-index: 9999;
+      opacity: 0.85;
+      mix-blend-mode: difference;
+    }
+    .dark #cursor { mix-blend-mode: normal; }
+    #cursor.hovered {
+      transform: translate(-50%, -50%) scale(1.6);
+      background-color: var(--cursor);
+      opacity: 0.25;
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+  <div class="node-aurora"></div>
+  <div class="grid-overlay"></div>
+  <div class="cypher-shell max-w-5xl mx-auto p-6 sm:p-8">
+    <!-- Top Bar -->
+    <div class="node-head flex items-start justify-between gap-4">
+      <header>
+        <div class="node-kicker">Secure Node</div>
+        <h1 class="text-2xl sm:text-3xl font-semibold">Client Password Cipher Converter</h1>
+        <p class="text-slate-600 dark:text-slate-300">Convert client names to secure numeric passwords</p>
+      </header>
+      <div class="flex items-center gap-2">
+        <button id="darkToggle" class="px-3 py-2 rounded-md border border-slate-300 dark:border-slate-700 shadow-sm hover:bg-slate-100 dark:hover:bg-slate-800" title="Toggle dark mode">
+          <span id="darkIcon">🌙</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <nav class="mt-6">
+      <div class="flex flex-wrap gap-2">
+        <button data-tab="tab1" class="tab-btn accent-blue px-4 py-2 rounded-md border border-transparent bg-white dark:bg-slate-800 shadow hover:shadow-md flex items-center gap-2">
+          <span class="inline-block w-2 h-2 rounded-full" style="background-color: var(--primary)"></span>
+          Phone Keypad Cipher
+        </button>
+        <button data-tab="tab2" class="tab-btn accent-green px-4 py-2 rounded-md border border-transparent bg-white dark:bg-slate-800 shadow hover:shadow-md flex items-center gap-2">
+          <span class="inline-block w-2 h-2 rounded-full" style="background-color: var(--success)"></span>
+          Modulus-10 Shift Cipher
+        </button>
+        <button data-tab="tab3" class="tab-btn accent-purple px-4 py-2 rounded-md border border-transparent bg-white dark:bg-slate-800 shadow hover:shadow-md flex items-center gap-2">
+          <span class="inline-block w-2 h-2 rounded-full" style="background-color: var(--purple)"></span>
+          Custom Algorithm
+        </button>
+        <button data-tab="tab4" class="tab-btn accent-cyan px-4 py-2 rounded-md border border-transparent bg-white dark:bg-slate-800 shadow hover:shadow-md flex items-center gap-2">
+          <span class="inline-block w-2 h-2 rounded-full" style="background-color: var(--cyan)"></span>
+          Safety Client DB
+        </button>
+      </div>
+    </nav>
+
+    <!-- Shared Input Section -->
+    <section id="sharedCipherSection" class="mt-6 grid gap-4">
+      <div class="grid md:grid-cols-12 gap-3">
+        <div class="md:col-span-3">
+          <label for="examples" class="block text-sm font-medium mb-1">Examples</label>
+          <select id="examples" class="w-full px-3 py-2 rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800">
+            <option value="">Select an example…</option>
+            <option value="SMITH">SMITH</option>
+            <option value="JONES">JONES</option>
+            <option value="AMAZON">AMAZON</option>
+          </select>
+        </div>
+        <div class="md:col-span-6">
+          <label for="clientName" class="block text-sm font-medium mb-1">Client Name</label>
+          <input id="clientName" placeholder="Enter client name" class="w-full px-3 py-2 rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800" />
+        </div>
+        <div class="md:col-span-3 flex items-end">
+          <button id="generateBtn" class="w-full px-4 py-3 rounded-md text-white font-semibold shadow hover:shadow-md accent-bg">Generate Password</button>
+        </div>
+      </div>
+
+      <!-- Output -->
+      <div id="outputCard" class="node-card rounded-lg bg-white dark:bg-slate-800 border accent-border shadow p-4 sm:p-5">
+        <div class="flex items-center justify-between gap-3">
+          <div>
+            <div class="text-sm text-slate-500 dark:text-slate-400">Generated Password</div>
+            <div id="output" class="mt-1 text-2xl sm:text-3xl font-mono tracking-wide select-all">
+              —
+            </div>
+          </div>
+          <div class="relative">
+            <button id="copyBtn" class="px-4 py-2 rounded-md border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800">Copy</button>
+            <div id="copyTip" class="tooltip absolute right-0 -top-8 text-xs bg-slate-900 text-white px-2 py-1 rounded">Copied!</div>
+          </div>
+        </div>
+        <div class="mt-3 flex items-center gap-3 text-sm text-slate-600 dark:text-slate-300">
+          <div id="strengthLen" class="px-2 py-1 rounded bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700">Length: 0</div>
+          <div id="strengthBits" class="px-2 py-1 rounded bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700">Entropy: ~0 bits</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab 1: Phone Keypad Cipher -->
+    <section id="tab1" class="tab-content mt-6 grid gap-4">
+      <div class="node-card rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow p-4 sm:p-5">
+        <h3 class="font-semibold text-slate-700 dark:text-slate-100 mb-3">Settings</h3>
+        <div class="grid sm:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-sm mb-1">Jump Number</label>
+            <select id="jumpNumber" class="w-full px-3 py-2 rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900">
+              <option value="1">+1</option>
+              <option value="2" selected>+2</option>
+              <option value="3">+3</option>
+              <option value="4">+4</option>
+            </select>
+          </div>
+          <div class="flex items-end gap-2">
+            <input id="mirrorMode" type="checkbox" checked class="w-4 h-4" />
+            <label for="mirrorMode" class="text-sm">Use Mirror Mode (9-minus)</label>
+          </div>
+          <div class="text-sm text-slate-600 dark:text-slate-300">
+            ABC=2, DEF=3, GHI=4, JKL=5, MNO=6, PQRS=7, TUV=8, WXYZ=9, space=0, punctuation=1
+          </div>
+        </div>
+      </div>
+      <div class="node-card rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow p-4 sm:p-5">
+        <h4 class="font-semibold mb-2">Live Example (this tab)</h4>
+        <div id="example1" class="text-sm font-mono text-slate-700 dark:text-slate-200"></div>
+      </div>
+    </section>
+
+    <!-- Tab 2: Modulus-10 Shift Cipher -->
+    <section id="tab2" class="tab-content mt-6 grid gap-4 hidden">
+      <div class="node-card rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow p-4 sm:p-5">
+        <h3 class="font-semibold text-slate-700 dark:text-slate-100 mb-3">Settings</h3>
+        <div class="grid sm:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-sm mb-1">Master Key (4 digits)</label>
+            <input id="masterKey" inputmode="numeric" maxlength="4" value="5274" class="w-full px-3 py-2 rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900" />
+          </div>
+          <div>
+            <label class="block text-sm mb-1">Salt Suffix (4 digits)</label>
+            <input id="saltSuffix" inputmode="numeric" maxlength="4" value="1988" class="w-full px-3 py-2 rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900" />
+          </div>
+        </div>
+      </div>
+      <div class="node-card rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow p-4 sm:p-5">
+        <h4 class="font-semibold mb-2">Live Example (this tab)</h4>
+        <div id="example2" class="text-sm font-mono text-slate-700 dark:text-slate-200"></div>
+      </div>
+    </section>
+
+    <!-- Tab 3: Custom Algorithm -->
+    <section id="tab3" class="tab-content mt-6 grid gap-4 hidden">
+      <div class="node-card rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow p-4 sm:p-5">
+        <h3 class="font-semibold text-slate-700 dark:text-slate-100 mb-3">Settings</h3>
+        <div class="grid sm:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-sm mb-1">Algorithm Type</label>
+            <select id="customType" class="w-full px-3 py-2 rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900">
+              <option value="reverse-double" selected>Reverse + Double</option>
+              <option value="prime-offset">Prime Number Offset</option>
+              <option value="fibonacci-seq">Fibonacci Sequence</option>
+            </select>
+          </div>
+          <div id="customHint" class="sm:col-span-2 text-sm text-slate-600 dark:text-slate-300">
+            Reverse + Double: First 4 letters → reverse → double → last digits → append current year (YY)
+          </div>
+        </div>
+      </div>
+      <div class="node-card rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow p-4 sm:p-5">
+        <h4 class="font-semibold mb-2">Live Example (this tab)</h4>
+        <div id="example3" class="text-sm font-mono text-slate-700 dark:text-slate-200"></div>
+      </div>
+    </section>
+
+    <!-- Tab 4: Safety Client Database -->
+    <section id="tab4" class="tab-content mt-6 grid gap-4 hidden">
+      <div class="node-card rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow p-4 sm:p-5">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <h3 class="font-semibold">Safety Client Database</h3>
+          <button id="dbReloadBtn" class="px-3 py-2 rounded-md border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800">
+            Reload from safety.html
+          </button>
+        </div>
+        <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">
+          This reads the <span class="font-mono">CLIENTS</span> map from <span class="font-mono">safety.html</span>. Use <span class="font-mono">Decode Hash</span> to run a best-effort SHA-256 decode attempt from built-in patterns.
+        </p>
+        <div id="dbStatus" class="mt-3 text-xs font-mono text-slate-400">Waiting to load client database…</div>
+        <div id="clientDbList" class="mt-4 grid gap-3"></div>
+      </div>
+    </section>
+
+    <!-- All Methods Summary -->
+    <section id="summarySection" class="mt-6">
+      <div class="node-card rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow p-4 sm:p-5">
+        <h3 class="font-semibold mb-3">All Methods (for selected input)</h3>
+        <div id="summary" class="grid sm:grid-cols-3 gap-3 text-sm">
+          <div class="p-3 rounded border border-slate-200 dark:border-slate-700">
+            <div class="text-slate-500">Phone Keypad</div>
+            <div id="sum1" class="font-mono text-lg">—</div>
+          </div>
+          <div class="p-3 rounded border border-slate-200 dark:border-slate-700">
+            <div class="text-slate-500">Modulus-10</div>
+            <div id="sum2" class="font-mono text-lg">—</div>
+          </div>
+          <div class="p-3 rounded border border-slate-200 dark:border-slate-700">
+            <div class="text-slate-500">Custom</div>
+            <div id="sum3" class="font-mono text-lg">—</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  <!-- SHA-256 Decoder & Hasher -->
+  <section id="hexTool" class="mt-6">
+    <div class="node-card rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow p-4 sm:p-5 grid gap-5">
+      <div class="flex items-center justify-between gap-3">
+        <h3 class="font-semibold">SHA-256 Tool</h3>
+        <div class="text-xs text-slate-500 dark:text-slate-400">Hash text and inspect SHA-256 hex digests</div>
+      </div>
+
+      <!-- SHA-256 Calculator -->
+      <div class="node-card-soft rounded-md border border-slate-200 dark:border-slate-700 p-3 sm:p-4">
+        <div class="flex items-center justify-between gap-3 mb-2">
+          <h4 class="font-semibold">SHA-256 Calculator</h4>
+          <div class="text-xs text-slate-500 dark:text-slate-400">Compute digest of plaintext</div>
+        </div>
+        <div class="grid gap-3">
+          <div>
+            <label for="shaTextInput" class="block text-sm font-medium mb-1">Plaintext</label>
+            <textarea id="shaTextInput" rows="3" placeholder="Type text to hash..." class="w-full px-3 py-2 rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900"></textarea>
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <button id="shaTextHashBtn" class="px-4 py-2 rounded-md text-white font-semibold shadow hover:shadow-md" style="background-color: var(--primary)">Hash</button>
+            <button id="shaTextClearBtn" class="px-3 py-2 rounded-md border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800">Clear</button>
+            <div class="relative ml-auto flex items-center gap-2">
+              <div class="relative">
+                <button id="shaTextCopyHexBtn" class="px-3 py-2 rounded-md border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800">Copy Hex</button>
+                <div id="shaTextCopyHexTip" class="tooltip absolute right-0 -top-8 text-xs bg-slate-900 text-white px-2 py-1 rounded">Copied!</div>
+              </div>
+              <div class="relative">
+                <button id="shaTextCopyBase64Btn" class="px-3 py-2 rounded-md border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800">Copy Base64</button>
+                <div id="shaTextCopyBase64Tip" class="tooltip absolute right-0 -top-8 text-xs bg-slate-900 text-white px-2 py-1 rounded">Copied!</div>
+              </div>
+            </div>
+          </div>
+          <div class="grid sm:grid-cols-2 gap-3">
+            <div>
+              <label for="shaHexOutput" class="block text-sm font-medium mb-1">Hex Digest (64 chars)</label>
+              <textarea id="shaHexOutput" rows="2" readonly class="w-full px-3 py-2 rounded-md border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 font-mono"></textarea>
+            </div>
+            <div>
+              <label for="shaTextBase64Output" class="block text-sm font-medium mb-1">Base64 Digest</label>
+              <textarea id="shaTextBase64Output" rows="2" readonly class="w-full px-3 py-2 rounded-md border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 font-mono"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SHA-256 Hex Inspector -->
+      <div class="node-card-soft rounded-md border border-slate-200 dark:border-slate-700 p-3 sm:p-4">
+        <div class="flex items-center justify-between gap-3 mb-2">
+          <h4 class="font-semibold">SHA-256 Hex Inspector</h4>
+          <div class="text-xs text-slate-500 dark:text-slate-400">Validate a 64-char hex digest and view Base64</div>
+        </div>
+        <div class="grid gap-3">
+          <div>
+            <div class="flex items-center justify-between">
+              <label for="shaHexInput" class="block text-sm font-medium mb-1">SHA-256 Hex (64 hex characters)</label>
+              <div id="shaHexError" class="text-xs text-red-600"></div>
+            </div>
+            <textarea id="shaHexInput" rows="2" placeholder="e.g., 9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08" class="w-full px-3 py-2 rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 font-mono"></textarea>
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <button id="shaHexConvertBtn" class="px-4 py-2 rounded-md text-white font-semibold shadow hover:shadow-md" style="background-color: var(--primary)">Convert</button>
+            <button id="shaHexClearBtn" class="px-3 py-2 rounded-md border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800">Clear</button>
+            <div class="relative ml-auto">
+              <button id="shaHexCopyBtn" class="px-3 py-2 rounded-md border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800">Copy Base64</button>
+              <div id="shaHexCopyTip" class="tooltip absolute right-0 -top-8 text-xs bg-slate-900 text-white px-2 py-1 rounded">Copied!</div>
+            </div>
+          </div>
+          <div>
+            <label for="shaBase64Output" class="block text-sm font-medium mb-1">Base64 Digest</label>
+            <textarea id="shaBase64Output" rows="2" readonly class="w-full px-3 py-2 rounded-md border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 font-mono"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  </div>
+
+  <!-- Custom Cursor Element -->
+  <div id="cursor" class="hidden"></div>
+
+  <script>
+    // Helper $ to match snippet
+    const $ = (id) => document.getElementById(id);
+
+    // Dark mode toggle using class strategy
+    (function initDark() {
+      const html = document.documentElement;
+      const saved = localStorage.getItem('pc-dark');
+      if (saved === '1' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        html.classList.add('dark');
+      }
+    })();
+
+    const el = (id) => document.getElementById(id);
+
+    const darkIconEl = el('darkIcon');
+    if (darkIconEl) {
+      darkIconEl.textContent = document.documentElement.classList.contains('dark') ? '☀️' : '🌙';
+    }
+
+    const tabs = Array.from(document.querySelectorAll('.tab-btn'));
+    let activeTab = 'tab1';
+    let safetyClients = [];
+    let safetyClientsLoaded = false;
+
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, (c) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+      }[c]));
+    }
+
+    function syncTabLayout() {
+      const showCipherPanels = activeTab !== 'tab4';
+      el('sharedCipherSection')?.classList.toggle('hidden', !showCipherPanels);
+      el('summarySection')?.classList.toggle('hidden', !showCipherPanels);
+    }
+
+    function setAccentForTab(tabId) {
+      const card = el('outputCard');
+      card.classList.remove('accent-blue','accent-green','accent-purple','accent-cyan');
+      let accent = getComputedStyle(document.documentElement).getPropertyValue('--primary');
+      if (tabId === 'tab1') { card.classList.add('accent-blue'); accent = getComputedStyle(document.documentElement).getPropertyValue('--primary'); }
+      if (tabId === 'tab2') { card.classList.add('accent-green'); accent = getComputedStyle(document.documentElement).getPropertyValue('--success'); }
+      if (tabId === 'tab3') { card.classList.add('accent-purple'); accent = getComputedStyle(document.documentElement).getPropertyValue('--purple'); }
+      if (tabId === 'tab4') { card.classList.add('accent-cyan'); accent = getComputedStyle(document.documentElement).getPropertyValue('--cyan'); }
+      // Update Generate button color
+      const genBtn = el('generateBtn');
+      genBtn.classList.remove('accent-bg');
+      genBtn.style.backgroundColor = accent;
+      // Update cursor accent color
+      document.documentElement.style.setProperty('--cursor', accent.trim());
+    }
+
+    tabs.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = btn.getAttribute('data-tab');
+        if (target === activeTab) return;
+        // toggle visibility
+        document.querySelectorAll('.tab-content').forEach(sec => sec.classList.add('hidden'));
+        el(target).classList.remove('hidden');
+        activeTab = target;
+        // Visual active state for tabs
+        tabs.forEach(t => t.classList.remove('ring-2','ring-offset-2'));
+        btn.classList.add('ring-2','ring-offset-2');
+        setAccentForTab(activeTab);
+        syncTabLayout();
+        if (activeTab === 'tab4') {
+          setOutput('');
+          if (!safetyClientsLoaded) loadSafetyClientDatabase();
+        } else {
+          generatePassword();
+        }
+      });
+    });
+
+    // Dark mode handler
+    el('darkToggle').addEventListener('click', () => {
+      const html = document.documentElement;
+      const isDark = html.classList.toggle('dark');
+      localStorage.setItem('pc-dark', isDark ? '1' : '0');
+      // icon
+      el('darkIcon').textContent = isDark ? '☀️' : '🌙';
+    });
+
+    // Mapping helpers
+    const phoneMap = new Map([
+      ['A', '2'], ['B','2'], ['C','2'],
+      ['D', '3'], ['E','3'], ['F','3'],
+      ['G', '4'], ['H','4'], ['I','4'],
+      ['J', '5'], ['K','5'], ['L','5'],
+      ['M', '6'], ['N','6'], ['O','6'],
+      ['P', '7'], ['Q','7'], ['R','7'], ['S','7'],
+      ['T', '8'], ['U','8'], ['V','8'],
+      ['W', '9'], ['X','9'], ['Y','9'], ['Z','9']
+    ]);
+
+    const keypadClockwise = {
+      1: [2, 3, 6, 9, 8, 7, 4],
+      2: [3, 6, 9, 8, 7, 4, 1],
+      3: [6, 9, 8, 7, 4, 1, 2],
+      4: [5, 6, 9, 8, 7, 1, 2],
+      5: [6, 9, 8, 7, 4, 1, 2], // special case: can also jump to 0 (not used by default)
+      6: [9, 8, 7, 4, 1, 2, 3],
+      7: [8, 9, 6, 3, 2, 1, 4],
+      8: [9, 6, 3, 2, 1, 4, 7],
+      9: [8, 7, 4, 1, 2, 3, 6],
+      0: [5] // special case
+    };
+
+    function nameToPhoneDigits(name) {
+      let out = '';
+      for (const chRaw of name) {
+        const ch = chRaw.toUpperCase();
+        if (/[A-Z]/.test(ch)) out += phoneMap.get(ch);
+        else if (/[0-9]/.test(ch)) out += ch; // keep digits as-is
+        else if (/\s/.test(ch)) out += '0'; // space
+        else out += '1'; // punctuation/special
+      }
+      return out.replace(/^\s+|\s+$/g,'');
+    }
+
+    function lastFourOrLess(d) {
+      if (!d) return '';
+      return d.length > 4 ? d.slice(-4) : d;
+    }
+
+    function alphaPositions(name) {
+      const res = [];
+      for (const chRaw of name) {
+        const ch = chRaw.toUpperCase();
+        if (/[A-Z]/.test(ch)) res.push(ch.charCodeAt(0) - 64);
+      }
+      return res;
+    }
+
+    // Algorithms
+    function computePhoneCipher(name, jump = 2, mirror = true) {
+      const digitsAll = nameToPhoneDigits(name);
+      const core = lastFourOrLess(digitsAll);
+      if (!core) return '';
+      const firstHalf = core.split('').map(c => {
+        const d = Number(c);
+        const arr = keypadClockwise[d] || [d];
+        const idx = Math.max(1, Math.min(4, Number(jump))) - 1; // 0..3
+        const val = arr[idx % arr.length];
+        return String(val);
+      }).join('');
+      if (!mirror) return firstHalf;
+      const mirrored = firstHalf.split('').map(c => String(9 - Number(c))).join('');
+      return firstHalf + mirrored;
+    }
+
+    function computeMod10Shift(name, masterKey = '5274', salt = '1988') {
+      const pos = alphaPositions(name);
+      const first4 = pos.slice(0, 4);
+      if (first4.length === 0) return '';
+      const base = first4.map(n => n % 10);
+      const mk = (String(masterKey).replace(/\D/g,'') + '0000').slice(0,4).split('').map(d => Number(d));
+      const out = base.map((d,i) => (d + mk[i]) % 10).join('');
+      const cleanSalt = String(salt).replace(/\D/g,'').slice(0,4);
+      return out + cleanSalt;
+    }
+
+    function computeCustom(name, type = 'reverse-double') {
+      const pos = alphaPositions(name);
+      const yy = String(new Date().getFullYear()).slice(-2);
+      if (type === 'reverse-double') {
+        const first4 = pos.slice(0,4);
+        if (first4.length === 0) return '';
+        const rev = first4.slice().reverse();
+        const lastDigits = rev.map(n => (n * 2) % 10);
+        return lastDigits.join('') + yy;
+      }
+      if (type === 'prime-offset') {
+        const primes = [2,3,5,7,11,13];
+        const first5 = pos.slice(0,5);
+        if (first5.length === 0) return '';
+        const base = first5.map(n => n % 10);
+        let digits = base.map((d,i) => (d + primes[i]) % 10);
+        const sum = digits.reduce((a,b) => a+b, 0) % 100;
+        const suffix = String(sum).padStart(2,'0');
+        return digits.join('') + suffix;
+      }
+      if (type === 'fibonacci-seq') {
+        const first = pos.slice(0,4).map(n => n % 10);
+        if (first.length === 0) return '';
+        // Ensure at least 2 seeds
+        while (first.length < 2) first.push(0);
+        // Grow to 4 using fib rule
+        while (first.length < 4) {
+          const L = first.length;
+          first.push((first[L-1] + first[L-2]) % 10);
+        }
+        const fib4 = first.slice(0,4);
+        const checksum = (fib4.reduce((a,b)=>a+b,0) * 3) % 100;
+        return fib4.join('') + String(checksum).padStart(2,'0');
+      }
+      return '';
+    }
+
+    // UI helpers
+    function updateStrength(pwd) {
+      const len = pwd.length;
+      el('strengthLen').textContent = 'Length: ' + len;
+      const bits = Math.round(len * Math.log2(10));
+      el('strengthBits').textContent = 'Entropy: ~' + bits + ' bits';
+    }
+
+    function setOutput(pwd) {
+      el('output').textContent = pwd || '—';
+      el('output').classList.remove('fade-in');
+      void el('output').offsetWidth; // reflow
+      el('output').classList.add('fade-in');
+      updateStrength(pwd || '');
+    }
+
+    function copyPassword() {
+      const text = el('output').textContent.trim();
+      if (!text || text === '—') return;
+      navigator.clipboard.writeText(text).then(() => {
+        const tip = el('copyTip');
+        tip.classList.add('show');
+        setTimeout(() => tip.classList.remove('show'), 2000);
+      }).catch(() => {
+        // Fallback
+        const ta = document.createElement('textarea');
+        ta.value = text; document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); } catch {}
+        document.body.removeChild(ta);
+      });
+    }
+
+    function setDbStatus(message, type = 'neutral') {
+      const statusEl = el('dbStatus');
+      if (!statusEl) return;
+      let cls = 'mt-3 text-xs font-mono';
+      if (type === 'success') cls += ' text-emerald-300';
+      else if (type === 'error') cls += ' text-red-300';
+      else cls += ' text-slate-400';
+      statusEl.className = cls;
+      statusEl.textContent = message || '';
+    }
+
+    function extractObjectLiteralAfterMarker(source, marker) {
+      const markerIndex = source.indexOf(marker);
+      if (markerIndex < 0) throw new Error('CLIENTS map marker not found in safety.html');
+      const start = source.indexOf('{', markerIndex);
+      if (start < 0) throw new Error('CLIENTS map opening brace not found');
+
+      let depth = 0;
+      let quote = null;
+      let escaped = false;
+      let inLineComment = false;
+      let inBlockComment = false;
+
+      for (let i = start; i < source.length; i++) {
+        const ch = source[i];
+        const next = source[i + 1];
+
+        if (inLineComment) {
+          if (ch === '\n') inLineComment = false;
+          continue;
+        }
+        if (inBlockComment) {
+          if (ch === '*' && next === '/') {
+            inBlockComment = false;
+            i++;
+          }
+          continue;
+        }
+        if (quote) {
+          if (escaped) {
+            escaped = false;
+            continue;
+          }
+          if (ch === '\\') {
+            escaped = true;
+            continue;
+          }
+          if (ch === quote) quote = null;
+          continue;
+        }
+
+        if (ch === '/' && next === '/') {
+          inLineComment = true;
+          i++;
+          continue;
+        }
+        if (ch === '/' && next === '*') {
+          inBlockComment = true;
+          i++;
+          continue;
+        }
+        if (ch === '"' || ch === "'" || ch === '`') {
+          quote = ch;
+          continue;
+        }
+
+        if (ch === '{') depth++;
+        else if (ch === '}') {
+          depth--;
+          if (depth === 0) return source.slice(start, i + 1);
+        }
+      }
+
+      throw new Error('CLIENTS map closing brace not found');
+    }
+
+    function parseClientsFromSafetyHtml(htmlText) {
+      const objectLiteral = extractObjectLiteralAfterMarker(htmlText, 'const CLIENTS =');
+      let parsed;
+      try {
+        parsed = Function('"use strict"; return (' + objectLiteral + ');')();
+      } catch {
+        throw new Error('Unable to parse CLIENTS map from safety.html');
+      }
+
+      if (!parsed || typeof parsed !== 'object') {
+        throw new Error('Parsed CLIENTS map is empty or invalid');
+      }
+
+      return Object.entries(parsed)
+        .map(([id, cfg]) => ({
+          id: String(id || ''),
+          name: cfg && typeof cfg.name === 'string' ? cfg.name : '',
+          passwordHashHex: cfg && typeof cfg.passwordHashHex === 'string' ? cfg.passwordHashHex : '',
+          projectUrl: cfg && typeof cfg.projectUrl === 'string' ? cfg.projectUrl : ''
+        }))
+        .sort((a, b) => a.id.localeCompare(b.id));
+    }
+
+    function renderSafetyClientDatabase() {
+      const listEl = el('clientDbList');
+      if (!listEl) return;
+
+      if (!safetyClients.length) {
+        listEl.innerHTML = '<div class="node-card-soft rounded-md p-3 text-sm text-slate-400">No clients found in safety.html.</div>';
+        return;
+      }
+
+      listEl.innerHTML = safetyClients.map((client, index) => {
+        const hasHash = /^[0-9a-f]{64}$/i.test(client.passwordHashHex || '');
+        const hashText = client.passwordHashHex || 'Missing passwordHashHex';
+        const resultText = hasHash ? 'Click Decode Hash to attempt recovery.' : 'No valid SHA-256 hash configured for this client.';
+        return `
+          <div class="node-card-soft rounded-md p-3 sm:p-4">
+            <div class="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <div class="font-mono text-sm text-slate-100">${escapeHtml(client.id)}</div>
+                <div class="text-xs text-slate-400">${escapeHtml(client.name || 'Unnamed client')}</div>
+              </div>
+            </div>
+            <div class="mt-2 text-xs font-mono break-all ${hasHash ? 'text-slate-300' : 'text-red-300'}">${escapeHtml(hashText)}</div>
+            <div class="mt-3 flex flex-wrap gap-2">
+              <button type="button" data-db-decode="${index}" ${hasHash ? '' : 'disabled'} class="px-4 py-2 rounded-md border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 whitespace-nowrap">
+                Decode Hash
+              </button>
+              <button type="button" data-db-copy="${index}" class="px-3 py-2 rounded-md border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800">
+                Copy Hash
+              </button>
+            </div>
+            <div data-db-result="${index}" class="mt-2 text-xs text-slate-400">${escapeHtml(resultText)}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function normalizeSha256Hex(value) {
+      const cleaned = String(value || '').trim().replace(/\s+/g, '').toLowerCase();
+      return /^[0-9a-f]{64}$/.test(cleaned) ? cleaned : null;
+    }
+
+    function buildTokenVariants(text) {
+      const raw = String(text || '').trim();
+      if (!raw) return [];
+
+      const compact = raw.replace(/\s+/g, '');
+      const alnum = raw.replace(/[^a-zA-Z0-9]/g, '');
+      const out = new Set([raw, compact, alnum]);
+      for (const token of Array.from(out)) {
+        if (!token) continue;
+        out.add(token.toLowerCase());
+        out.add(token.toUpperCase());
+      }
+
+      return Array.from(out).filter(Boolean);
+    }
+
+    function buildClientDecodeCandidates(client) {
+      const all = new Set();
+      const add = (value) => {
+        const v = String(value || '').trim();
+        if (!v || v.length > 64) return;
+        all.add(v);
+      };
+
+      const currentYear = String(new Date().getFullYear());
+      const yy = currentYear.slice(-2);
+      const suffixes = ['', '1', '12', '123', '1234', '!', '!!', yy, currentYear, '2024', '2025', '2026'];
+      const baseTokens = [
+        ...buildTokenVariants(client.id),
+        ...buildTokenVariants(client.name),
+        ...buildTokenVariants(`${client.id}${client.name}`),
+        ...buildTokenVariants(`${client.name}${client.id}`)
+      ];
+
+      for (const token of baseTokens) {
+        add(token);
+        for (const suffix of suffixes) add(`${token}${suffix}`);
+
+        for (let jump = 1; jump <= 4; jump++) {
+          add(computePhoneCipher(token, jump, true));
+          add(computePhoneCipher(token, jump, false));
+        }
+
+        add(computeMod10Shift(token, '5274', '1988'));
+        add(computeMod10Shift(token, '1234', '0000'));
+        add(computeMod10Shift(token, '0000', '0000'));
+
+        add(computeCustom(token, 'reverse-double'));
+        add(computeCustom(token, 'prime-offset'));
+        add(computeCustom(token, 'fibonacci-seq'));
+      }
+
+      return Array.from(all);
+    }
+
+    async function decodeClientHash(index) {
+      const client = safetyClients[index];
+      const resultEl = document.querySelector(`[data-db-result="${index}"]`);
+      if (!client || !resultEl) return;
+
+      const targetHash = normalizeSha256Hex(client.passwordHashHex);
+      if (!targetHash) {
+        resultEl.className = 'mt-2 text-xs text-red-300';
+        resultEl.textContent = 'Invalid hash. Cannot decode.';
+        return;
+      }
+
+      const candidates = buildClientDecodeCandidates(client);
+      if (!candidates.length) {
+        resultEl.className = 'mt-2 text-xs text-amber-300';
+        resultEl.textContent = 'No decode candidates available for this client.';
+        return;
+      }
+
+      resultEl.className = 'mt-2 text-xs text-slate-300';
+      resultEl.textContent = `Trying ${candidates.length} candidate(s)...`;
+
+      let found = null;
+      for (let i = 0; i < candidates.length; i++) {
+        if (i > 0 && i % 30 === 0) {
+          resultEl.textContent = `Trying ${i}/${candidates.length} candidate(s)...`;
+          await new Promise((resolve) => setTimeout(resolve, 0));
+        }
+        const digest = await sha256(candidates[i]);
+        const computedHash = bytesToHex(digest).toLowerCase();
+        if (computedHash === targetHash) {
+          found = candidates[i];
+          break;
+        }
+      }
+
+      if (found !== null) {
+        resultEl.className = 'mt-2 text-xs text-emerald-300 font-mono';
+        resultEl.textContent = `Decoded: ${found}`;
+      } else {
+        resultEl.className = 'mt-2 text-xs text-amber-300';
+        resultEl.textContent = 'Not found. SHA-256 is one-way, so this only works when the real password is in the candidate set.';
+      }
+    }
+
+    async function loadSafetyClientDatabase() {
+      setDbStatus('Loading clients from safety.html ...');
+      try {
+        const response = await fetch('./safety.html', { cache: 'no-store' });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+        const htmlText = await response.text();
+        safetyClients = parseClientsFromSafetyHtml(htmlText);
+        safetyClientsLoaded = true;
+        renderSafetyClientDatabase();
+        setDbStatus(`Loaded ${safetyClients.length} client record(s) from safety.html.`, 'success');
+      } catch (err) {
+        safetyClients = [];
+        safetyClientsLoaded = false;
+        renderSafetyClientDatabase();
+        setDbStatus(`Failed to load safety.html (${err && err.message ? err.message : 'unknown error'}).`, 'error');
+      }
+    }
+
+    /*************************************************************
+     * Cursor (matches your site)
+     *************************************************************/
+    function initCursor() {
+      // Only use the custom cursor if there's a fine pointer (mouse/trackpad)
+      if (!window.matchMedia || !window.matchMedia("(pointer: fine)").matches) return;
+
+      const cursor = $("cursor");
+      if (!cursor) return;
+
+      // Enable custom-cursor mode on body
+      document.body.classList.add('use-custom-cursor');
+
+      const moveCursor = (e) => {
+        cursor.style.top = `${e.clientY}px`;
+        cursor.style.left = `${e.clientX}px`;
+      };
+
+      const hoverEnter = () => cursor.classList.add("hovered");
+      const hoverLeave = () => cursor.classList.remove("hovered");
+
+      window.addEventListener("mousemove", moveCursor);
+
+      document.querySelectorAll("a, button, .interactive, input, label, summary").forEach(el => {
+        el.addEventListener("mouseenter", hoverEnter);
+        el.addEventListener("mouseleave", hoverLeave);
+      });
+
+      window.addEventListener("mouseleave", () => cursor.classList.add("hidden"));
+      window.addEventListener("mouseenter", () => cursor.classList.remove("hidden"));
+
+      // Make sure it shows immediately once initialized
+      cursor.classList.remove("hidden");
+    }
+
+    function sanitizeDigitsInput(e) {
+      const v = e.target.value.replace(/\D/g,'').slice(0,4);
+      e.target.value = v;
+    }
+
+    // Live examples per tab
+    function renderExample1(name) {
+      const digits = nameToPhoneDigits(name);
+      const last4 = lastFourOrLess(digits);
+      const jump = Number(el('jumpNumber').value || 2);
+      const mirror = el('mirrorMode').checked;
+      let jumped = '';
+      if (last4) {
+        jumped = last4.split('').map(c => {
+          const d = Number(c);
+          const arr = keypadClockwise[d] || [d];
+          const idx = Math.max(1, Math.min(4, jump)) - 1;
+          return String(arr[idx % arr.length]);
+        }).join('');
+      }
+      const mirrored = jumped ? jumped.split('').map(c => String(9-Number(c))).join('') : '';
+      el('example1').innerHTML = `Input: "${name || ''}"<br>Digits: ${digits || '—'} → Last 4: ${last4 || '—'}<br>Jump +${jump}: ${jumped || '—'}${mirror ? `<br>Mirror: ${mirrored || '—'}` : ''}<br>Result: <span class="accent-text" style="color: var(--accent)">${computePhoneCipher(name, jump, mirror) || '—'}</span>`;
+    }
+
+    function renderExample2(name) {
+      const pos = alphaPositions(name);
+      const first4 = pos.slice(0,4);
+      const base = first4.map(n => n % 10);
+      const mk = (el('masterKey').value.replace(/\D/g,'') + '0000').slice(0,4).split('').map(d => Number(d));
+      const added = base.map((d,i) => (d + mk[i]) % 10);
+      const salt = el('saltSuffix').value.replace(/\D/g,'').slice(0,4);
+      el('example2').innerHTML = `Input: "${name || ''}"<br>Letters: ${first4.map(n => n).join(', ') || '—'} → last digits: ${base.join('') || '—'}<br>Master Key: ${mk.join('')} → Add: ${added.join('') || '—'}<br>Salt: ${salt || '—'}<br>Result: <span class="accent-text" style="color: var(--accent)">${computeMod10Shift(name, el('masterKey').value, el('saltSuffix').value) || '—'}</span>`;
+    }
+
+    function renderExample3(name) {
+      const type = el('customType').value;
+      let detail = '';
+      const pos = alphaPositions(name);
+      if (type === 'reverse-double') {
+        const first4 = pos.slice(0,4);
+        const rev = first4.slice().reverse();
+        const doubled = rev.map(n => n*2);
+        const last = doubled.map(n => n % 10);
+        detail = `Letters: ${first4.join(', ') || '—'} → Reverse: ${rev.join(', ') || '—'} → Double: ${doubled.join(', ') || '—'} → Last digits: ${last.join(', ') || '—'} → Year (${String(new Date().getFullYear()).slice(-2)})`;
+      } else if (type === 'prime-offset') {
+        const first5 = pos.slice(0,5);
+        const base = first5.map(n => n % 10);
+        const primes = [2,3,5,7,11,13];
+        const off = base.map((d,i) => (d + primes[i]) % 10);
+        const suffix = String(off.reduce((a,b)=>a+b,0)%100).padStart(2,'0');
+        detail = `Base: ${base.join('') || '—'} → +primes → ${off.join('') || '—'} → suffix ${suffix}`;
+      } else {
+        const base = pos.slice(0,4).map(n => n % 10);
+        const seeds = base.slice(0,2);
+        while (base.length < 2) base.push(0);
+        while (base.length < 4) {
+          const L = base.length;
+          base.push((base[L-1] + base[L-2]) % 10);
+        }
+        const checksum = (base.slice(0,4).reduce((a,b)=>a+b,0)*3)%100;
+        detail = `Seeds: ${seeds.join(', ') || '—'} → Fib4: ${base.slice(0,4).join(', ')} → checksum ${String(checksum).padStart(2,'0')}`;
+      }
+      el('example3').innerHTML = `Input: "${name || ''}"<br>${detail}<br>Result: <span class="accent-text" style="color: var(--accent)">${computeCustom(name, type) || '—'}</span>`;
+    }
+
+    function updateAllExamples() {
+      const name = el('clientName').value.trim();
+      renderExample1(name);
+      renderExample2(name);
+      renderExample3(name);
+    }
+
+    function updateSummary(name) {
+      const phone = computePhoneCipher(name, Number(el('jumpNumber').value || 2), el('mirrorMode').checked) || '—';
+      const mod10 = computeMod10Shift(name, el('masterKey').value, el('saltSuffix').value) || '—';
+      const custom = computeCustom(name, el('customType').value) || '—';
+      el('sum1').textContent = phone;
+      el('sum2').textContent = mod10;
+      el('sum3').textContent = custom;
+    }
+
+    function generatePassword() {
+      if (activeTab === 'tab4') {
+        setOutput('');
+        return;
+      }
+
+      const name = el('clientName').value.trim();
+      let pwd = '';
+      if (activeTab === 'tab1') {
+        pwd = computePhoneCipher(name, Number(el('jumpNumber').value || 2), el('mirrorMode').checked);
+      } else if (activeTab === 'tab2') {
+        pwd = computeMod10Shift(name, el('masterKey').value, el('saltSuffix').value);
+      } else if (activeTab === 'tab3') {
+        pwd = computeCustom(name, el('customType').value);
+      }
+      setOutput(pwd || '');
+      updateAllExamples();
+      updateSummary(name);
+    }
+
+    // Events
+    el('generateBtn').addEventListener('click', generatePassword);
+    el('copyBtn').addEventListener('click', copyPassword);
+
+    el('examples').addEventListener('change', (e) => {
+      const val = e.target.value;
+      if (val) {
+        el('clientName').value = val;
+        generatePassword();
+      }
+    });
+
+    el('clientName').addEventListener('input', () => {
+      updateAllExamples();
+      updateSummary(el('clientName').value.trim());
+    });
+
+    el('jumpNumber').addEventListener('change', generatePassword);
+    el('mirrorMode').addEventListener('change', generatePassword);
+    el('masterKey').addEventListener('input', (e) => { sanitizeDigitsInput(e); generatePassword(); });
+    el('saltSuffix').addEventListener('input', (e) => { sanitizeDigitsInput(e); generatePassword(); });
+    el('customType').addEventListener('change', () => {
+      const type = el('customType').value;
+      const hint = {
+        'reverse-double': 'Reverse + Double: First 4 letters → reverse → double → last digits → append current year (YY)',
+        'prime-offset': 'Prime Offset: First 5 letters → last digits → add primes (2,3,5,7,11) → append 2-digit sum',
+        'fibonacci-seq': 'Fibonacci: Use first digits as seeds → build 4 digits by fib rule → append 2-digit checksum'
+      }[type];
+      el('customHint').textContent = hint;
+      generatePassword();
+    });
+    el('dbReloadBtn')?.addEventListener('click', loadSafetyClientDatabase);
+
+    el('clientDbList')?.addEventListener('click', (event) => {
+      const decodeBtn = event.target.closest('[data-db-decode]');
+      if (decodeBtn) {
+        const index = Number(decodeBtn.getAttribute('data-db-decode'));
+        if (Number.isFinite(index)) decodeClientHash(index);
+        return;
+      }
+
+      const copyBtn = event.target.closest('[data-db-copy]');
+      if (copyBtn) {
+        const index = Number(copyBtn.getAttribute('data-db-copy'));
+        if (!Number.isFinite(index)) return;
+        const client = safetyClients[index];
+        if (!client || !client.passwordHashHex) return;
+        copyText(client.passwordHashHex, '');
+        const resultEl = document.querySelector(`[data-db-result="${index}"]`);
+        if (resultEl) {
+          resultEl.className = 'mt-2 text-xs text-emerald-300';
+          resultEl.textContent = 'Hash copied to clipboard.';
+        }
+      }
+    });
+
+    // Initialize accent and defaults
+    tabs[0]?.classList.add('ring-2','ring-offset-2');
+    setAccentForTab(activeTab);
+    syncTabLayout();
+    updateAllExamples();
+    updateSummary('');
+    // Init custom cursor
+    initCursor();
+
+    /*************************************************************
+     * SHA-256 Tool Logic
+     *************************************************************/
+    function bytesToHex(bytes) {
+      return Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    function hexToBytesExact(hex) {
+      const clean = (hex || '').trim().replace(/\s+/g, '').toLowerCase();
+      if (!/^[0-9a-f]*$/.test(clean)) throw new Error('Hex must contain only 0-9 and a-f');
+      if (clean.length % 2 !== 0) throw new Error('Hex length must be even');
+      const out = new Uint8Array(clean.length / 2);
+      for (let i = 0; i < out.length; i++) {
+        out[i] = parseInt(clean.substr(i * 2, 2), 16);
+      }
+      return out;
+    }
+
+    function bytesToBase64(bytes) {
+      let binary = '';
+      for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+      return btoa(binary);
+    }
+
+    async function sha256(text) {
+      const enc = new TextEncoder();
+      const data = enc.encode(text);
+      const digest = await crypto.subtle.digest('SHA-256', data);
+      return new Uint8Array(digest);
+    }
+
+    function setTipVisible(id) {
+      const tip = document.getElementById(id);
+      if (!tip) return;
+      tip.classList.add('show');
+      setTimeout(() => tip.classList.remove('show'), 2000);
+    }
+
+    function copyText(text, tipId) {
+      if (!text) return;
+      navigator.clipboard.writeText(text).then(() => setTipVisible(tipId)).catch(() => {
+        const ta = document.createElement('textarea');
+        ta.value = text; document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); } catch {}
+        document.body.removeChild(ta);
+        setTipVisible(tipId);
+      });
+    }
+
+    // Initialize SHA-256 UI
+    (function initShaTool(){
+      const txt = document.getElementById('shaTextInput');
+      const btnHash = document.getElementById('shaTextHashBtn');
+      const btnClear = document.getElementById('shaTextClearBtn');
+      const outHex = document.getElementById('shaHexOutput');
+      const outB64 = document.getElementById('shaTextBase64Output');
+      const copyHex = document.getElementById('shaTextCopyHexBtn');
+      const copyHexTip = 'shaTextCopyHexTip';
+      const copyB64 = document.getElementById('shaTextCopyBase64Btn');
+      const copyB64Tip = 'shaTextCopyBase64Tip';
+
+      if (txt && btnHash && btnClear && outHex && outB64 && copyHex && copyB64) {
+        const doHash = async () => {
+          const val = txt.value || '';
+          if (!val) { outHex.value = ''; outB64.value = ''; return; }
+          try {
+            const bytes = await sha256(val);
+            outHex.value = bytesToHex(bytes);
+            outB64.value = bytesToBase64(bytes);
+          } catch (e) {
+            outHex.value = '';
+            outB64.value = '';
+          }
+        };
+        btnHash.addEventListener('click', doHash);
+        txt.addEventListener('input', () => { doHash(); });
+        btnClear.addEventListener('click', () => { txt.value = ''; outHex.value = ''; outB64.value = ''; txt.focus(); });
+        copyHex.addEventListener('click', () => copyText(outHex.value, copyHexTip));
+        copyB64.addEventListener('click', () => copyText(outB64.value, copyB64Tip));
+      }
+
+      // Hex inspector
+      const hexIn = document.getElementById('shaHexInput');
+      const hexBtn = document.getElementById('shaHexConvertBtn');
+      const hexClr = document.getElementById('shaHexClearBtn');
+      const hexErr = document.getElementById('shaHexError');
+      const b64Out = document.getElementById('shaBase64Output');
+      const hexCopy = document.getElementById('shaHexCopyBtn');
+      const hexCopyTip = 'shaHexCopyTip';
+
+      function validateShaHex(h) {
+        const clean = (h || '').trim().replace(/^0x/i, '').replace(/\s+/g, '').toLowerCase();
+        if (clean.length === 0) return { ok: true, clean: '' };
+        if (clean.length !== 64) return { ok: false, msg: 'Digest must be exactly 64 hex chars' };
+        if (!/^[0-9a-f]{64}$/.test(clean)) return { ok: false, msg: 'Invalid hex characters' };
+        return { ok: true, clean };
+      }
+
+      function convertHexToB64() {
+        const v = hexIn.value;
+        hexErr.textContent = '';
+        b64Out.value = '';
+        const result = validateShaHex(v);
+        if (!result.ok) { hexErr.textContent = result.msg || 'Invalid input'; return; }
+        if (!result.clean) return;
+        try {
+          const bytes = hexToBytesExact(result.clean);
+          b64Out.value = bytesToBase64(bytes);
+        } catch (e) {
+          hexErr.textContent = e.message || 'Conversion error';
+        }
+      }
+
+      if (hexIn && hexBtn && hexClr && hexErr && b64Out && hexCopy) {
+        hexBtn.addEventListener('click', convertHexToB64);
+        hexIn.addEventListener('input', () => { convertHexToB64(); });
+        hexClr.addEventListener('click', () => { hexIn.value = ''; b64Out.value = ''; hexErr.textContent = ''; hexIn.focus(); });
+        hexCopy.addEventListener('click', () => copyText(b64Out.value, hexCopyTip));
+      }
+    })();
+  </script>
+</body>
+</html>

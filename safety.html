@@ -40,6 +40,7 @@
     }
 
     body { overflow-x: hidden; }
+    body.viewer-immersive { overflow: hidden; }
 
 /* Only hide the system cursor when there is a fine pointer (mouse/trackpad) */
 @media (pointer: fine) {
@@ -116,6 +117,58 @@
     @keyframes pulse {
       0%, 100% { transform: scale(1); opacity: 0.6; }
       50% { transform: scale(1.4); opacity: 1; }
+    }
+
+    /* Full-screen project mode (mostly for mobile) */
+    #viewerShell.immersive {
+      position: fixed;
+      inset: 0;
+      z-index: 12000;
+      border: 0;
+      border-radius: 0;
+      background: #0b0f14;
+    }
+    #viewerShell.immersive > .flex {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 2;
+      border: 0;
+      background: linear-gradient(to bottom, rgba(11, 15, 20, 0.88), rgba(11, 15, 20, 0.3), transparent);
+      color: #e7eef7;
+    }
+    #viewerShell.immersive #viewerSub,
+    #viewerShell.immersive .preview-size-controls {
+      display: none !important;
+    }
+    #viewerShell.immersive > .p-4,
+    #viewerShell.immersive > .p-5,
+    #viewerShell.immersive > .md\:p-5 {
+      padding: 0;
+      height: 100dvh;
+    }
+    #viewerShell.immersive #frameShell {
+      border: 0;
+      border-radius: 0;
+      height: 100dvh;
+    }
+    #viewerShell.immersive #projectFrame {
+      height: 100dvh !important;
+      min-height: 100dvh !important;
+      max-height: 100dvh !important;
+    }
+    #viewerShell.immersive #fallback {
+      margin: 0;
+      border: 0;
+      border-radius: 0;
+      background: rgba(11, 15, 20, 0.94);
+      color: #e7eef7;
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 3;
     }
   </style>
 </head>
@@ -218,7 +271,11 @@
               </div>
               <div class="flex items-center gap-2">
                 <span id="embedStatus" class="text-xs uppercase tracking-widest opacity-60"></span>
-                <div class="hidden md:flex items-center gap-2 text-[10px] uppercase tracking-widest">
+                <button id="immersiveToggle" type="button"
+                        class="px-3 py-2 rounded-lg border border-black/10 bg-white/60 hover:bg-white transition-colors text-[10px] uppercase tracking-widest interactive">
+                  <span id="immersiveLabel" data-i18n="viewer.fullscreenEnter">Full screen</span>
+                </button>
+                <div class="preview-size-controls hidden md:flex items-center gap-2 text-[10px] uppercase tracking-widest">
                   <button id="sizeMobile" type="button"
                           class="px-3 py-2 rounded-lg border border-black/10 bg-white/60 hover:bg-white transition-colors interactive">
                     <span data-i18n="viewer.mobile">Mobile</span>
@@ -226,10 +283,6 @@
                   <button id="sizeTablet" type="button"
                           class="px-3 py-2 rounded-lg border border-black/10 bg-white/60 hover:bg-white transition-colors interactive">
                     <span data-i18n="viewer.tablet">Tablet</span>
-                  </button>
-                  <button id="sizeDesktop" type="button"
-                          class="px-3 py-2 rounded-lg border border-black/10 bg-white/60 hover:bg-white transition-colors interactive">
-                    <span data-i18n="viewer.desktop">Desktop</span>
                   </button>
                 </div>
               </div>
@@ -247,7 +300,7 @@
 
               <div id="fallback" class="mt-4 hidden border border-black/10 bg-white/50 rounded-2xl p-4">
                 <div class="font-display font-bold tracking-tight" data-i18n="viewer.fallback.title">Can’t embed this project</div>
-                <p class="mt-2 text-sm opacity-80" data-i18n="viewer.fallback.body">
+                <p id="fallbackBody" class="mt-2 text-sm opacity-80" data-i18n="viewer.fallback.body">
                   The project may block embedding (X-Frame-Options / CSP frame-ancestors). Use the button below.
                 </p>
                 <a id="fallbackOpen"
@@ -320,8 +373,8 @@
       </section>
 
       <div class="mt-14 text-xs uppercase tracking-widest opacity-60">
-        <span data-i18n="help.line">Having trouble? Contact João at</span>
-        <a class="underline hover:text-accent interactive" href="mailto:work@jbclemente.pt">work@jbclemente.pt</a>
+        <span data-i18n="help.line">Having trouble? Contact us at</span>
+        <a class="underline hover:text-accent interactive" href="mailto:support@jbclemente.pt">support@jbclemente.pt</a>
       </div>
 
     </div>
@@ -349,6 +402,8 @@
      * CONFIG (edit this)
      *************************************************************/
     const rememberDurationHours = 24;
+    const autoFullscreenOnMobile = true; // full-screen viewer on small screens
+    const revealProjectUrl = false; // hide direct open links in UI
 
     // 1) Add each client here:
     // - id: the URL ?id= value
@@ -383,6 +438,19 @@
       }
     };
 
+    const CLIENT_KEYS = Object.keys(CLIENTS);
+
+    function resolveClientById(id) {
+      if (!id) return { clientId: null, client: null };
+      if (CLIENTS[id]) return { clientId: id, client: CLIENTS[id] };
+
+      const lowerId = id.toLowerCase();
+      const matchedKey = CLIENT_KEYS.find((key) => key.toLowerCase() === lowerId);
+      if (matchedKey) return { clientId: matchedKey, client: CLIENTS[matchedKey] };
+
+      return { clientId: id, client: null };
+    }
+
     /*************************************************************
      * Helpers
      *************************************************************/
@@ -414,9 +482,13 @@
         "viewer.mobile": "Mobile",
         "viewer.tablet": "Tablet",
         "viewer.desktop": "Desktop",
+        "viewer.fullscreenEnter": "Full screen",
+        "viewer.fullscreenExit": "Exit full screen",
+        "viewer.secureLabel": "Secure preview",
         "viewer.iframeTitle": "Client Project",
         "viewer.fallback.title": "Can't embed this project",
         "viewer.fallback.body": "The project may block embedding (X-Frame-Options / CSP frame-ancestors). Use the button below.",
+        "viewer.fallback.privateBody": "This client preview is locked to embedded mode. Ask Bruno if you need direct access.",
         "viewer.fallback.open": "Open in new tab",
         "empty.secureNode": "Secure Node",
         "empty.accessLocked": "Access Locked",
@@ -430,7 +502,7 @@
         "empty.log3": "> channel: encrypted",
         "empty.log4": "> status: locked",
         "empty.footer": "Client access portal secured",
-        "help.line": "Having trouble? Contact João at",
+        "help.line": "Having trouble? Contact us at",
         "chip.missingId": "Missing id",
         "chip.unknownClient": "Unknown client",
         "labels.clientDefault": "client",
@@ -480,9 +552,13 @@
         "viewer.mobile": "Mobile",
         "viewer.tablet": "Tablet",
         "viewer.desktop": "Desktop",
+        "viewer.fullscreenEnter": "Ecrã inteiro",
+        "viewer.fullscreenExit": "Sair do ecrã inteiro",
+        "viewer.secureLabel": "Pré-visualização segura",
         "viewer.iframeTitle": "Projeto do Cliente",
         "viewer.fallback.title": "Não é possível incorporar este projeto",
         "viewer.fallback.body": "O projeto pode bloquear a incorporação (X-Frame-Options / CSP frame-ancestors). Usa o botão abaixo.",
+        "viewer.fallback.privateBody": "Esta pré-visualização só pode abrir incorporada. Fala com o Bruno se precisares de acesso direto.",
         "viewer.fallback.open": "Abrir num novo separador",
         "empty.secureNode": "Nó Seguro",
         "empty.accessLocked": "Acesso Bloqueado",
@@ -568,6 +644,8 @@
       });
       const frame = $("projectFrame");
       if (frame && dict["viewer.iframeTitle"]) frame.setAttribute("title", dict["viewer.iframeTitle"]);
+      syncFallbackPrivacyText();
+      syncImmersiveToggleLabel();
     };
 
     const showLangModal = () => {
@@ -664,18 +742,24 @@
     }
 
     function updateOpenLinks(url) {
-      $("openNewTabLink").href = url;
-      $("fallbackOpen").href = url;
+      if (revealProjectUrl) {
+        $("openNewTabLink").href = url;
+        $("fallbackOpen").href = url;
+      } else {
+        $("openNewTabLink").removeAttribute("href");
+        $("fallbackOpen").removeAttribute("href");
+      }
     }
 
     function showViewer() {
       $("emptyState").classList.add("hidden");
       $("viewerShell").classList.remove("hidden");
       $("lockBtn").classList.remove("hidden");
-      $("openNewTabLink").classList.remove("hidden");
+      $("openNewTabLink").classList.toggle("hidden", !revealProjectUrl);
     }
 
     function hideViewer() {
+      setImmersive(false);
       $("viewerShell").classList.add("hidden");
       $("lockBtn").classList.add("hidden");
       $("openNewTabLink").classList.add("hidden");
@@ -751,14 +835,44 @@ function initCursor() {
       unlocked: false,
       loadTimer: null,
       loaded: false,
+      immersive: false,
     };
+
+    function isMobileViewport() {
+      return !!(window.matchMedia && window.matchMedia("(max-width: 767px)").matches);
+    }
+
+    function syncImmersiveToggleLabel() {
+      const label = $("immersiveLabel");
+      if (!label) return;
+      label.textContent = state.immersive ? t("viewer.fullscreenExit") : t("viewer.fullscreenEnter");
+    }
+
+    function setImmersive(enabled) {
+      state.immersive = !!enabled;
+      $("viewerShell").classList.toggle("immersive", state.immersive);
+      document.body.classList.toggle("viewer-immersive", state.immersive);
+      syncImmersiveToggleLabel();
+    }
+
+    function syncFallbackPrivacyText() {
+      const body = $("fallbackBody");
+      const openBtn = $("fallbackOpen");
+      if (body) {
+        body.textContent = revealProjectUrl ? t("viewer.fallback.body") : t("viewer.fallback.privateBody");
+      }
+      if (openBtn) {
+        openBtn.classList.toggle("hidden", !revealProjectUrl);
+      }
+    }
 
     function readParams() {
       const params = new URLSearchParams(window.location.search);
       const id = (params.get("id") || "").trim();
 
-      state.clientId = id || null;
-      state.client = id && CLIENTS[id] ? CLIENTS[id] : null;
+      const resolved = resolveClientById(id);
+      state.clientId = resolved.clientId;
+      state.client = resolved.client;
       state.projectUrl = state.client && state.client.projectUrl ? state.client.projectUrl : null;
     }
 
@@ -842,6 +956,7 @@ function initCursor() {
       clearTimeout(state.loadTimer);
       state.loaded = false;
       setEmbedStatus(t("viewer.embed.loading"));
+      syncFallbackPrivacyText();
 
       state.loadTimer = setTimeout(() => {
         if (state.loaded) return;
@@ -863,8 +978,12 @@ function initCursor() {
 
       showViewer();
       $("fallback").classList.add("hidden");
-      $("viewerSub").textContent = v.host;
+      $("viewerSub").textContent = revealProjectUrl ? v.host : t("viewer.secureLabel");
+      syncFallbackPrivacyText();
       updateOpenLinks(v.url);
+      if (autoFullscreenOnMobile && isMobileViewport()) {
+        setImmersive(true);
+      }
 
       const frame = $("projectFrame");
       startEmbedWatchdog();
@@ -945,6 +1064,8 @@ function initCursor() {
       // Empty state visibility
       $("emptyState").classList.remove("hidden");
       hideViewer();
+      syncFallbackPrivacyText();
+      syncImmersiveToggleLabel();
 
       // Events
       $("unlockBtn").addEventListener("click", attemptUnlock);
@@ -961,6 +1082,10 @@ function initCursor() {
       });
 
       $("lockBtn").addEventListener("click", lockNow);
+      $("immersiveToggle")?.addEventListener("click", () => {
+        if (!state.unlocked) return;
+        setImmersive(!state.immersive);
+      });
 
       $("projectFrame").addEventListener("load", () => {
         state.loaded = true;
