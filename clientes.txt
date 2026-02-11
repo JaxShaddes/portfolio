@@ -4,7 +4,12 @@
     "password": "248826"
   },
   "gemmini": {
-    "upstream": "https://client-preview-gemmini.pages.dev/",
+    "upstream": "https://gemmini.pages.dev/",
     "password": "86861313"
-  }
+  },
+  "fofinhos": {
+    "upstream": "https://client-preview-fofinhos.pages.dev/",
+    "password": "820226"
+  },
+
 }
