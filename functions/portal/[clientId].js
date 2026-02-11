@@ -7,6 +7,7 @@ import {
   readAuthorizedSession,
 } from "../_portal";
 import { onRequestGet as onPortalLoginGet } from "./login";
+import { onRequestGet as onPortalDebugGet } from "./debug";
 
 function renderClientPage(clientId) {
   const safeClientId = escapeHtml(clientId);
@@ -103,6 +104,9 @@ export async function onRequestGet(context) {
   const rawClientId = String(context.params.clientId || "").trim().toLowerCase();
   if (rawClientId === "login") {
     return onPortalLoginGet(context);
+  }
+  if (rawClientId === "debug") {
+    return onPortalDebugGet(context);
   }
 
   let config;
