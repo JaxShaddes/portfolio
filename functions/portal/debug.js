@@ -7,6 +7,7 @@ import {
 } from "../_portal";
 
 export async function onRequestGet(context) {
+  const requestUrl = new URL(context.request.url);
   const nowUnix = Math.floor(Date.now() / 1000);
   const cookies = parseCookies(context.request.headers.get("Cookie"));
   const portalSessionToken = cookies.portal_session || "";
@@ -50,7 +51,9 @@ export async function onRequestGet(context) {
     JSON.stringify(
       {
         timestamp: new Date().toISOString(),
-        requestPath: new URL(context.request.url).pathname,
+        requestPath: requestUrl.pathname,
+        requestHost: requestUrl.host,
+        requestOrigin: requestUrl.origin,
         secureRequest: isSecureRequest(context.request),
         hasCookieHeader: !!context.request.headers.get("Cookie"),
         cookieNames: Object.keys(cookies),
