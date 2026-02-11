@@ -40,13 +40,13 @@ export async function onRequestPost(context) {
 
   if (!clientId || !password) {
     const redirectPath = buildLoginErrorRedirect("invalid_credentials", clientId, nextRaw);
-    return makeRedirectResponse(redirectPath, 302);
+    return makeRedirectResponse(redirectPath, 303);
   }
 
   const credentialsValid = await verifyCredentials(config, clientId, password);
   if (!credentialsValid) {
     const redirectPath = buildLoginErrorRedirect("invalid_credentials", clientId, nextRaw);
-    return makeRedirectResponse(redirectPath, 302);
+    return makeRedirectResponse(redirectPath, 303);
   }
 
   const token = await createSessionToken(clientId, config.sessionTtlSeconds, config.authSecret);
@@ -54,7 +54,7 @@ export async function onRequestPost(context) {
   const setCookie = buildSessionCookie(token, config.sessionTtlSeconds, secure);
   const safeNext = sanitizeNextPath(nextRaw, clientId);
   const target = safeNext || `/portal/${clientId}`;
-  const response = makeRedirectResponse(target, 302);
+  const response = makeRedirectResponse(target, 303);
   response.headers.append("Set-Cookie", setCookie);
   return response;
 }

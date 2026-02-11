@@ -324,7 +324,7 @@ export async function verifySessionToken(token, authSecret) {
   if (!clientId) return null;
   if (!Number.isFinite(exp) || !Number.isFinite(iat)) return null;
   if (exp <= now) return null;
-  if (iat > now + 60) return null;
+  if (iat <= 0) return null;
 
   return { clientId, exp, iat };
 }
