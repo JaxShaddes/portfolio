@@ -6,6 +6,7 @@ import {
   normalizeClientId,
   readAuthorizedSession,
 } from "../_portal";
+import { onRequestGet as onPortalLoginGet } from "./login";
 
 function renderClientPage(clientId) {
   const safeClientId = escapeHtml(clientId);
@@ -99,6 +100,11 @@ function renderClientPage(clientId) {
 }
 
 export async function onRequestGet(context) {
+  const rawClientId = String(context.params.clientId || "").trim().toLowerCase();
+  if (rawClientId === "login") {
+    return onPortalLoginGet(context);
+  }
+
   let config;
   try {
     config = await loadPortalConfig(context.env);
