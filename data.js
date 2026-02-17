@@ -121,7 +121,7 @@ window.PORTFOLIO_DATA = {
           "Gráfico",
           ""
         ],
-        "heroBody": "Crio experiências digitais austeras, tipográficas e orientadas por propósito para marcas que não têm medo de se destacar. Baseado no Porto, com atuação global.",
+        "heroBody": "Crio experiências digitais tipográficas e orientadas para marcas que não têm medo de se destacar. Baseado no Porto, com alcance global.",
         "marquee": "DISPONÍVEL PARA NOVOS PROJETOS — BASEADO NO PORTO — ALCANCE GLOBAL",
         "selectedWork": "Trabalhos Selecionados",
         "viewAll": "Ver Todos",
