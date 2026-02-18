@@ -406,9 +406,9 @@
                         </div>
                         <div>
                             <h4 className="font-sans text-xs uppercase tracking-widest mb-6 text-gray-500">{copy.footer.connect}</h4>
-                            <a href="#" onClick={() => setPage('contact')} className="font-display text-3xl hover:text-accent transition-colors interactive underline decoration-1 underline-offset-4">
+                            <button type="button" onClick={() => setPage('contact')} className="font-display text-3xl hover:text-accent transition-colors interactive underline decoration-1 underline-offset-4 text-left">
                                 {copy.footer.letsTalk}
-                            </a>
+                            </button>
                         </div>
                     </div>
                     <div className="flex justify-between items-end mt-20 pt-8 border-t border-gray-800 font-sans text-xs text-gray-500">
@@ -855,10 +855,46 @@
             );
         };
 
+        const parseHashRoute = (hash) => {
+            const cleaned = (hash || "").replace(/^#/, "").replace(/^\/+/, "");
+            const segments = cleaned.split("/").filter(Boolean);
+
+            if (segments.length === 0) {
+                return { page: "home", slug: null };
+            }
+
+            const [section, rawSlug] = segments;
+
+            if (section === "project" && rawSlug) {
+                let decodedSlug = rawSlug;
+                try {
+                    decodedSlug = decodeURIComponent(rawSlug);
+                } catch {}
+                return { page: "project", slug: decodedSlug };
+            }
+
+            if (["home", "work", "about", "contact"].includes(section)) {
+                return { page: section, slug: null };
+            }
+
+            return { page: "home", slug: null };
+        };
+
+        const buildHashRoute = (page, slug = null) => {
+            if (page === "project" && slug) {
+                return `#/project/${encodeURIComponent(slug)}`;
+            }
+            if (page === "work") return "#/work";
+            if (page === "about") return "#/about";
+            if (page === "contact") return "#/contact";
+            return "#/";
+        };
+
         // 4. App Shell
         const App = () => {
-            const [page, setPageState] = useState('home');
-            const [slug, setSlug] = useState(null);
+            const initialRoute = parseHashRoute(window.location.hash);
+            const [page, setPageState] = useState(initialRoute.page);
+            const [slug, setSlug] = useState(initialRoute.slug);
             const [loading, setLoading] = useState(true);
             const storedLang = getStoredLang();
             const [lang, setLang] = useState(storedLang || "en");
@@ -926,9 +962,31 @@
                 return () => clearTimeout(timer);
             }, []);
 
+            useEffect(() => {
+                const handleHashChange = () => {
+                    const nextRoute = parseHashRoute(window.location.hash);
+                    setPageState(nextRoute.page);
+                    setSlug(nextRoute.slug);
+                };
+
+                window.addEventListener("hashchange", handleHashChange);
+
+                if (!window.location.hash) {
+                    window.history.replaceState(null, "", buildHashRoute(initialRoute.page, initialRoute.slug));
+                }
+
+                return () => {
+                    window.removeEventListener("hashchange", handleHashChange);
+                };
+            }, []);
+
             const setPage = (newPage, newSlug = null) => {
                 setSlug(newSlug);
                 setPageState(newPage);
+                const nextHash = buildHashRoute(newPage, newSlug);
+                if (window.location.hash !== nextHash) {
+                    window.location.hash = nextHash;
+                }
             };
 
             const handleSelectLang = (nextLang) => {
