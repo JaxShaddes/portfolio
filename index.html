@@ -177,7 +177,21 @@
             document.documentElement.setAttribute("data-lang", lang);
         };
 
-                const DATA = window.PORTFOLIO_DATA || {};
+        const PREVIEW_STORAGE_KEY = "bc_portfolio_preview_data_v1";
+        const getPreviewData = () => {
+            try {
+                const params = new URLSearchParams(window.location.search);
+                if (params.get("adminPreview") !== "1") return null;
+                const raw = localStorage.getItem(PREVIEW_STORAGE_KEY);
+                if (!raw) return null;
+                const parsed = JSON.parse(raw);
+                return parsed && typeof parsed === "object" ? parsed : null;
+            } catch {
+                return null;
+            }
+        };
+
+        const DATA = getPreviewData() || window.PORTFOLIO_DATA || {};
         const COPY = DATA.copy || {};
         const FILTERS = DATA.filters || [];
         const MONTHS_SHORT = DATA.monthsShort || { en: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"], pt: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"] };
@@ -444,8 +458,8 @@
         // --- PAGES ---
         const HomePage = ({ setPage, copy, projects }) => {
             useCursorHover();
-            const SELECTED_INDICES = [0, 2]; 
-            const selectedProjects = projects.filter((_, index) => SELECTED_INDICES.includes(index));
+            const featured = projects.filter((project) => project && project.featured);
+            const selectedProjects = (featured.length > 0 ? featured : projects).slice(0, 4);
             
             useEffect(() => {
                 gsap.fromTo(".hero-text", 
@@ -537,7 +551,7 @@
             };
             const filteredProjects = filter === 'all' 
                 ? projects 
-                : projects.filter(p => p.tags.includes(filter));
+                : projects.filter(p => Array.isArray(p.tags) && p.tags.includes(filter));
             
             const getSortValue = (p) => {
                 const year = getYear(p.year);
@@ -632,11 +646,14 @@
             const rightImages = project.images.filter((_, i) => i % 2 !== 0);
 
             const renderRole = () => {
-                 if (Array.isArray(project.role)) {
+                 if (Array.isArray(project.role) && project.role.length > 0) {
                      return project.role.map(r => <li key={r}>{r}</li>);
                  }
-                 return <li>{project.role || copy.project.defaultRole}</li>;
-            };
+                 if (typeof project.role === "string" && project.role.trim()) {
+                     return <li>{project.role}</li>;
+                 }
+                 return <li>{copy.project.defaultRole}</li>;
+             };
 
             return (
                 <div className="min-h-screen bg-off-white">

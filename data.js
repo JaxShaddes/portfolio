@@ -276,6 +276,7 @@ window.PORTFOLIO_DATA = {
         "year": "2025",
         "month": 8,
         "showMonth": true,
+        "featured": false,
         "client": "Casa Rabelo: Wine Boutique",
         "services": [
           "Identity",
@@ -324,6 +325,7 @@ window.PORTFOLIO_DATA = {
         "year": "2019/2025",
         "month": 1,
         "showMonth": false,
+        "featured": false,
         "client": "Tintas Silaca",
         "services": [
           "Mobile App design",
@@ -331,6 +333,7 @@ window.PORTFOLIO_DATA = {
           "logo design",
           "packaging design"
         ],
+        "role": "",
         "tags": [
           "packaging",
           "ux/ui design",
@@ -367,6 +370,7 @@ window.PORTFOLIO_DATA = {
         "year": "2025",
         "month": 11,
         "showMonth": true,
+        "featured": false,
         "client": "Hingryd Queiroz",
         "services": [
           "web design",
@@ -401,12 +405,14 @@ window.PORTFOLIO_DATA = {
         "year": "2025",
         "month": 7,
         "showMonth": false,
+        "featured": false,
         "client": "Azul Empréstimo",
         "services": [
           "Typography",
           "Social Media",
           "consulting"
         ],
+        "role": "",
         "tags": [
           "typography",
           "print"
@@ -435,11 +441,13 @@ window.PORTFOLIO_DATA = {
         "year": "2024",
         "month": 11,
         "showMonth": false,
+        "featured": false,
         "client": "Personal Project",
         "services": [
           "Typography",
           "Cover Design"
         ],
+        "role": "",
         "tags": [
           "print",
           "graphic design"
@@ -477,6 +485,7 @@ window.PORTFOLIO_DATA = {
         "year": "2025",
         "month": 8,
         "showMonth": true,
+        "featured": false,
         "client": "Casa Rabelo: Boutique de Vinhos",
         "services": [
           "Identidade",
@@ -525,6 +534,7 @@ window.PORTFOLIO_DATA = {
         "year": "2019/2025",
         "month": 1,
         "showMonth": false,
+        "featured": false,
         "client": "Tintas Silaca",
         "services": [
           "Design de App Móvel",
@@ -532,6 +542,7 @@ window.PORTFOLIO_DATA = {
           "Design de Logótipo",
           "Design de Embalagem"
         ],
+        "role": "",
         "tags": [
           "packaging",
           "ux/ui design",
@@ -568,6 +579,7 @@ window.PORTFOLIO_DATA = {
         "year": "2025",
         "month": 11,
         "showMonth": true,
+        "featured": false,
         "client": "Hingryd Queiroz",
         "services": [
           "Web Design",
@@ -602,12 +614,14 @@ window.PORTFOLIO_DATA = {
         "year": "2025",
         "month": 7,
         "showMonth": false,
+        "featured": false,
         "client": "Azul Empréstimo",
         "services": [
           "Tipografia",
           "Redes Sociais",
           "Consultoria"
         ],
+        "role": "",
         "tags": [
           "typography",
           "print"
@@ -636,11 +650,13 @@ window.PORTFOLIO_DATA = {
         "year": "2024",
         "month": 11,
         "showMonth": false,
+        "featured": false,
         "client": "Projeto Pessoal",
         "services": [
           "Tipografia",
           "Design de Capas"
         ],
+        "role": "",
         "tags": [
           "print",
           "graphic design"
@@ -673,10 +689,10 @@ window.PORTFOLIO_DATA = {
     ]
   },
   "clients": [
-    "Casa Rabelo",
     "Azul Empréstimo",
     "Tintas Silaca",
     "Outrider Petfood",
-    "hqrz"
+    "hqrz",
+    "Casa Rabelo: Wine Boutique"
   ]
 };

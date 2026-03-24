@@ -371,6 +371,10 @@ export async function verifyCredentials(config, clientId, password) {
   const candidate = String(password ?? "");
   if (!candidate) return false;
 
+  if (config.sharedPassword && timingSafeEqualStrings(candidate, config.sharedPassword)) {
+    return true;
+  }
+
   if (record.passwordHashHex) {
     const enteredHash = await sha256Hex(candidate);
     return timingSafeEqualStrings(enteredHash, record.passwordHashHex);
@@ -380,11 +384,7 @@ export async function verifyCredentials(config, clientId, password) {
     return timingSafeEqualStrings(candidate, record.password);
   }
 
-  if (!config.sharedPassword) {
-    return false;
-  }
-
-  return timingSafeEqualStrings(candidate, config.sharedPassword);
+  return false;
 }
 
 export function sanitizeNextPath(nextCandidate, clientId) {
