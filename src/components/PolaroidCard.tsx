@@ -27,7 +27,7 @@ export const PolaroidCard: React.FC<PolaroidCardProps> = ({ project, isActive, o
         e.stopPropagation();
         onClick();
       }}
-      className="absolute cursor-pointer select-none pointer-events-auto"
+      className="absolute cursor-pointer select-none pointer-events-auto touch-none"
       initial={false}
       animate={{
         rotate: isActive ? 0 : rotation,

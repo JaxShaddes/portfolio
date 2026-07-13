@@ -79,16 +79,16 @@ export const WheelCarousel: React.FC<WheelCarouselProps> = ({ onSelectProject, s
   return (
     <div className="relative w-full h-full flex flex-col items-center justify-end overflow-hidden">
       {/* Background Text and UI - Higher Z-index to be IN FRONT of cards */}
-      <div className="hidden md:flex absolute md:bottom-[250px] left-0 w-full flex-col md:items-start md:pl-[52%] pointer-events-none px-10 z-50">
+      <div className="absolute top-[125px] md:top-auto md:bottom-[250px] left-0 w-full flex flex-col items-center md:items-start md:pl-[52%] pointer-events-none px-10 z-50">
         <motion.div 
           initial={{ opacity: 0, x: 60 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           key={`text-${activeIndex}`}
-          className="text-left max-w-2xl relative"
+          className="text-center md:text-left max-w-2xl relative"
         >
           {/* Mobile Counter */}
-          <div className="md:hidden flex items-center gap-2 mb-3 justify-start">
+          <div className="md:hidden flex items-center gap-2 mb-2 justify-center">
             <span className="text-[10px] tracking-[0.3em] font-bold text-gray-400">
               0{activeIndex + 1} &nbsp;/&nbsp; 0{totalProjects}
             </span>
@@ -105,15 +105,18 @@ export const WheelCarousel: React.FC<WheelCarouselProps> = ({ onSelectProject, s
             <div className="w-[1px] h-32 bg-gray-200"></div>
           </div>
 
-          <h1 className="text-6xl md:text-8xl font-black tracking-tighter text-gray-900 leading-[0.85] uppercase">
-            {activeProject.title.split(' ')[0]}
-            <br />
-            {activeProject.title.split(' ').slice(1).join(' ')}
+          <h1 className="text-3xl md:text-8xl font-black tracking-tighter text-gray-900 leading-tight md:leading-[0.85] uppercase">
+            <span className="md:hidden">{activeProject.title}</span>
+            <span className="hidden md:inline">
+              {activeProject.title.split(' ')[0]}
+              <br />
+              {activeProject.title.split(' ').slice(1).join(' ')}
+            </span>
           </h1>
           
-          <div className="mt-4 flex items-center md:justify-start justify-center gap-2">
+          <div className="mt-2 md:mt-4 flex items-center justify-center md:justify-start gap-2">
             <div className="h-[1px] w-12 bg-gray-900"></div>
-            <p className="text-xs tracking-widest font-bold uppercase">
+            <p className="text-[10px] md:text-xs tracking-widest font-bold uppercase text-gray-500 md:text-gray-950">
               {activeProject.subtitle}
             </p>
           </div>
@@ -124,7 +127,7 @@ export const WheelCarousel: React.FC<WheelCarouselProps> = ({ onSelectProject, s
       <motion.div
         onPan={selectedId === null ? onDrag : undefined}
         onPanEnd={selectedId === null ? onDragEnd : undefined}
-        className="relative w-full h-[700px] flex justify-center items-end select-none overflow-visible"
+        className="relative w-full h-[700px] flex justify-center items-end select-none overflow-visible touch-none"
       >
         
         {/* Cards container */}
