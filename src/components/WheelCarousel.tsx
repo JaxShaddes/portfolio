@@ -212,7 +212,7 @@ export const WheelCarousel: React.FC<WheelCarouselProps> = ({ onSelectProject, s
           </div>
 
           {/* PC Mouse scrollwheel indicator */}
-          <div className="hidden md:block w-5 h-8 border border-gray-400 rounded-full flex justify-center pt-1">
+          <div className="hidden md:flex w-5 h-8 border border-gray-400 rounded-full justify-center pt-1">
             <motion.div 
               animate={{ y: [0, 10, 0] }}
               transition={{ repeat: Infinity, duration: 1.5 }}
