@@ -79,7 +79,7 @@ export const WheelCarousel: React.FC<WheelCarouselProps> = ({ onSelectProject, s
   return (
     <div className="relative w-full h-full flex flex-col items-center justify-end overflow-hidden">
       {/* Background Text and UI - Higher Z-index to be IN FRONT of cards */}
-      <div className="absolute top-[14%] md:top-auto md:bottom-[250px] left-0 w-full flex flex-col items-center md:items-start md:pl-[52%] pointer-events-none px-10 z-50">
+      <div className="hidden md:flex absolute md:bottom-[250px] left-0 w-full flex-col md:items-start md:pl-[52%] pointer-events-none px-10 z-50">
         <motion.div 
           initial={{ opacity: 0, x: 60 }}
           animate={{ opacity: 1, x: 0 }}
@@ -121,7 +121,11 @@ export const WheelCarousel: React.FC<WheelCarouselProps> = ({ onSelectProject, s
       </div>
 
       {/* Wheel Interaction Area */}
-      <div className="relative w-full h-[700px] flex justify-center items-end select-none overflow-visible">
+      <motion.div
+        onPan={selectedId === null ? onDrag : undefined}
+        onPanEnd={selectedId === null ? onDragEnd : undefined}
+        className="relative w-full h-[700px] flex justify-center items-end select-none overflow-visible"
+      >
         
         {/* Cards container */}
         <div className="absolute bottom-0 w-full h-full flex justify-center items-end pb-[200px] pointer-events-none">
@@ -196,7 +200,7 @@ export const WheelCarousel: React.FC<WheelCarouselProps> = ({ onSelectProject, s
             />
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };

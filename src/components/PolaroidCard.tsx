@@ -59,10 +59,10 @@ export const PolaroidCard: React.FC<PolaroidCardProps> = ({ project, isActive, o
         </div>
         <div className="mt-4 text-left">
           <p className="text-[10px] font-bold tracking-widest text-gray-800 uppercase border-t pt-2 border-gray-200">
-            {project.author}
+            {project.title}
           </p>
           <p className="text-[8px] text-gray-500 italic uppercase">
-            {Array.isArray(project.role) ? project.role.join(' / ') : project.role}
+            {project.subtitle}
           </p>
         </div>
         
