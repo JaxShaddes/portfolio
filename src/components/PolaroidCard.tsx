@@ -31,17 +31,17 @@ export const PolaroidCard: React.FC<PolaroidCardProps> = ({ project, isActive, o
       initial={false}
       animate={{
         rotate: isActive ? 0 : rotation,
-        scale: isActive ? 1.15 : 0.8,
+        scale: isActive ? (isMobile ? 0.95 : 1.15) : (isMobile ? 0.75 : 0.8),
         opacity: isActive ? 1 : 0.4,
         zIndex: isActive ? 30 : 10, // Text is at Z-50, so cards are always behind
         x: isActive && !isMobile ? -220 : 0,
-        y: isActive ? (isMobile ? 170 : 100) : 0
+        y: isActive ? (isMobile ? 50 : 100) : 0
       }}
       transition={{ type: 'spring', stiffness: 300, damping: 30 }}
       style={{
         width: '240px',
         height: '320px',
-        bottom: '350px', // Raised slightly more to clear the wheel hub
+        bottom: isMobile ? '230px' : '350px', // Lower on mobile to prevent overlapping title
         left: '50%',
         marginLeft: '-120px',
         transformOrigin: '50% 210%', // Increased radius for smoother circular path

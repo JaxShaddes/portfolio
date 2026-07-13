@@ -79,7 +79,7 @@ export const WheelCarousel: React.FC<WheelCarouselProps> = ({ onSelectProject, s
   return (
     <div className="relative w-full h-full flex flex-col items-center justify-end overflow-hidden">
       {/* Background Text and UI - Higher Z-index to be IN FRONT of cards */}
-      <div className="absolute top-[125px] md:top-auto md:bottom-[250px] left-0 w-full flex flex-col items-center md:items-start md:pl-[52%] pointer-events-none px-10 z-50">
+      <div className="absolute top-[115px] md:top-auto md:bottom-[250px] left-0 w-full flex flex-col items-center md:items-start md:pl-[52%] pointer-events-none px-10 z-50">
         <motion.div 
           initial={{ opacity: 0, x: 60 }}
           animate={{ opacity: 1, x: 0 }}
@@ -105,7 +105,7 @@ export const WheelCarousel: React.FC<WheelCarouselProps> = ({ onSelectProject, s
             <div className="w-[1px] h-32 bg-gray-200"></div>
           </div>
 
-          <h1 className="text-3xl md:text-8xl font-black tracking-tighter text-gray-900 leading-tight md:leading-[0.85] uppercase">
+          <h1 className="text-2xl md:text-8xl font-black tracking-tighter text-gray-900 leading-tight md:leading-[0.85] uppercase">
             <span className="md:hidden">{activeProject.title}</span>
             <span className="hidden md:inline">
               {activeProject.title.split(' ')[0]}
