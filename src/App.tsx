@@ -1,46 +1,34 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { WheelCarousel } from './components/WheelCarousel';
 import { ProjectView } from './components/ProjectView';
 import { projects, Project } from './data';
-import { Menu, Search } from 'lucide-react';
+import { Menu } from 'lucide-react';
 
 function App() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [showWorksDropdown, setShowWorksDropdown] = useState(false);
   const [showAboutModal, setShowAboutModal] = useState(false);
-  const [showSearch, setShowSearch] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const searchInputRef = useRef<HTMLInputElement>(null);
+  const [showContactModal, setShowContactModal] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         setShowWorksDropdown(false);
         setShowAboutModal(false);
-        setShowSearch(false);
-        setSearchQuery('');
+        setShowContactModal(false);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  useEffect(() => {
-    if (showSearch) {
-      setTimeout(() => {
-        searchInputRef.current?.focus();
-      }, 50);
-    }
-  }, [showSearch]);
-
-  const filteredProjects = projects.filter(p => {
-    const query = searchQuery.toLowerCase();
-    const matchesTitle = p.title.toLowerCase().includes(query);
-    const matchesSubtitle = p.subtitle.toLowerCase().includes(query);
-    const matchesServices = p.services ? p.services.some(s => s.toLowerCase().includes(query)) : false;
-    return matchesTitle || matchesSubtitle || matchesServices;
-  });
+  const copyEmail = () => {
+    navigator.clipboard.writeText('contact@jbclemente.pt');
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   const handleNextProject = () => {
     if (!selectedProject) return;
@@ -77,13 +65,12 @@ function App() {
           >
             About
           </button>
-          <div className="flex gap-4">
-            <Search 
-              size={20} 
-              onClick={() => setShowSearch(true)} 
-              className="cursor-pointer hover:scale-110 transition-transform text-gray-900 hover:text-black" 
-            />
-          </div>
+          <button 
+            onClick={() => setShowContactModal(true)}
+            className="text-[10px] tracking-widest font-bold uppercase hover:opacity-50 transition-opacity cursor-pointer"
+          >
+            Contact
+          </button>
         </div>
       </nav>
 
@@ -226,73 +213,92 @@ function App() {
         )}
       </AnimatePresence>
 
-      {/* Search Overlay Modal */}
+      {/* Contact Overlay Modal */}
       <AnimatePresence>
-        {showSearch && (
+        {showContactModal && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[150] bg-black/45 backdrop-blur-md flex justify-center items-start pt-32 px-4"
+            className="fixed inset-0 z-[150] bg-black/40 backdrop-blur-md flex justify-center items-center p-4"
           >
             {/* Backdrop click to close */}
-            <div className="absolute inset-0" onClick={() => { setShowSearch(false); setSearchQuery(''); }} />
+            <div className="absolute inset-0" onClick={() => setShowContactModal(false)} />
 
-            {/* Search Box */}
+            {/* Modal Box */}
             <motion.div
-              initial={{ scale: 0.97, y: -10 }}
+              initial={{ scale: 0.95, y: 15 }}
               animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.97, y: -10 }}
+              exit={{ scale: 0.95, y: 15 }}
               transition={{ type: "spring", damping: 25, stiffness: 220 }}
-              className="relative bg-[#F8F7F5] border border-gray-200 rounded-sm shadow-2xl p-6 max-w-lg w-full noise-bg z-10 text-gray-900"
+              className="relative bg-[#F8F7F5] border border-gray-200 rounded-sm shadow-2xl p-8 md:p-12 max-w-md w-full noise-bg z-10 text-gray-900"
             >
-              {/* Input container */}
-              <div className="flex items-center gap-3 border-b border-gray-300 pb-3 mb-4">
-                <Search size={18} className="text-gray-400" />
-                <input
-                  ref={searchInputRef}
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Type to search projects..."
-                  className="w-full bg-transparent border-none outline-none text-sm font-space text-black placeholder-gray-400"
-                />
-                <button
-                  onClick={() => { setShowSearch(false); setSearchQuery(''); }}
-                  className="text-[10px] font-bold uppercase tracking-wider text-gray-400 hover:text-black transition-colors cursor-pointer"
-                >
-                  Close
-                </button>
+              {/* Header Branding */}
+              <div className="flex flex-col items-center text-center mb-8 border-b border-gray-200 pb-6">
+                <div className="w-12 h-12 mb-3">
+                  <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
+                </div>
+                <h3 className="text-lg font-bold tracking-wider font-space uppercase">Bruno Clemente</h3>
+                <span className="text-[7px] tracking-[0.27em] text-gray-500 font-light font-lexend uppercase mt-1">Graphic Design</span>
               </div>
 
-              {/* Results list */}
-              <div className="max-h-60 overflow-y-auto pr-1">
-                {searchQuery.trim() === '' ? (
-                  <p className="text-[10px] tracking-widest font-mono text-gray-400 uppercase">// Start typing to find projects...</p>
-                ) : filteredProjects.length === 0 ? (
-                  <p className="text-[10px] tracking-widest font-mono text-red-500 uppercase">// No matching projects found</p>
-                ) : (
-                  <ul className="flex flex-col gap-1">
-                    {filteredProjects.map((project) => (
-                      <li key={project.id}>
-                        <button
-                          onClick={() => {
-                            setSelectedProject(project);
-                            setShowSearch(false);
-                            setSearchQuery('');
-                          }}
-                          className="w-full text-left p-2 hover:bg-gray-200/50 rounded-sm transition-colors flex justify-between items-center group cursor-pointer"
-                        >
-                          <div>
-                            <span className="font-space font-semibold text-xs text-black block">{project.title}</span>
-                            <span className="text-[9px] text-gray-400 font-mono tracking-wider block mt-0.5">{project.subtitle}</span>
-                          </div>
-                          <span className="text-[10px] tracking-widest font-bold uppercase text-black opacity-0 group-hover:opacity-100 transition-opacity">View →</span>
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                )}
+              {/* Contact Content */}
+              <div className="space-y-6 text-left">
+                <div>
+                  <h4 className="text-[9px] tracking-widest font-bold text-gray-400 uppercase font-mono mb-2">// INQUIRIES & NEW PROJECTS</h4>
+                  <button 
+                    onClick={copyEmail}
+                    className="w-full text-center py-4 px-6 border border-dashed border-gray-300 rounded-sm hover:border-black bg-gray-50/50 hover:bg-gray-100/50 transition-all cursor-pointer group mt-1"
+                  >
+                    <span className="font-space text-base md:text-lg font-bold tracking-tight block text-gray-800 group-hover:text-black transition-colors">
+                      contact@jbclemente.pt
+                    </span>
+                    <span className="text-[8px] font-mono tracking-widest text-gray-400 uppercase group-hover:text-gray-600 mt-1 block">
+                      {copied ? '✓ COPIED TO CLIPBOARD' : 'CLICK TO COPY EMAIL'}
+                    </span>
+                  </button>
+                </div>
+
+                <div>
+                  <h4 className="text-[9px] tracking-widest font-bold text-gray-400 uppercase font-mono mb-3">// CONNECT & FOLLOW</h4>
+                  <div className="grid grid-cols-2 gap-4">
+                    <a 
+                      href="https://www.linkedin.com/in/bruno-clemente-43391b16b/" 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="flex items-center justify-between p-3 border border-gray-250 hover:border-black rounded-sm bg-white transition-colors group text-left cursor-pointer"
+                    >
+                      <div>
+                        <span className="text-[7px] font-mono text-gray-400 block">// PROFESSIONAL</span>
+                        <span className="font-space text-[11px] font-semibold text-black block">LinkedIn</span>
+                      </div>
+                      <span className="text-xs text-gray-400 group-hover:translate-x-0.5 transition-transform">→</span>
+                    </a>
+                    <a 
+                      href="https://instagram.com/jbrunoclemente" 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="flex items-center justify-between p-3 border border-gray-250 hover:border-black rounded-sm bg-white transition-colors group text-left cursor-pointer"
+                    >
+                      <div>
+                        <span className="text-[7px] font-mono text-gray-400 block">// JOURNAL</span>
+                        <span className="font-space text-[11px] font-semibold text-black block">Instagram</span>
+                      </div>
+                      <span className="text-xs text-gray-400 group-hover:translate-x-0.5 transition-transform">→</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              {/* Close controls */}
+              <div className="mt-8 pt-6 border-t border-gray-200 flex justify-between items-center text-[10px] tracking-widest font-bold uppercase text-gray-400 font-mono">
+                <span>© 2026 BRUNO CLEMENTE</span>
+                <button 
+                  onClick={() => setShowContactModal(false)}
+                  className="text-black hover:opacity-50 transition-opacity underline decoration-2 underline-offset-4 cursor-pointer"
+                >
+                  Close [ESC]
+                </button>
               </div>
             </motion.div>
           </motion.div>
@@ -319,22 +325,7 @@ function App() {
         )}
       </AnimatePresence>
 
-      {/* Bottom info */}
-      <div className="fixed bottom-10 right-10 z-40 flex items-center gap-8">
-        <div className="flex items-center gap-4">
-          <div className="flex flex-col items-end">
-            <span className="text-[10px] font-bold tracking-widest uppercase">Social</span>
-            <span className="text-[8px] text-gray-400 uppercase">Follow my journey</span>
-          </div>
-          <div className="w-10 h-[1px] bg-gray-900"></div>
-        </div>
-        
-        <div className="w-12 h-12 border border-gray-200 rounded-full flex items-center justify-center opacity-50 hover:opacity-100 transition-opacity cursor-pointer">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5V14l-3-3 4-3 2 3h2"/><path d="M10.5 7.5L8 11H5"/>
-          </svg>
-        </div>
-      </div>
+
     </div>
   );
 }
