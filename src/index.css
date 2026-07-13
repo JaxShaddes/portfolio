@@ -1,0 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=Lexend+Giga:wght@300&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-space: "Space Grotesk", sans-serif;
+  --font-lexend: "Lexend Giga", sans-serif;
+}

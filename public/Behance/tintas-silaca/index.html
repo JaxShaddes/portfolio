@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tintas Silaca — Behance Presentation</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS (via CDN for ease of standalone load) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['"Space Grotesk"', 'sans-serif'],
+            mono: ['"Space Mono"', 'monospace'],
+          },
+          colors: {
+            brand: {
+              bg: '#0A0A0C',
+              card: '#121216',
+              accent: '#3F8CFF',
+              secondary: '#FF7D00',
+              border: '#1F2026',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0A0A0C;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1F2026;
+      border-radius: 5px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #3F8CFF;
+    }
+
+    /* Fade-in Animation on Scroll */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body class="bg-brand-bg text-gray-300 font-sans antialiased selection:bg-brand-accent selection:text-white">
+
+  <!-- Header Info / Metadata -->
+  <header class="max-w-7xl mx-auto px-6 pt-16 pb-8 border-b border-brand-border/60 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+    <div class="flex items-center gap-4">
+      <a href="/" class="text-[10px] font-mono tracking-wider uppercase text-gray-500 hover:text-white transition-colors"><- BACK_TO_PORTFOLIO</a>
+    </div>
+    <div class="flex items-center gap-8 text-[10px] font-mono tracking-wider uppercase text-gray-500">
+      <div><span class="text-gray-400">CLIENT:</span> <span class="text-white">TINTAS SILACA</span></div>
+      <div><span class="text-gray-400">ESTABLISHED:</span> <span class="text-white">1981</span></div>
+      <div><span class="text-gray-400">ROLE:</span> <span class="text-white">REBRANDING / UI DESIGN</span></div>
+    </div>
+  </header>
+
+  <!-- Project Title Hero -->
+  <section class="max-w-5xl mx-auto px-6 py-20 md:py-32 text-center">
+    <span class="font-mono text-xs text-brand-accent tracking-[0.4em] uppercase">INDUSTRIAL REBRANDING</span>
+    <h1 class="font-display text-6xl md:text-8xl lg:text-9xl text-white font-bold tracking-tight uppercase leading-none mt-4">
+      SILACA
+    </h1>
+    <p class="font-mono text-xs md:text-sm text-gray-500 mt-6 tracking-widest max-w-2xl mx-auto">
+      [TRANSITIONING FOUR DECADES OF TECHNICAL PAINT ENGINEERING INTO A SYSTEMATIZED DESIGN IDENTITY]
+    </p>
+    <div class="w-16 h-[2px] bg-brand-accent mx-auto mt-12"></div>
+  </section>
+
+  <!-- Big Hero Image -->
+  <section class="w-full bg-[#121216] overflow-hidden reveal">
+    <img 
+      src="../../media/silaca/capa.jpg" 
+      alt="Tintas Silaca Hero Packaging" 
+      class="w-full h-auto object-cover max-h-[85vh] opacity-90 hover:scale-[1.01] transition-transform duration-1000"
+    />
+  </section>
+
+  <!-- Overview Narrative -->
+  <section class="max-w-4xl mx-auto px-6 py-24 md:py-32 reveal">
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-16 items-start">
+      <div class="md:col-span-4">
+        <h2 class="font-mono text-xs font-bold tracking-widest text-brand-accent uppercase">
+          // CASE STUDY
+        </h2>
+      </div>
+      <div class="md:col-span-8 font-sans text-xl md:text-2xl text-gray-200 font-light leading-relaxed">
+        Silaca has provided coatings and specialized chemical solutions since 1981. The design challenge was to modernize their industrial footprint, building a unified identity that translates engineering rigor into a contemporary, tech-driven brand system.
+      </div>
+    </div>
+  </section>
+
+  <!-- Rebrand Evolution Split -->
+  <section class="max-w-6xl mx-auto px-6 py-12 reveal">
+    <div class="bg-brand-card p-6 md:p-12 border border-brand-border rounded-sm">
+      <p class="font-mono text-[10px] text-gray-500 tracking-wider mb-6">PACKAGING DESIGN EVOLUTION</p>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="flex flex-col gap-4">
+          <div class="overflow-hidden bg-black rounded-sm border border-brand-border">
+            <img 
+              src="../../media/silaca/latas/before.jpg" 
+              alt="Silaca Before Packaging" 
+              class="w-full h-auto opacity-70 hover:opacity-100 transition-opacity duration-500"
+            />
+          </div>
+          <span class="font-mono text-[10px] text-brand-secondary tracking-widest uppercase">// ORIGIN 1980s</span>
+          <p class="text-xs text-gray-500">The historical container design featured a highly illustrative, crowded format characteristic of late-20th-century paint production.</p>
+        </div>
+        
+        <div class="flex flex-col gap-4">
+          <div class="overflow-hidden bg-black rounded-sm border border-brand-border">
+            <img 
+              src="../../media/silaca/latas/after.jpg" 
+              alt="Silaca After Packaging" 
+              class="w-full h-auto hover:scale-[1.01] transition-transform duration-500"
+            />
+          </div>
+          <span class="font-mono text-[10px] text-brand-accent tracking-widest uppercase">// REBRAND SYSTEM 2025</span>
+          <p class="text-xs text-gray-500">The updated packaging system uses bold typography, structured line dividers, and color-coded labels to facilitate instant technical navigation.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Technical Cans Grid -->
+  <section class="max-w-6xl mx-auto px-6 py-12 reveal">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div class="bg-brand-card p-6 border border-brand-border rounded-sm flex flex-col justify-between">
+        <p class="font-mono text-[10px] text-gray-500 tracking-wider mb-6">SILACA RESIN SERIES MOCKUP</p>
+        <img 
+          src="../../media/silaca/latas/1.jpg" 
+          alt="Silaca Packaging 1" 
+          class="w-full h-auto rounded-sm hover:scale-[1.01] transition-transform duration-500"
+        />
+      </div>
+      <div class="bg-brand-card p-6 border border-brand-border rounded-sm flex flex-col justify-between">
+        <p class="font-mono text-[10px] text-gray-500 tracking-wider mb-6">PRODUCT LINE DISPLAY</p>
+        <img 
+          src="../../media/silaca/latas/2.jpg" 
+          alt="Silaca Packaging 2" 
+          class="w-full h-auto rounded-sm hover:scale-[1.01] transition-transform duration-500"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- Brutalist Quote Segment -->
+  <section class="w-full bg-brand-card py-24 my-16 border-y border-brand-border reveal">
+    <div class="max-w-3xl mx-auto px-6 text-center">
+      <span class="font-mono text-brand-accent text-xs tracking-[0.3em] uppercase">// DESIGN LOGIC</span>
+      <blockquote class="font-display text-2xl md:text-3xl text-white font-semibold leading-normal mt-4">
+        "A minimalist emblem replaced the former illustrative logo, retaining original color equity while signaling technical evolution."
+      </blockquote>
+      <div class="w-8 h-[2px] bg-brand-secondary mx-auto mt-8"></div>
+    </div>
+  </section>
+
+  <!-- Mobile App Presentation -->
+  <section class="max-w-6xl mx-auto px-6 py-12 reveal">
+    <div class="bg-brand-card p-6 md:p-12 border border-brand-border rounded-sm">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
+        <div>
+          <span class="font-mono text-[10px] text-gray-500 tracking-wider">UTILITY INTERFACE</span>
+          <h3 class="font-display text-3xl text-white mt-1">Industrial UI Design</h3>
+        </div>
+        <p class="text-xs text-gray-500 max-w-sm font-mono leading-relaxed">
+          The app interface for technical documentation and security data sheets prioritizes ease of search, high-visibility warning warnings, and brutalist layouts.
+        </p>
+      </div>
+
+      <!-- App grid -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div class="flex flex-col gap-2">
+          <img src="../../media/silaca/app/1.jpg" alt="App interface screen 1" class="w-full h-auto rounded-sm border border-brand-border shadow-lg" />
+          <span class="font-mono text-[8px] text-gray-500 mt-1">01_TECHNICAL_DASHBOARD</span>
+        </div>
+        <div class="flex flex-col gap-2">
+          <img src="../../media/silaca/app/2.jpg" alt="App interface screen 2" class="w-full h-auto rounded-sm border border-brand-border shadow-lg" />
+          <span class="font-mono text-[8px] text-gray-500 mt-1">02_COLOR_CONFIGURATOR</span>
+        </div>
+        <div class="flex flex-col gap-2">
+          <img src="../../media/silaca/app/3.jpg" alt="App interface screen 3" class="w-full h-auto rounded-sm border border-brand-border shadow-lg" />
+          <span class="font-mono text-[8px] text-gray-500 mt-1">03_SHEET_EXPLORER</span>
+        </div>
+        <div class="flex flex-col gap-2">
+          <img src="../../media/silaca/app/4.jpg" alt="App interface screen 4" class="w-full h-auto rounded-sm border border-brand-border shadow-lg" />
+          <span class="font-mono text-[8px] text-gray-500 mt-1">04_SAFETY_INSTRUCTIONS</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Color Palette Section -->
+  <section class="max-w-6xl mx-auto px-6 py-24 reveal">
+    <div class="bg-brand-card p-8 border border-brand-border rounded-sm">
+      <span class="font-mono text-[10px] text-brand-accent tracking-widest uppercase">TECHNICAL SPECS // COLORS</span>
+      
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-8">
+        <div class="flex flex-col gap-2 group cursor-pointer" onclick="navigator.clipboard.writeText('#3F8CFF'); alert('Hex #3F8CFF copied!')">
+          <div class="h-24 bg-[#3F8CFF] rounded-sm group-hover:scale-105 transition-transform border border-brand-border"></div>
+          <span class="font-mono text-[10px] font-bold text-white mt-1">Silaca Tech Blue</span>
+          <span class="font-mono text-[8px] text-gray-500">#3F8CFF</span>
+        </div>
+        
+        <div class="flex flex-col gap-2 group cursor-pointer" onclick="navigator.clipboard.writeText('#FF7D00'); alert('Hex #FF7D00 copied!')">
+          <div class="h-24 bg-[#FF7D00] rounded-sm group-hover:scale-105 transition-transform border border-brand-border"></div>
+          <span class="font-mono text-[10px] font-bold text-white mt-1">Warning Orange</span>
+          <span class="font-mono text-[8px] text-gray-500">#FF7D00</span>
+        </div>
+
+        <div class="flex flex-col gap-2 group cursor-pointer" onclick="navigator.clipboard.writeText('#121216'); alert('Hex #121216 copied!')">
+          <div class="h-24 bg-[#121216] rounded-sm group-hover:scale-105 transition-transform border border-brand-border"></div>
+          <span class="font-mono text-[10px] font-bold text-white mt-1">Brutal Charcoal</span>
+          <span class="font-mono text-[8px] text-gray-500">#121216</span>
+        </div>
+
+        <div class="flex flex-col gap-2 group cursor-pointer" onclick="navigator.clipboard.writeText('#FFFFFF'); alert('Hex #FFFFFF copied!')">
+          <div class="h-24 bg-[#FFFFFF] rounded-sm group-hover:scale-105 transition-transform border border-brand-border"></div>
+          <span class="font-mono text-[10px] font-bold text-white mt-1">Pure Clean White</span>
+          <span class="font-mono text-[8px] text-gray-500">#FFFFFF</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Outro Appreciation Block -->
+  <section class="max-w-4xl mx-auto px-6 py-32 text-center reveal">
+    <h2 class="font-display text-5xl md:text-6xl text-white font-bold uppercase tracking-tight">
+      PROJECT COMPLETE
+    </h2>
+    <p class="font-mono text-xs text-gray-500 mt-4 tracking-wider">
+      Rebranded and structured by Bruno Clemente
+    </p>
+
+    <!-- Behance styled big appreciation button -->
+    <div class="mt-12 flex flex-col items-center gap-4">
+      <button 
+        id="appreciate-btn" 
+        class="group px-8 py-5 bg-[#3F8CFF] hover:bg-[#2573E7] active:scale-95 text-white rounded-full font-mono font-bold text-xs tracking-wider uppercase flex items-center gap-3 transition-all shadow-lg shadow-blue-500/10"
+      >
+        <svg class="w-5 h-5 fill-current transition-transform group-hover:scale-120" viewBox="0 0 24 24">
+          <path d="M4 21h1v-8H4a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2zM20 14h-5.27l.83-4.4a2.02 2.02 0 0 0-.25-1.57A1.85 1.85 0 0 0 14 7h-1.63L9.12 12.38A1.9 1.9 0 0 0 8.5 13.7v6.6a1.9 1.9 0 0 0 1.9 1.9H17a1.9 1.9 0 0 0 1.9-1.5l1.9-7.6a2 2 0 0 0-.25-1.6A1.85 1.85 0 0 0 20 14z"/>
+        </svg>
+        <span>APPRECIATE_PROJECT</span>
+      </button>
+      
+      <!-- Counter -->
+      <span id="appreciate-count" class="font-mono text-xs text-brand-secondary tracking-widest uppercase mt-2">
+        0 APPRECIATIONS
+      </span>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="border-t border-brand-border bg-brand-bg py-16 text-center text-xs font-mono text-gray-600 tracking-widest uppercase">
+    <p>© 2026 BRUNO CLEMENTE. ALL RIGHTS RESERVED.</p>
+  </footer>
+
+  <!-- Scroll Reveal Script -->
+  <script>
+    function reveal() {
+      const reveals = document.querySelectorAll(".reveal");
+      for (let i = 0; i < reveals.length; i++) {
+        const windowHeight = window.innerHeight;
+        const elementTop = reveals[i].getBoundingClientRect().top;
+        const elementVisible = 150;
+        
+        if (elementTop < windowHeight - elementVisible) {
+          reveals[i].classList.add("active");
+        }
+      }
+    }
+    
+    window.addEventListener("scroll", reveal);
+    reveal();
+
+    // Appreciation Counter Logic
+    const btn = document.getElementById('appreciate-btn');
+    const label = document.getElementById('appreciate-count');
+    let count = parseInt(localStorage.getItem('silaca_appreciations') || '98');
+    
+    label.innerText = `${count} APPRECIATIONS`;
+
+    btn.addEventListener('click', () => {
+      count++;
+      localStorage.setItem('silaca_appreciations', count);
+      label.innerText = `${count} APPRECIATIONS`;
+      
+      // Temporary animation punch
+      btn.classList.add('bg-emerald-600', 'hover:bg-emerald-700');
+      btn.querySelector('span').innerText = 'APPRECIATED!';
+      
+      setTimeout(() => {
+        btn.classList.remove('bg-emerald-600', 'hover:bg-emerald-700');
+        btn.querySelector('span').innerText = 'APPRECIATE_PROJECT';
+      }, 2000);
+    });
+  </script>
+</body>
+</html>

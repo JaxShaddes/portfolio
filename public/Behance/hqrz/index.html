@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>hqrz — Behance Presentation</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS (via CDN for ease of standalone load) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['Outfit', 'sans-serif'],
+            sans: ['Outfit', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              bg: '#F5F4F0',
+              card: '#FFFFFF',
+              text: '#1E1E1E',
+              accent: '#8C8273',
+              border: '#E5E2DC',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #F5F4F0;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #D5D2CC;
+      border-radius: 5px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #8C8273;
+    }
+
+    /* Fade-in Animation on Scroll */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body class="bg-brand-bg text-brand-text font-sans antialiased selection:bg-brand-accent selection:text-white">
+
+  <!-- Header Info / Metadata -->
+  <header class="max-w-7xl mx-auto px-6 pt-16 pb-8 border-b border-brand-border flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+    <div class="flex items-center gap-4">
+      <a href="/" class="text-[10px] tracking-widest uppercase font-bold text-gray-500 hover:text-brand-text transition-colors">← Back to Portfolio</a>
+    </div>
+    <div class="flex items-center gap-8 text-[10px] tracking-[0.2em] font-bold uppercase text-gray-500">
+      <div><span class="text-gray-400">Client:</span> <span class="text-brand-text">Hingryd Queiroz</span></div>
+      <div><span class="text-gray-400">Date:</span> <span class="text-brand-text">November 2025</span></div>
+      <div><span class="text-gray-400">Services:</span> <span class="text-brand-text">Web Design & Dev</span></div>
+    </div>
+  </header>
+
+  <!-- Project Title Hero -->
+  <section class="max-w-5xl mx-auto px-6 py-20 md:py-32 text-center">
+    <span class="text-xs font-bold tracking-[0.3em] text-brand-accent uppercase">ARCHITECT, PHOTOGRAPHER & POET</span>
+    <h1 class="font-serif text-6xl md:text-8xl lg:text-9xl text-brand-text font-light tracking-wide uppercase leading-tight mt-4">
+      hqrz
+    </h1>
+    <p class="font-serif text-xl md:text-2xl text-brand-accent mt-6">
+      Three disciplines, one singular vision.
+    </p>
+    <div class="w-16 h-[1px] bg-brand-accent mx-auto mt-12"></div>
+  </section>
+
+  <!-- Big Hero Image -->
+  <section class="w-full bg-brand-card overflow-hidden reveal">
+    <img 
+      src="../../media/hqrz/1mk.jpg" 
+      alt="hqrz Hero Presentation" 
+      class="w-full h-auto object-cover max-h-[85vh] hover:scale-[1.01] transition-transform duration-1000"
+    />
+  </section>
+
+  <!-- Overview Narrative -->
+  <section class="max-w-4xl mx-auto px-6 py-24 md:py-32 reveal">
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-16 items-start">
+      <div class="md:col-span-4">
+        <h2 class="text-xs font-bold tracking-[0.3em] text-brand-accent uppercase mt-2">
+          Project Narrative
+        </h2>
+      </div>
+      <div class="md:col-span-8 font-serif text-2xl md:text-3xl text-gray-700 font-light leading-relaxed">
+        This portfolio explores the harmony between the structures we build and the emotions we inhabit. Inspired by the steady flow of rivers and the breathless ascent of flight, her work captures the intersection of human design and natural wonder.
+      </div>
+    </div>
+  </section>
+
+  <!-- Photo Grid - Layout 1 -->
+  <section class="max-w-6xl mx-auto px-6 py-12 reveal">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+      <div class="bg-brand-card p-6 border border-brand-border rounded-sm flex flex-col justify-between">
+        <p class="text-[10px] tracking-widest font-bold text-gray-400 uppercase mb-6">Photography / Editorial spreads</p>
+        <img 
+          src="../../media/hqrz/1.jpg" 
+          alt="hqrz Photography 1" 
+          class="w-full h-auto rounded-sm hover:scale-[1.01] transition-transform duration-500"
+        />
+      </div>
+      <div class="bg-brand-card p-6 border border-brand-border rounded-sm flex flex-col justify-between pt-16 md:pt-32">
+        <p class="text-[10px] tracking-widest font-bold text-gray-400 uppercase mb-6">Space Architecture / Line Geometry</p>
+        <img 
+          src="../../media/hqrz/2mk.jpg" 
+          alt="hqrz Architecture Mock 1" 
+          class="w-full h-auto rounded-sm hover:scale-[1.01] transition-transform duration-500"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- Design Philosophy Quote -->
+  <section class="w-full bg-brand-card py-24 my-16 border-y border-brand-border reveal">
+    <div class="max-w-3xl mx-auto px-6 text-center">
+      <span class="font-serif text-4xl text-brand-accent leading-none">“</span>
+      <blockquote class="font-serif text-3xl md:text-4xl text-brand-text font-light leading-normal -mt-4">
+        Through the lens, the pen, and the drafting table, she seeks one thing: the beauty of love in every form.
+      </blockquote>
+      <div class="w-8 h-[1px] bg-brand-accent mx-auto mt-8"></div>
+    </div>
+  </section>
+
+  <!-- Photo Grid - Layout 2 -->
+  <section class="max-w-6xl mx-auto px-6 py-12 reveal">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+      <div class="bg-brand-card p-6 border border-brand-border rounded-sm flex flex-col justify-between pt-16 md:pt-32">
+        <p class="text-[10px] tracking-widest font-bold text-gray-400 uppercase mb-6">Minimal Editorial Design / Portfolio Details</p>
+        <img 
+          src="../../media/hqrz/2.jpg" 
+          alt="hqrz Editorial Detail" 
+          class="w-full h-auto rounded-sm hover:scale-[1.01] transition-transform duration-500"
+        />
+      </div>
+      <div class="bg-brand-card p-6 border border-brand-border rounded-sm flex flex-col justify-between">
+        <p class="text-[10px] tracking-widest font-bold text-gray-400 uppercase mb-6">Interactive Web Mockups</p>
+        <img 
+          src="../../media/hqrz/3mk.jpg" 
+          alt="hqrz Web Mockup 1" 
+          class="w-full h-auto rounded-sm hover:scale-[1.01] transition-transform duration-500"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- Single Large Image -->
+  <section class="max-w-6xl mx-auto px-6 py-12 reveal">
+    <div class="bg-brand-card p-6 md:p-12 border border-brand-border rounded-sm">
+      <p class="text-[10px] tracking-widest font-bold text-gray-400 uppercase mb-6">Digital Experience / Mobile layout</p>
+      <img 
+        src="../../media/hqrz/3.jpg" 
+        alt="hqrz Mobile Presentation" 
+        class="w-full h-auto rounded-sm hover:opacity-95 transition-opacity"
+      />
+    </div>
+  </section>
+
+  <!-- Color Palette Section -->
+  <section class="max-w-6xl mx-auto px-6 py-24 reveal">
+    <div class="bg-brand-card p-8 border border-brand-border rounded-sm">
+      <span class="text-[10px] text-brand-accent tracking-widest uppercase font-bold">Palette & Tones</span>
+      
+      <div class="grid grid-cols-3 gap-6 mt-8">
+        <div class="flex flex-col gap-2 group cursor-pointer" onclick="navigator.clipboard.writeText('#F5F4F0'); alert('Hex #F5F4F0 copied!')">
+          <div class="h-24 bg-[#F5F4F0] rounded-sm group-hover:scale-105 transition-transform border border-brand-border"></div>
+          <span class="text-[10px] font-bold text-brand-text mt-1">Warm Canvas</span>
+          <span class="text-[8px] text-gray-500">#F5F4F0</span>
+        </div>
+        
+        <div class="flex flex-col gap-2 group cursor-pointer" onclick="navigator.clipboard.writeText('#8C8273'); alert('Hex #8C8273 copied!')">
+          <div class="h-24 bg-[#8C8273] rounded-sm group-hover:scale-105 transition-transform border border-brand-border"></div>
+          <span class="text-[10px] font-bold text-brand-text mt-1">Arch Stone</span>
+          <span class="text-[8px] text-gray-500">#8C8273</span>
+        </div>
+
+        <div class="flex flex-col gap-2 group cursor-pointer" onclick="navigator.clipboard.writeText('#1E1E1E'); alert('Hex #1E1E1E copied!')">
+          <div class="h-24 bg-[#1E1E1E] rounded-sm group-hover:scale-105 transition-transform border border-brand-border"></div>
+          <span class="text-[10px] font-bold text-brand-text mt-1">Ink Black</span>
+          <span class="text-[8px] text-gray-500">#1E1E1E</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Outro Appreciation Block -->
+  <section class="max-w-4xl mx-auto px-6 py-32 text-center reveal">
+    <h2 class="font-serif text-5xl md:text-6xl text-brand-text font-light">
+      Thank You
+    </h2>
+    <p class="text-sm text-gray-500 tracking-wider mt-4">
+      Project designed and styled by Bruno Clemente
+    </p>
+
+    <!-- Behance styled big appreciation button -->
+    <div class="mt-12 flex flex-col items-center gap-4">
+      <button 
+        id="appreciate-btn" 
+        class="group px-8 py-5 bg-brand-text hover:bg-brand-accent active:scale-95 text-white rounded-full font-bold text-sm tracking-widest uppercase flex items-center gap-3 transition-all shadow-lg shadow-black/10"
+      >
+        <svg class="w-5 h-5 fill-current transition-transform group-hover:scale-125" viewBox="0 0 24 24">
+          <path d="M4 21h1v-8H4a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2zM20 14h-5.27l.83-4.4a2.02 2.02 0 0 0-.25-1.57A1.85 1.85 0 0 0 14 7h-1.63L9.12 12.38A1.9 1.9 0 0 0 8.5 13.7v6.6a1.9 1.9 0 0 0 1.9 1.9H17a1.9 1.9 0 0 0 1.9-1.5l1.9-7.6a2 2 0 0 0-.25-1.6A1.85 1.85 0 0 0 20 14z"/>
+        </svg>
+        <span>Appreciate Project</span>
+      </button>
+      
+      <!-- Counter -->
+      <span id="appreciate-count" class="text-xs font-semibold tracking-widest text-brand-accent uppercase mt-2">
+        0 Appreciations
+      </span>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="border-t border-brand-border bg-white py-16 text-center text-xs text-gray-400 tracking-widest uppercase">
+    <p>© 2026 Bruno Clemente. All rights reserved.</p>
+  </footer>
+
+  <!-- Scroll Reveal Script -->
+  <script>
+    function reveal() {
+      const reveals = document.querySelectorAll(".reveal");
+      for (let i = 0; i < reveals.length; i++) {
+        const windowHeight = window.innerHeight;
+        const elementTop = reveals[i].getBoundingClientRect().top;
+        const elementVisible = 150;
+        
+        if (elementTop < windowHeight - elementVisible) {
+          reveals[i].classList.add("active");
+        }
+      }
+    }
+    
+    window.addEventListener("scroll", reveal);
+    reveal();
+
+    // Appreciation Counter Logic
+    const btn = document.getElementById('appreciate-btn');
+    const label = document.getElementById('appreciate-count');
+    let count = parseInt(localStorage.getItem('hqrz_appreciations') || '84');
+    
+    label.innerText = `${count} Appreciations`;
+
+    btn.addEventListener('click', () => {
+      count++;
+      localStorage.setItem('hqrz_appreciations', count);
+      label.innerText = `${count} Appreciations`;
+      
+      btn.classList.add('bg-emerald-600', 'hover:bg-emerald-700');
+      btn.querySelector('span').innerText = 'Appreciated!';
+      
+      setTimeout(() => {
+        btn.classList.remove('bg-emerald-600', 'hover:bg-emerald-700');
+        btn.querySelector('span').innerText = 'Appreciate Project';
+      }, 2000);
+    });
+  </script>
+</body>
+</html>

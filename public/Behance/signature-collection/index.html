@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signature Collection — Behance Presentation</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS (via CDN for ease of standalone load) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['"Space Grotesk"', 'sans-serif'],
+            serif: ['"Space Grotesk"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              bg: '#08080A',
+              card: '#121215',
+              text: '#FFFFFF',
+              accent: '#00439C',
+              gold: '#D4AF37',
+              border: '#1E1E24',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #08080A;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1E1E24;
+      border-radius: 5px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #00439C;
+    }
+
+    /* Fade-in Animation on Scroll */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body class="bg-brand-bg text-gray-300 font-sans antialiased selection:bg-brand-accent selection:text-white">
+
+  <!-- Header Info / Metadata -->
+  <header class="max-w-7xl mx-auto px-6 pt-16 pb-8 border-b border-brand-border/60 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+    <div class="flex items-center gap-4">
+      <a href="/" class="text-[10px] font-mono tracking-wider uppercase text-gray-500 hover:text-white transition-colors">< BACK_TO_PORTFOLIO</a>
+    </div>
+    <div class="flex items-center gap-8 text-[10px] font-mono tracking-wider uppercase text-gray-500">
+      <div><span class="text-gray-400">PROJECT:</span> <span class="text-white">SIGNATURE COLLECTION</span></div>
+      <div><span class="text-gray-400">TYPE:</span> <span class="text-white">GAME COVER ART REDESIGN</span></div>
+      <div><span class="text-gray-400">SERVICES:</span> <span class="text-white">PACKAGING / TYPOGRAPHY</span></div>
+    </div>
+  </header>
+
+  <!-- Project Title Hero -->
+  <section class="max-w-5xl mx-auto px-6 py-20 md:py-32 text-center">
+    <span class="font-mono text-xs text-brand-gold tracking-[0.4em] uppercase">PLAYSTATION EXCLUSIVES</span>
+    <h1 class="font-display text-5xl md:text-7xl lg:text-8xl text-white font-bold tracking-tight uppercase leading-none mt-4">
+      SIGNATURE
+    </h1>
+    <p class="font-mono text-xs md:text-sm text-gray-500 mt-6 tracking-widest max-w-2xl mx-auto">
+      [REIMAGINING CINEMATIC NARRATIVES THROUGH THE ART OF MINIMALIST PHYSICAL MEDIA]
+    </p>
+    <div class="w-16 h-[2px] bg-brand-accent mx-auto mt-12"></div>
+  </section>
+
+  <!-- Big Hero Image -->
+  <section class="w-full bg-brand-card overflow-hidden reveal">
+    <img 
+      src="../../media/signature-collection/capa.jpg" 
+      alt="Signature Collection Cover Presentation" 
+      class="w-full h-auto object-cover max-h-[85vh] opacity-90 hover:scale-[1.01] transition-transform duration-1000"
+    />
+  </section>
+
+  <!-- Overview Narrative -->
+  <section class="max-w-4xl mx-auto px-6 py-24 md:py-32 reveal">
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-16 items-start">
+      <div class="md:col-span-4">
+        <h2 class="font-mono text-xs font-bold tracking-widest text-brand-gold uppercase">
+          // THE CONCEPT
+        </h2>
+      </div>
+      <div class="md:col-span-8 font-sans text-xl md:text-2xl text-gray-200 font-light leading-relaxed">
+        Drawing inspiration from Sony's 2019 "Only on PlayStation" collection, this project revisits modern classics. By stripping away marketing clutter and focusing on monochromatic grain textures and symbolic layouts, it highlights the emotional core of physical media design.
+      </div>
+    </div>
+  </section>
+
+  <!-- Game Box Flow: RDR2 -->
+  <section class="max-w-6xl mx-auto px-6 py-12 reveal">
+    <div class="bg-brand-card p-6 md:p-12 border border-brand-border rounded-sm">
+      <span class="font-mono text-[10px] text-brand-gold tracking-widest uppercase">// PART 01: RED DEAD REDEMPTION 2</span>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+        <div class="flex flex-col gap-2">
+          <img src="../../media/signature-collection/cover/rdr2.jpg" alt="RDR2 Cover" class="w-full h-auto rounded-sm border border-brand-border" />
+          <span class="font-mono text-[8px] text-gray-500 mt-1">01_FLAT_COVER</span>
+        </div>
+        <div class="flex flex-col gap-2">
+          <img src="../../media/signature-collection/box/rdr2.jpg" alt="RDR2 Box Case" class="w-full h-auto rounded-sm border border-brand-border" />
+          <span class="font-mono text-[8px] text-gray-500 mt-1">02_BOX_MOCKUP</span>
+        </div>
+        <div class="flex flex-col gap-2">
+          <img src="../../media/signature-collection/box-cd/rdr2.jpg" alt="RDR2 Box and CD" class="w-full h-auto rounded-sm border border-brand-border" />
+          <span class="font-mono text-[8px] text-gray-500 mt-1">03_CD_SPREAD</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Game Box Flow: KCD2 -->
+  <section class="max-w-6xl mx-auto px-6 py-12 reveal">
+    <div class="bg-brand-card p-6 md:p-12 border border-brand-border rounded-sm">
+      <span class="font-mono text-[10px] text-brand-gold tracking-widest uppercase">// PART 02: KINGDOM COME DELIVERANCE 2</span>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+        <div class="flex flex-col gap-2">
+          <img src="../../media/signature-collection/cover/kcd2.jpg" alt="KCD2 Cover" class="w-full h-auto rounded-sm border border-brand-border" />
+          <span class="font-mono text-[8px] text-gray-500 mt-1">01_FLAT_COVER</span>
+        </div>
+        <div class="flex flex-col gap-2">
+          <img src="../../media/signature-collection/box/kcd2.jpg" alt="KCD2 Box Case" class="w-full h-auto rounded-sm border border-brand-border" />
+          <span class="font-mono text-[8px] text-gray-500 mt-1">02_BOX_MOCKUP</span>
+        </div>
+        <div class="flex flex-col gap-2">
+          <img src="../../media/signature-collection/box-cd/kcd2.jpg" alt="KCD2 Box and CD" class="w-full h-auto rounded-sm border border-brand-border" />
+          <span class="font-mono text-[8px] text-gray-500 mt-1">03_CD_SPREAD</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Design Philosophy Quote -->
+  <section class="w-full bg-brand-card py-24 my-16 border-y border-brand-border reveal">
+    <div class="max-w-3xl mx-auto px-6 text-center">
+      <span class="font-mono text-brand-gold text-xs tracking-[0.3em] uppercase">// REST RATIONAL</span>
+      <blockquote class="font-serif text-2xl md:text-3xl text-white font-medium leading-normal mt-4">
+        "Cinematic restraint and textural depth, focusing on atmosphere rather than spectacle. A collector's edition sensibility, merging nostalgia with refinement."
+      </blockquote>
+      <div class="w-8 h-[2px] bg-brand-accent mx-auto mt-8"></div>
+    </div>
+  </section>
+
+  <!-- Game Box Flow: GHOST OF TSUSHIMA -->
+  <section class="max-w-6xl mx-auto px-6 py-12 reveal">
+    <div class="bg-brand-card p-6 md:p-12 border border-brand-border rounded-sm">
+      <span class="font-mono text-[10px] text-brand-gold tracking-widest uppercase">// PART 03: GHOST OF TSUSHIMA</span>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+        <div class="flex flex-col gap-2">
+          <img src="../../media/signature-collection/cover/got.jpg" alt="GOT Cover" class="w-full h-auto rounded-sm border border-brand-border" />
+          <span class="font-mono text-[8px] text-gray-500 mt-1">01_FLAT_COVER</span>
+        </div>
+        <div class="flex flex-col gap-2">
+          <img src="../../media/signature-collection/box/got.jpg" alt="GOT Box Case" class="w-full h-auto rounded-sm border border-brand-border" />
+          <span class="font-mono text-[8px] text-gray-500 mt-1">02_BOX_MOCKUP</span>
+        </div>
+        <div class="flex flex-col gap-2">
+          <img src="../../media/signature-collection/box-cd/got.jpg" alt="GOT Box and CD" class="w-full h-auto rounded-sm border border-brand-border" />
+          <span class="font-mono text-[8px] text-gray-500 mt-1">03_CD_SPREAD</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Game Box Flow: GOW RAGNAROK -->
+  <section class="max-w-6xl mx-auto px-6 py-12 reveal">
+    <div class="bg-brand-card p-6 md:p-12 border border-brand-border rounded-sm">
+      <span class="font-mono text-[10px] text-brand-gold tracking-widest uppercase">// PART 04: GOD OF WAR: RAGNARÖK</span>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+        <div class="flex flex-col gap-2">
+          <img src="../../media/signature-collection/cover/gow.jpg" alt="GOW Cover" class="w-full h-auto rounded-sm border border-brand-border" />
+          <span class="font-mono text-[8px] text-gray-500 mt-1">01_FLAT_COVER</span>
+        </div>
+        <div class="flex flex-col gap-2">
+          <img src="../../media/signature-collection/box/gow.jpg" alt="GOW Box Case" class="w-full h-auto rounded-sm border border-brand-border" />
+          <span class="font-mono text-[8px] text-gray-500 mt-1">02_BOX_MOCKUP</span>
+        </div>
+        <div class="flex flex-col gap-2">
+          <img src="../../media/signature-collection/box-cd/gow.jpg" alt="GOW Box and CD" class="w-full h-auto rounded-sm border border-brand-border" />
+          <span class="font-mono text-[8px] text-gray-500 mt-1">03_CD_SPREAD</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Game Box Flow: SPIDERMAN 2 -->
+  <section class="max-w-6xl mx-auto px-6 py-12 reveal">
+    <div class="bg-brand-card p-6 md:p-12 border border-brand-border rounded-sm">
+      <span class="font-mono text-[10px] text-brand-gold tracking-widest uppercase">// PART 05: MARVEL'S SPIDER-MAN 2</span>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+        <div class="flex flex-col gap-2">
+          <img src="../../media/signature-collection/cover/sm2.jpg" alt="SM2 Cover" class="w-full h-auto rounded-sm border border-brand-border" />
+          <span class="font-mono text-[8px] text-gray-500 mt-1">01_FLAT_COVER</span>
+        </div>
+        <div class="flex flex-col gap-2">
+          <img src="../../media/signature-collection/box/sm2.jpg" alt="SM2 Box Case" class="w-full h-auto rounded-sm border border-brand-border" />
+          <span class="font-mono text-[8px] text-gray-500 mt-1">02_BOX_MOCKUP</span>
+        </div>
+        <div class="flex flex-col gap-2">
+          <img src="../../media/signature-collection/box-cd/sm2.jpg" alt="SM2 Box and CD" class="w-full h-auto rounded-sm border border-brand-border" />
+          <span class="font-mono text-[8px] text-gray-500 mt-1">03_CD_SPREAD</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Outro Appreciation Block -->
+  <section class="max-w-4xl mx-auto px-6 py-32 text-center reveal">
+    <h2 class="font-display text-5xl md:text-6xl text-white font-bold uppercase tracking-tight">
+      COLLECTION COMPLETE
+    </h2>
+    <p class="font-mono text-xs text-gray-500 mt-4 tracking-wider">
+      Designed and curated by Bruno Clemente
+    </p>
+
+    <!-- Behance styled big appreciation button -->
+    <div class="mt-12 flex flex-col items-center gap-4">
+      <button 
+        id="appreciate-btn" 
+        class="group px-8 py-5 bg-brand-accent hover:bg-blue-800 active:scale-95 text-white rounded-full font-mono font-bold text-xs tracking-wider uppercase flex items-center gap-3 transition-all shadow-lg shadow-blue-500/10"
+      >
+        <svg class="w-5 h-5 fill-current transition-transform group-hover:scale-120" viewBox="0 0 24 24">
+          <path d="M4 21h1v-8H4a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2zM20 14h-5.27l.83-4.4a2.02 2.02 0 0 0-.25-1.57A1.85 1.85 0 0 0 14 7h-1.63L9.12 12.38A1.9 1.9 0 0 0 8.5 13.7v6.6a1.9 1.9 0 0 0 1.9 1.9H17a1.9 1.9 0 0 0 1.9-1.5l1.9-7.6a2 2 0 0 0-.25-1.6A1.85 1.85 0 0 0 20 14z"/>
+        </svg>
+        <span>APPRECIATE_COLLECTION</span>
+      </button>
+      
+      <!-- Counter -->
+      <span id="appreciate-count" class="font-mono text-xs text-brand-gold tracking-widest uppercase mt-2">
+        0 APPRECIATIONS
+      </span>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="border-t border-brand-border bg-brand-bg py-16 text-center text-xs font-mono text-gray-600 tracking-widest uppercase">
+    <p>© 2026 BRUNO CLEMENTE. ALL RIGHTS RESERVED.</p>
+  </footer>
+
+  <!-- Scroll Reveal Script -->
+  <script>
+    function reveal() {
+      const reveals = document.querySelectorAll(".reveal");
+      for (let i = 0; i < reveals.length; i++) {
+        const windowHeight = window.innerHeight;
+        const elementTop = reveals[i].getBoundingClientRect().top;
+        const elementVisible = 150;
+        
+        if (elementTop < windowHeight - elementVisible) {
+          reveals[i].classList.add("active");
+        }
+      }
+    }
+    
+    window.addEventListener("scroll", reveal);
+    reveal();
+
+    // Appreciation Counter Logic
+    const btn = document.getElementById('appreciate-btn');
+    const label = document.getElementById('appreciate-count');
+    let count = parseInt(localStorage.getItem('signature_appreciations') || '204');
+    
+    label.innerText = `${count} APPRECIATIONS`;
+
+    btn.addEventListener('click', () => {
+      count++;
+      localStorage.setItem('signature_appreciations', count);
+      label.innerText = `${count} APPRECIATIONS`;
+      
+      btn.classList.add('bg-emerald-600', 'hover:bg-emerald-700');
+      btn.querySelector('span').innerText = 'APPRECIATED!';
+      
+      setTimeout(() => {
+        btn.classList.remove('bg-emerald-600', 'hover:bg-emerald-700');
+        btn.querySelector('span').innerText = 'APPRECIATE_COLLECTION';
+      }, 2000);
+    });
+  </script>
+</body>
+</html>
