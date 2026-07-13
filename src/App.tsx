@@ -45,11 +45,11 @@ function App() {
       {/* Navigation */}
       <nav className="fixed top-0 left-0 w-full p-10 flex justify-between items-start z-40">
         <div className="flex flex-col items-center">
-          <div className="w-8 h-8 mb-2">
+          <div className="w-8 h-8 md:w-11 md:h-11 mb-2 md:mb-3">
             <img src="/logo.png" alt="Galleria Studio Logo" className="w-full h-full object-contain" />
           </div>
-          <span className="text-xs font-bold tracking-wider font-space uppercase text-black">Bruno Clemente</span>
-          <span className="text-[7px] tracking-[0.27em] text-gray-500 font-light font-lexend uppercase mt-1">Graphic Design</span>
+          <span className="text-xs md:text-sm font-bold tracking-wider font-space uppercase text-black">Bruno Clemente</span>
+          <span className="text-[7px] md:text-[8px] tracking-[0.27em] text-gray-500 font-light font-lexend uppercase mt-1">Graphic Design</span>
         </div>
         
         <div className="flex items-center gap-8">
@@ -310,6 +310,7 @@ function App() {
         <WheelCarousel 
           onSelectProject={(p) => setSelectedProject(p)} 
           selectedId={selectedProject?.id || null}
+          isLocked={showAboutModal || showContactModal || showWorksDropdown}
         />
       </main>
 

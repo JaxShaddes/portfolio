@@ -6,9 +6,10 @@ import { PolaroidCard } from './PolaroidCard';
 interface WheelCarouselProps {
   onSelectProject: (project: Project) => void;
   selectedId: number | null;
+  isLocked?: boolean;
 }
 
-export const WheelCarousel: React.FC<WheelCarouselProps> = ({ onSelectProject, selectedId }) => {
+export const WheelCarousel: React.FC<WheelCarouselProps> = ({ onSelectProject, selectedId, isLocked = false }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const rotationValue = useMotionValue(0);
   const smoothRotation = useSpring(rotationValue, { stiffness: 100, damping: 30 });
@@ -22,7 +23,7 @@ export const WheelCarousel: React.FC<WheelCarouselProps> = ({ onSelectProject, s
     let isScrolling = false;
 
     const handleWheel = (e: WheelEvent) => {
-      if (selectedId !== null) return;
+      if (selectedId !== null || isLocked) return;
       
       // Prevent browser from scrolling the window
       e.preventDefault();
@@ -45,7 +46,7 @@ export const WheelCarousel: React.FC<WheelCarouselProps> = ({ onSelectProject, s
 
     window.addEventListener('wheel', handleWheel, { passive: false });
     return () => window.removeEventListener('wheel', handleWheel);
-  }, [rotationValue, selectedId, angleStep]);
+  }, [rotationValue, selectedId, angleStep, isLocked]);
 
   // Sync active index based on CURRENT rotation
   useEffect(() => {
@@ -125,8 +126,8 @@ export const WheelCarousel: React.FC<WheelCarouselProps> = ({ onSelectProject, s
 
       {/* Wheel Interaction Area */}
       <motion.div
-        onPan={selectedId === null ? onDrag : undefined}
-        onPanEnd={selectedId === null ? onDragEnd : undefined}
+        onPan={selectedId === null && !isLocked ? onDrag : undefined}
+        onPanEnd={selectedId === null && !isLocked ? onDragEnd : undefined}
         className="relative w-full h-[700px] flex justify-center items-end select-none overflow-visible touch-none"
       >
         
