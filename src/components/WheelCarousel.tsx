@@ -106,7 +106,7 @@ export const WheelCarousel: React.FC<WheelCarouselProps> = ({ onSelectProject, s
             <div className="w-[1px] h-32 bg-gray-200"></div>
           </div>
 
-          <h1 className="text-2xl md:text-8xl font-black tracking-tighter text-gray-900 leading-tight md:leading-[0.85] uppercase">
+          <h1 className="text-xl md:text-7xl font-lexend font-light tracking-tight text-gray-900 leading-tight md:leading-[0.85] uppercase">
             <span className="md:hidden">{activeProject.title}</span>
             <span className="hidden md:inline">
               {activeProject.title.split(' ')[0]}

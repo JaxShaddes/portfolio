@@ -156,7 +156,7 @@ export const ProjectView: React.FC<ProjectViewProps> = ({ project, onBack, onNex
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.3 }}
             >
-              <h2 className="text-5xl font-bold tracking-tighter text-gray-900 mb-6 uppercase">
+              <h2 className="text-4xl font-lexend font-light tracking-tight text-gray-900 mb-6 uppercase">
                 {project.title}
               </h2>
               <div className="w-20 h-1 bg-gray-900 mb-10"></div>

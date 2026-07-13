@@ -58,7 +58,7 @@ export const PolaroidCard: React.FC<PolaroidCardProps> = ({ project, isActive, o
           />
         </div>
         <div className="mt-4 text-left">
-          <p className="text-[10px] font-bold tracking-widest text-gray-800 uppercase border-t pt-2 border-gray-200">
+          <p className="text-[8px] font-lexend font-light tracking-widest text-gray-800 uppercase border-t pt-2 border-gray-200">
             {project.title}
           </p>
           <p className="text-[8px] text-gray-500 italic uppercase">
