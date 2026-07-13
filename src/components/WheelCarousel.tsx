@@ -191,11 +191,27 @@ export const WheelCarousel: React.FC<WheelCarouselProps> = ({ onSelectProject, s
         </motion.div>
 
         {/* Drag Indicator */}
-        <div className="absolute bottom-40 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 pointer-events-none z-30">
+        <div className="absolute bottom-20 md:bottom-40 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 pointer-events-none z-30">
           <p className="text-[9px] tracking-widest uppercase font-medium text-gray-400 italic">
-            Drag the Cog to navigate
+            <span className="md:hidden">Swipe to navigate</span>
+            <span className="hidden md:inline">Drag the Cog to navigate</span>
           </p>
-          <div className="w-5 h-8 border border-gray-400 rounded-full flex justify-center pt-1">
+          
+          {/* Mobile Swipe Hand Icon */}
+          <div className="md:hidden">
+            <motion.div 
+              animate={{ x: [-12, 12, -12] }}
+              transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+              className="text-gray-400"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 11V3a2 2 0 1 0-4 0v8a3 3 0 0 0-3 3v2a7 7 0 0 0 14 0v-4a2 2 0 1 0-4 0v1h-1V8a2 2 0 1 0-4 0v3h-1z" />
+              </svg>
+            </motion.div>
+          </div>
+
+          {/* PC Mouse scrollwheel indicator */}
+          <div className="hidden md:block w-5 h-8 border border-gray-400 rounded-full flex justify-center pt-1">
             <motion.div 
               animate={{ y: [0, 10, 0] }}
               transition={{ repeat: Infinity, duration: 1.5 }}

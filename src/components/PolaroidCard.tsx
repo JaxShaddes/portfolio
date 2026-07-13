@@ -66,15 +66,7 @@ export const PolaroidCard: React.FC<PolaroidCardProps> = ({ project, isActive, o
           </p>
         </div>
         
-        {isActive && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="absolute -bottom-10 left-0 right-0 text-center"
-          >
-            <span className="text-[8px] tracking-[0.3em] font-bold text-gray-400 uppercase">View Project</span>
-          </motion.div>
-        )}
+
       </div>
     </motion.div>
   );

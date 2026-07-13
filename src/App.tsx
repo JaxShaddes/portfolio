@@ -97,7 +97,7 @@ function App() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setShowWorksDropdown(false)}
-              className="fixed inset-0 z-30 bg-black/5 backdrop-blur-xs"
+              className="fixed inset-0 z-[60] bg-black/5 backdrop-blur-xs"
             />
             {/* Works List Drawer */}
             <motion.div
@@ -105,7 +105,7 @@ function App() {
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -20, opacity: 0 }}
               transition={{ type: "spring", damping: 30, stiffness: 300 }}
-              className="fixed top-28 right-10 z-40 bg-[#F8F7F5] border border-gray-200 rounded-sm shadow-xl p-6 w-80 noise-bg"
+              className="fixed top-28 right-10 z-[70] bg-[#F8F7F5] border border-gray-200 rounded-sm shadow-xl p-6 w-80 noise-bg"
             >
               <div className="flex flex-col gap-4">
                 <span className="text-[9px] tracking-widest text-gray-400 font-bold uppercase font-mono border-b border-gray-200 pb-2 flex justify-between items-center">
@@ -156,7 +156,7 @@ function App() {
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.95, y: 15 }}
               transition={{ type: "spring", damping: 25, stiffness: 220 }}
-              className="relative bg-[#F8F7F5] border border-gray-200 rounded-sm shadow-2xl p-8 md:p-12 max-w-xl w-full noise-bg z-10 text-gray-900"
+              className="relative bg-[#F8F7F5] border border-gray-200 rounded-sm shadow-2xl p-8 md:p-12 max-w-xl w-full max-h-[90vh] overflow-y-auto noise-bg z-10 text-gray-900"
             >
               {/* Header Branding */}
               <div className="flex flex-col items-center text-center mb-8 border-b border-gray-200 pb-6">
